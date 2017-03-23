@@ -1,13 +1,87 @@
-\documentclass[11pt]{article}
+\documentclass{cslthse-msc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+%\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage[titletoc, header, page]{appendix}
+
+\usepackage{hyperref}
+\usepackage{pdfpages}
+
+%\geometry{showframe}
+
+\author{
+	Erik Hedblom \\
+	{\normalsize \href{mailto:hedblom.e@gmail.com}{\texttt{hedblom.e@gmail.com}}}
+	\and
+	Kasper Rundquist \\
+    {\normalsize \href{mailto:kasper.rundquist@gmail.com}{\texttt{kasper.rundquist@gmail.com}}}
+}
+
+\title{Safe regression test selection using static analysis}
+%\subtitle{A {\LaTeX} class}
+\company{Modelon AB}
+\supervisors{Johan Ylikiiskilä, \href{mailto:johan.ylikiiskila@modelon.com}{\texttt{johan.ylikiiskila@modelon.com}}}{Jonatan Kämpe, \href{mailto:jonathan.kampe@modelon.com}{\texttt{jonathan.kampe@modelon.com}}}\supervisor{Niklas Fors, \href{mailto:niklas.fors@cs.lth.se}{\texttt{niklas.fors@cs.lth.se}}}
+\examiner{Görel Hedin, \href{mailto:gorel.hedin@cs.lth.se}{\texttt{gorel.hedin@cs.lth.se}}}
+
+\date{\today}
+%\date{January 16, 2015}
+
+\acknowledgements{
+If you want to thank people, do it here, on a separate right-hand page. Both the U.S. \textit{acknowledgments} and the British \textit{acknowledgements} spellings are acceptable.
+}
+
+\theabstract{
+This document describes the Master's Thesis format for the theses carried out at 
+the Department of Computer Science, Lund University. 
+
+Your abstract should capture, in English, the whole thesis with focus on the problem and solution in 150 words. It should be placed on a separate right-hand page, with an additional \textit{1cm} margin on both left and right. Avoid acronyms, footnotes, and references in the abstract if possible.
+
+Leave a \textit{2cm} vertical space after the abstract and provide a few keywords relevant for your report. Use five to six words, of which at most two should be from the title.
+}
+
+\keywords{MSc, template, report, style, structure}
+
+%% Only used to display font sizes
+\makeatletter
+\newcommand\thefontsize[1]{{#1 \f@size pt\par}}
+\makeatother
+%%%%%%%%%%
+
 
 \begin{document}
+\makefrontmatter
+\chapter[Introduction]{Introduction}
 
-\title{Safe regression test selection useing static analysis}
-\author{Erik Hedblom and Kasper Rundquist}
-\maketitle
+\section{Problem Description}
 
-\cite{DBLP:conf/pppj/OqvistHM16} \cite{DBLP:conf/sigsoft/LegunsenHSLZM16}
 
-\bibliography{thebib}{}
-\bibliographystyle{plain}
+
+\subsection{Tables}
+
+
+\section{Related Work}
+\cite{DBLP:conf/pppj/OqvistHM16}
+
+\chapter[Background]{Background}
+
+\chapter[Implementation]{Implementation}
+
+\chapter[Evaluation]{Evaluation}
+
+\chapter[Future Work]{Future Work}
+
+\chapter[Discussion]{Discussion}
+
+\makebibliography{thebib}
+
+\begin{appendices}
+\chapter{About This Document}
+\end{appendices}
+
+
 \end{document}
