@@ -19,7 +19,7 @@
 	{\normalsize \href{mailto:hedblom.e@gmail.com}{\texttt{hedblom.e@gmail.com}}}
 	\and
 	Kasper Rundquist \\
-    {\normalsize \href{mailto:kasper.rundquist@gmail.com}{\texttt{kasper.rundquist@gmail.com}}}
+	{\normalsize \href{mailto:kasper.rundquist@gmail.com}{\texttt{kasper.rundquist@gmail.com}}}
 }
 
 \title{Safe regression test selection using static analysis}
@@ -57,25 +57,54 @@ Leave a \textit{2cm} vertical space after the abstract and provide a few keyword
 \makefrontmatter
 \chapter[Introduction]{Introduction}
 
-\section{Problem Description}
+\section{Motivation / Background}
+During software development, when a change is integrated into a project all previous testing have to be rerun. Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the test may be unrelated to the change and by excluding unrelated tests significant time savings could be achieved. ~\cite{DUMMY}
+Det är viktig att testa mjukvara under utvecklingen för säkerställa att mjukvaran fungerar korrekt. När mjukvaran uppdateras måste testfall som redan testats utföras igen för att kontrollera att allt som fungerade innan uppdatering fortfarande fungerar efter. Det kan vara väldigt tidskrävande att köra samtliga test. Det finns därför mycket tid att spara om det går att utesluta test som garanterat inte har påverkas. För språket Modelica finns det inget verktyg för detta och det är därför intressant att utveckla ett.
 
+\section{Problem Description / Aim / Goal}
 
-
-\subsection{Tables}
-
-
-\section{Related Work}
-\cite{DBLP:conf/pppj/OqvistHM16}
+The of this project is too reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a method to exclude tests in a test suite unaffected by a specific change. Regression testing can then be performed with a reduced test suite without compromising quality.
 
 \chapter[Background]{Background}
 
+\section{Test Selection}
+\begin{itemize}
+	\item What is test selection?
+	\item Different approaches
+\end{itemize}
+
+\section{Modelica?}
+\begin{itemize}
+	\item What is Modelica? 
+	\item How can we perform test selection for Modelica?
+	\item SourceTree, InstanceTree, FlatTree
+\end{itemize}
+
 \chapter[Implementation]{Implementation}
 
+\section{Dependency analysis}
+\subsection{Incremental updating}
+
+\section{Test selection}
+
 \chapter[Evaluation]{Evaluation}
+\begin{itemize}
+	\item Savings
+	\item Precision
+\end{itemize}
 
 \chapter[Future Work]{Future Work}
 
 \chapter[Discussion]{Discussion}
+
+
+\begin{itemize}
+	\item Validity
+	\item Analysis granularity
+\end{itemize}
+
+\section{Related Work}
+Det har tidigare gjorts ett liknande examensarbete på LTH. Där användes JastAdd för att minska kostnaden för testning av Android projekt. Det finns även forskning på området. Nästan precis samma sak som vi ska göra har gjorts tidigare men för Java ~\cite{DBLP:conf/pppj/OqvistHM16}. Utöver detta har det även tidigare undersökts hur finkornig en beroendeanalys kan vara utan att den blir för dyr ~\cite{DBLP:conf/sigsoft/LegunsenHSLZM16}. Det finns även arbete inom andra tekniker för att uppnå kortare test tider, till exempel dynamiskt testurval.
 
 \makebibliography{thebib}
 
