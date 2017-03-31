@@ -71,12 +71,12 @@
     % custom commands
 	\newcommand{\company}[1]{\def \@company {#1}}
 	\newcommand{\supervisor}[1]{\def \@supervisor {#1}}
-	\newcommand{\supervisors}[2]{\def \@firstsupervisor {#1}  \def \@secondsupervisor {#2}}
+	\newcommand{\supervisors}[3]{\def \@firstsupervisor {#1}  \def \@secondsupervisor {#2}  \def \@thirdsupervisor {#3}}
 	\newcommand{\examiner}[1]{\def \@examiner {#1}}
 	\newcommand{\subtitle}[1]{\def \@subtitle {#1}}
 	\company{}
 	\supervisor{}
-	\supervisors{}{}
+	\supervisors{}{}{}
 	\examiner{}
 	\subtitle{}
 	
@@ -95,8 +95,8 @@
 			\ifx\@supervisor\empty 
 			   %\ClassWarning{cslthse-msc}{Empty supervisor.}
 			   \ifx\@firstsupervisor\empty
-				  \ClassError{cslthse-msc}{Missing supervisor. Use either \protect\supervisor{name,email} or \protect\supervisors{name1,email1}{name2,email2}}{You must specify your thesis supervisor(s).}
-				\else Supervisors: \@firstsupervisor ~\\ \@secondsupervisor \fi
+				  \ClassError{cslthse-msc}{Missing supervisor. Use either \protect\supervisor{name,email} or \protect\supervisors{name1,email1}{name2,email2}{name3,email3}}{You must specify your thesis supervisor(s).}
+				\else Supervisors: \@firstsupervisor ~\\ \@secondsupervisor ~\\ \@thirdsupervisor \fi
 			\else Supervisor: \@supervisor \fi
 			
 			Examiner: 
@@ -136,10 +136,12 @@
 \newcommand{\keywords}[1]{\def \@keywords {#1}}
 \newcommand{\theabstract}[1]{\def \@theabstract {#1}}
 \newcommand{\acknowledgements}[1]{\def \@acknowledgements {#1}}
+\newcommand{\divisionoflabor}[1]{\def \@divisionoflabor {#1}}
 
 \keywords{}
 \theabstract{}
 \acknowledgements{}
+\divisionoflabor{}
 
 % indent the abstract properly
 \setlength{\absrightindent}{1cm}
@@ -175,8 +177,16 @@
 	\ifx \@acknowledgements \@empty
 			\relax
 	\else
-			\chapter*{Acknowledgements}
+			\chapter*{Acknowledgments}
 			\@acknowledgements
+	\fi
+	
+	% add division of labor if any
+	\ifx \@divisionoflabor \@empty
+			\relax
+	\else
+			\chapter*{Division of Labor}
+			\@divisionoflabor
 	\fi
 
 	\tableofcontents
