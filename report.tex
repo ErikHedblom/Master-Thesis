@@ -12,6 +12,10 @@
 \usepackage{hyperref}
 \usepackage{pdfpages}
 
+\usepackage{subfig}
+\usepackage{listings}
+\input{listings-modelica.cfg}
+
 %\geometry{showframe}
 
 \author{
@@ -99,6 +103,51 @@ Collection attributes are defined by partial definitions in a number of arbitrar
 
 \section{Dependency analysis}
 The Dependency analysis should produce a directed graph on dot format. Dot is a plain text representation of a graph, that can be visualized.
+\begin{itemize}
+\item 1. A class depends on its parent class if it has one.
+
+\item 2. A class depends on all instantiations, imports and extends in its immediate subtree. A class depends on the class instantiated/imported/extended and all its subclasses.
+
+\item 3. A class depends on all its accesses in its immediate subtree.
+\end{itemize}
+
+An immediate subtree is a tree with a single ClassDecl, the ClassDecl is allways the root.
+A immediate subtree is created by taking the AST subtree at a ClassDecl node and removing all subtrees with a ClassDecl, ElementRedeclare, child of Access or CompnentModification as root. So that the new tree only contains one ClassDecl, the root.
+\begin{figure}[h]
+    \centering
+    \subfloat{{\includegraphics[]{EPS-graphs/ParentExample.eps}}}
+    \qquad
+    \subfloat{{\lstinputlisting[language=modelica]{modelica/parentExample.mo}}}
+    \caption{Parent graph}
+    \label{fig:parentGraph}
+\end{figure}
+
+There is a constant k defined in package A. If we define a constant k in model B, the k accessed in C will be k defined in model B. Therefore we need a dependency from C to B.
+
+If the constant k in package A is changed it will affect model C. Therefore we need a dependency from C to A. With rule number 1 we get dependencies from C to B and from B to A. So we have an indirect dependency from C to A, figure \ref{fig:parentGraph}.
+
+\begin{figure}[h]
+    \centering
+    \subfloat{{\includegraphics[]{EPS-graphs/GraphA.eps}}}
+    \qquad
+    \subfloat{{\lstinputlisting[language=modelica]{modelica/exampleA.mo}}}
+    \caption{Graph A}
+    \label{fig:GraphA}
+\end{figure}
+
+When we create an instance of A in model E, we want dependencies from E to A and everything in A, see figure \ref{fig:graphA}. We want to have a dependency from E to the subtree with A as a root, in this case the subtree consists of the nodes P.A, P.A.B and P.A.B.f.
+
+\begin{figure}[h]
+    \centering
+    \subfloat{{\includegraphics[]{EPS-graphs/DotAccess.eps}}}
+    \qquad
+    \subfloat{{\lstinputlisting[language=modelica]{modelica/DotAccess.mo}}}
+    \subfloat{{\lstinputlisting[language=modelica]{modelica/DotAccessC.mo}}}
+    \caption{Dot Access}
+    \label{fig:dotAccess}
+\end{figure}
+
+To find the dependency from model D to function f in C, we want to add dependencies from all the parts of an Dot access. We want dependencies from D to A, A.B and C.f.
 \subsection{Incremental updating}
 
 \section{Test selection}
