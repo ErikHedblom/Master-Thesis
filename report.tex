@@ -12,7 +12,9 @@
 \usepackage{hyperref}
 \usepackage{pdfpages}
 
+\usepackage{enumitem}
 \usepackage{subfig}
+\usepackage{float}
 \usepackage{listings}
 \input{listings-modelica.cfg}
 
@@ -103,17 +105,31 @@ Collection attributes are defined by partial definitions in a number of arbitrar
 
 \section{Dependency analysis}
 The Dependency analysis should produce a directed graph on dot format. Dot is a plain text representation of a graph, that can be visualized.
-\begin{itemize}
-\item 1. A class depends on its parent class if it has one.
+\setlist{nolistsep}
+\begin{enumerate}[]
+\item A class depends on its parent class if it has one.
 
-\item 2. A class depends on all instantiations, imports and extends in its immediate subtree. A class depends on the class instantiated/imported/extended and all its subclasses.
-
-\item 3. A class depends on all its accesses in its immediate subtree.
-\end{itemize}
-
+\item A class depends on all accesses in its immediate subtree.
+\begin{enumerate}[]
+\item A class depends on the accessed class and all its subclasses.
+\item A class depends on all classes in the path to the accessed class.
+\end{enumerate}
+\end{enumerate}
 An immediate subtree is a tree with a single ClassDecl, the ClassDecl is allways the root.
 A immediate subtree is created by taking the AST subtree at a ClassDecl node and removing all subtrees with a ClassDecl, ElementRedeclare, child of Access or CompnentModification as root. So that the new tree only contains one ClassDecl, the root.
-\begin{figure}[h]
+
+In figure \ref{fig:extends}, class C is the accessed class in the immediate subtree of class A. Class B is in the path to the accessed class. Class E is an subclass to class C.
+Example:
+\begin{figure}[H]
+    \centering
+    \subfloat{{\includegraphics[]{EPS-graphs/extends.eps}}}
+    \qquad
+    \subfloat{{\lstinputlisting[language=modelica]{modelica/extends.mo}}}
+    \caption{Extends Graph}
+    \label{fig:extends}
+\end{figure}
+Dependency rules
+\begin{figure}[H]
     \centering
     \subfloat{{\includegraphics[]{EPS-graphs/ParentExample.eps}}}
     \qquad
@@ -126,7 +142,7 @@ There is a constant k defined in package A. If we define a constant k in model B
 
 If the constant k in package A is changed it will affect model C. Therefore we need a dependency from C to A. With rule number 1 we get dependencies from C to B and from B to A. So we have an indirect dependency from C to A, figure \ref{fig:parentGraph}.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \subfloat{{\includegraphics[]{EPS-graphs/GraphA.eps}}}
     \qquad
@@ -137,7 +153,7 @@ If the constant k in package A is changed it will affect model C. Therefore we n
 
 When we create an instance of A in model E, we want dependencies from E to A and everything in A, see figure \ref{fig:graphA}. We want to have a dependency from E to the subtree with A as a root, in this case the subtree consists of the nodes P.A, P.A.B and P.A.B.f.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \subfloat{{\includegraphics[]{EPS-graphs/DotAccess.eps}}}
     \qquad
