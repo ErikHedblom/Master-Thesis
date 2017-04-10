@@ -86,18 +86,58 @@ Regression tests are used to make sure that regression dose not occur. Software 
 A safe Regression Test Selection (RTS) method will select all tests that produce a new result after a specific change. A safe RTS method is equivalent to running all tests. For a RTS method to be useful the RTS algorithm should run in less time than it takes to run the excluded tests.
 \end{itemize}
 
-\section{Modelica?}
+\section{Modelica}
 \begin{itemize}
 	\item What is Modelica?
 Modelica is an object-oriented language and is used for physical models and simulation. 
 
 The output of a Modelica compilation process is code to be compiled, in our case C-code.~\cite{aakesson2008development}
+
+\subsection{Classes}
+Basically everything in Modelica is classes. Built in types such as Integer are Modelica classes. Packages, models and functions are classes.
+
+Modelica allows short definitions of classes. The definition of a class to the left in figure \ref{fig:classDefinition}, is equivalent to the definition to the right \cite{modelicamodelica}.
+
+\begin{figure}[H]
+    \centering
+    \subfloat{{\lstinputlisting[language=modelica]{modelica/packageDecl.mo}}}
+    \qquad
+    \subfloat{{\lstinputlisting[language=modelica]{modelica/shortPackageDecl.mo}}}
+    \caption{Class definition}
+    \label{fig:classDefinition}
+\end{figure}
+
+\subsection{Import}
+
+
+\subsection{Name lookup}
+In order to find a match for a name, Modelica starts by looking at the first name in a qualified name. Take for example the fully qualified name Modelica.Fluid.Pipes.StaticPipe. In this example Modelica is the first name in the qualified name.
+
+To find a match for the name, Modelica first checks if it's a built in type. If it's a built in type Modelica has found a match for the name.
+
+If it's not a built in type Modelica looks in the class where the name is used, including inherited definitions, for a nested definition of the name. 
+
+If there is no nested definition of the name, Modelica looks in the imports in the class where the name is used, inherited imports are not included, to find a match for the name.
+
+If a match for the name is not found in the imports, Modelica looks for a nested definition in the parent package, including inherited definitions.
+
+If the definition of the name isn't found in the parent package, Modelica looks for a imported definition, not including inherited imports, in the parent package.
+
+If a match for the name still not is found, Modelica continues by using the same method and looking in the parent packages parent package and so on until: the parent package has the encapsulated qualifier or a package doesn't have a parent package. In the first case the search for the name terminates and in the second case Modelica searches for a match in root level packages.
+
+The search is done in the same way for the first name in a qualified name and an unqualified name. An unqualified name doesn't contain a dot, an unqualified name consists of only one name. StaticPipe is an example of an unqualified name.
+
+If a name is a part of a qualified name and isn't the first name in the qualified name, it must be a nested definition within the definition of the previous name in the qualified name. In the example Modelica.Fluid.Pipes.StaticPipe, Fluid must be a nested definition within Modelica.\cite{modelicamodelica, tillermodelica}
+
+\subsection{Access}
+
+\subsection{Redeclear}
 	\item How can we perform test selection for Modelica?
 	\item SourceTree, InstanceTree, FlatTree
 \end{itemize}
 
 \section{JastAdd}
-JastAdd is a system based on reference attribute grammars, for extensible implementation of compilers. An Abstract Syntax Tree (AST) is used to represent a program. Attribute Grammars is amethod for declerativly defining computations on an AST. A node in an AST can have a synthezied attribute or an inherited attribute. An attribue is defined by an equation. A synthezied attribyte is defined in the node, an inherired attribute is defined in an ancestor node.A JastAdd specification is used to create an object-oriented framework.~\cite{aakesson2008development}
+JastAdd is a system based on reference attribute grammars, for extensible implementation of compilers. An Abstract Syntax Tree (AST) is used to represent a program. Attribute Grammars is amethod for declerativly defining computations on an AST. A node in an AST can have a synthezied attribute or an inherited attribute. An attribue is defined by an equation. A synthezied attribyte is defined in the node, an inherired attribute is defined in an ancestor node. A JastAdd specification is used to create an object-oriented framework.~\cite{aakesson2008development}
 
 Collection attributes are defined by partial definitions in a number of arbitrary nodes. A node that have a partial definition of a collection attribute contributes to the value of the collection attribute. A collection attribute is usually a set where the empty set is the initial value of the collection attribute. The contributors, the nodes that contributes to the collection attribute, can for example contribute by adding elements to the set.~\cite{magnusson2007extending}
 
@@ -192,7 +232,7 @@ To find the dependency from model D to function f in C, we want to add dependenc
 \end{itemize}
 
 \chapter[Future Work]{Future Work}
-
+	
 \chapter[Discussion]{Discussion}
 
 
@@ -202,7 +242,7 @@ To find the dependency from model D to function f in C, we want to add dependenc
 \end{itemize}
 
 \section{Related Work}
-A master thesis similar to this one has previously been done at LTH ~\cite{kampe2012dependroid}. In the previously master thesis JastAdd was used to decrease the cost for testing of Android projects ~\cite{DUMMY}. There is research done on test selection. A method for safe RTS for Java has been developed before, that has many similarities with the method we are developing for Modelica. 
+A master thesis similar to this one has previously been done at LTH. In the previously master thesis JastAdd was used to decrease the cost for testing of Android projects ~\cite{kampe2012dependroid}. There is research done on test selection. A method for safe RTS for Java has been developed before, that has many similarities with the method we are developing for Modelica. 
 
 Studies have been conducted to investigate at which granularity dependency analysis pays off the most and how much percision it can have with out getting to expensive ~\cite{DBLP:conf/sigsoft/LegunsenHSLZM16}. It has also been done work in other techniques to achieve shorter time for testing, including dynamic test selection.
 
