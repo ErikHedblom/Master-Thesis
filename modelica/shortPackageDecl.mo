@@ -1,0 +1,1 @@
+package P2 = P1;
