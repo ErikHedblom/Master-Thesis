@@ -96,7 +96,7 @@ The output of a Modelica compilation process is code to be compiled, in our case
 \subsection{Classes}
 Basically everything in Modelica is classes. Built in types such as Integer are Modelica classes. Packages, models and functions are classes.
 
-Modelica allows short definitions of classes. The definition of a class to the left in figure \ref{fig:classDefinition}, is equivalent to the definition to the right.
+Modelica allows short definitions of classes. The definition of a class to the left in figure \ref{fig:classDefinition}, is equivalent to the definition to the right \cite{modelicamodelica}.
 
 \begin{figure}[H]
     \centering
@@ -107,10 +107,13 @@ Modelica allows short definitions of classes. The definition of a class to the l
     \label{fig:classDefinition}
 \end{figure}
 
+\subsection{Import}
+
+
 \subsection{Name lookup}
 In order to find a match for a name, Modelica starts by looking at the first name in a qualified name. Take for example the fully qualified name Modelica.Fluid.Pipes.StaticPipe. In this example Modelica is the first name in the qualified name.
 
-To find a match for the name Modelica first checks if it's a built in type. If it's a built in type Modelica has found a match for the name.
+To find a match for the name, Modelica first checks if it's a built in type. If it's a built in type Modelica has found a match for the name.
 
 If it's not a built in type Modelica looks in the class where the name is used, including inherited definitions, for a nested definition of the name. 
 
@@ -118,11 +121,11 @@ If there is no nested definition of the name, Modelica looks in the imports in t
 
 If a match for the name is not found in the imports, Modelica looks for a nested definition in the parent package, including inherited definitions.
 
-If the definition of the name not is found in the parent package, Modelica looks for a imported definition, not including inherited imports, in the parent package.
+If the definition of the name isn't found in the parent package, Modelica looks for a imported definition, not including inherited imports, in the parent package.
 
 If a match for the name still not is found, Modelica continues by using the same method and looking in the parent packages parent package and so on until: the parent package has the encapsulated qualifier or a package doesn't have a parent package. In the first case the search for the name terminates and in the second case Modelica searches for a match in root level packages.
 
-This search is done in the same way for the first name in a qualified name and an unqualified name. An unqualified name doesn't contain a dot, an unqualified name consists of only one name. StaticPipe is an example of an unqualified name.
+The search is done in the same way for the first name in a qualified name and an unqualified name. An unqualified name doesn't contain a dot, an unqualified name consists of only one name. StaticPipe is an example of an unqualified name.
 
 If a name is a part of a qualified name and isn't the first name in the qualified name, it must be a nested definition within the definition of the previous name in the qualified name. In the example Modelica.Fluid.Pipes.StaticPipe, Fluid must be a nested definition within Modelica.\cite{modelicamodelica, tillermodelica}
 
