@@ -89,14 +89,14 @@ A safe Regression Test Selection (RTS) method will select all tests that produce
 \section{Modelica}
 \begin{itemize}
 	\item What is Modelica?
-Modelica is an object-oriented language and is used for physical models and simulation. 
-
-The output of a Modelica compilation process is code to be compiled, in our case C-code.~\cite{aakesson2008development}
+	\item How can we perform test selection for Modelica?
+	\item SourceTree, InstanceTree, FlatTree
+	\end{itemize}
 
 \subsection{Classes}
-Basically everything in Modelica is classes. Built in types such as Integer are Modelica classes. Packages, models and functions are classes.
+Basically everything in Modelica is classes. Built in types such as Integer are Modelica classes. Packages, models and functions are classes. Modelica is an object-oriented language, inheritance is possible. The extends clause is used to create an subclass of an superclass. In figure \ref{fig:classDefinition}, P2 is a subclass to P1, which is a superclass to P2. The subclass inherits everything in the superclass. The subclass may have more content than the superclass, but all the content in the super class is also in the subclass. 
 
-Modelica allows short definitions of classes. The definition of a class to the left in figure \ref{fig:classDefinition}, is equivalent to the definition to the right \cite{modelicamodelica}.
+Modelica allows short declarations of classes. The definition of a class to the left in figure \ref{fig:classDefinition}, is equivalent to the definition to the right \cite{modelicamodelica}.
 
 \begin{figure}[H]
     \centering
@@ -107,8 +107,30 @@ Modelica allows short definitions of classes. The definition of a class to the l
     \label{fig:classDefinition}
 \end{figure}
 
-\subsection{Import}
+A redeclare can be used to replace the declaration of an class or component with a new declaration. A component is a variable or an instance of a class. In figure ~\ref{fig:redeclare}, x is declared in model A. An instance of A is created in model C where x is redeclared. The y in model B, B.y, will have the value 1, while the y in model C, C.y, will have the value 2.
 
+\begin{figure}[H]
+	\lstinputlisting[language=modelica]{modelica/redeclare.mo}
+    \caption{Redeclare}
+    \label{fig:redeclare}
+\end{figure}
+
+\subsection{Import}
+Imports are possible in Modelica to refer to a class or component in an other package. An import creates an alias. In the import below HydralicConductance will be mapped to the fully qualified name Modelica.Fluid.Types.HydralicConductance.
+
+\lstinputlisting[language=modelica]{modelica/import.mo}
+
+Modelica offers the option to rename an import. Here an alias will be created where the name Conductance is mapped to the fully qualified name Modelica.Fluid.Types.HydralicConductance.
+
+\lstinputlisting[language=modelica]{modelica/renamedImport.mo}
+
+Modelica allows the use of wildcard imports. Using wildcards it isn't possible to rename the import. This wildcard import will create an alias for every definition in Modelica.Fluid.
+
+\lstinputlisting[language=modelica]{modelica/wildcardImport.mo}
+
+To avoid multiple imports and wildcard imports, an multiple definition import can be used, from Modelica specification 3.3 \cite{modelicamodelica}. This multiple definition import creates two aliases, one mapping HydralicConductance to Modelica.Fluid.Types.HydralicConductance and one mapping HydralicResistance to Modelica.Fluid.Types.HydralicResistance.
+
+\lstinputlisting[language=modelica]{modelica/multipleDefinitionImport.mo}
 
 \subsection{Name lookup}
 In order to find a match for a name, Modelica starts by looking at the first name in a qualified name. Take for example the fully qualified name Modelica.Fluid.Pipes.StaticPipe. In this example Modelica is the first name in the qualified name.
@@ -129,12 +151,7 @@ The search is done in the same way for the first name in a qualified name and an
 
 If a name is a part of a qualified name and isn't the first name in the qualified name, it must be a nested definition within the definition of the previous name in the qualified name. In the example Modelica.Fluid.Pipes.StaticPipe, Fluid must be a nested definition within Modelica.\cite{modelicamodelica, tillermodelica}
 
-\subsection{Access}
-
-\subsection{Redeclear}
-	\item How can we perform test selection for Modelica?
-	\item SourceTree, InstanceTree, FlatTree
-\end{itemize}
+\subsection{Accesses}
 
 \section{JastAdd}
 JastAdd is a system based on reference attribute grammars, for extensible implementation of compilers. An Abstract Syntax Tree (AST) is used to represent a program. Attribute Grammars is amethod for declerativly defining computations on an AST. A node in an AST can have a synthezied attribute or an inherited attribute. An attribue is defined by an equation. A synthezied attribyte is defined in the node, an inherired attribute is defined in an ancestor node. A JastAdd specification is used to create an object-oriented framework.~\cite{aakesson2008development}
