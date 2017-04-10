@@ -104,19 +104,36 @@ Collection attributes are defined by partial definitions in a number of arbitrar
 \chapter[Implementation]{Implementation}
 
 \section{Dependency analysis}
-The Dependency analysis should produce a directed graph on dot format. Dot is a plain text representation of a graph, that can be visualized.
-\setlist{nolistsep}
-\begin{enumerate}[]
-\item A class depends on its parent class if it has one.
 
-\item A class depends on all accesses in its immediate subtree.
-\begin{enumerate}[]
-\item A class depends on the accessed class and all its subclasses.
-\item A class depends on all classes in the path to the accessed class.
+This dependency analysis is intended for source tree analysis.
+
+The dependency model we have developed have two types of dependencies, parent and access dependencies. Parent dependencies are dependencies that occur due to Modelicas lookup and scoping rules. This means that classes depend on the class they are defined in, their parent. consider the following code:
+
+\lstinputlisting[language=modelica]{modelica/parent1.mo}
+\begin{figure}
+    \centering
+    \includegraphics[]{EPS-graphs/parent1.pdf}
+  \caption{The dependency graph}
+  \label{fig:parent1graph}
+\end{figure}
+
+D has a dependency to A.k since it accesses the constant k. This is not a parent dependency and we will leave it for now. D also has dependencies to B and C due to Modelicas scoping and lookup rules. If k is redefined in either B or C, the reference to k in D will refer to k in C or B instead. To handle this type of dependency we say that a class has a dependency to its parent class.
+
+Another way to think about it is to consider what happens if a parent is removed. The class class can no longer be accessed since the path to it is broken. This will causes the compilation of the class to fail. The corresponding dependency graph is found in figure \ref{fig:parent1graph}.
+
+Access dependencies are all the other dependencies, dependencies created by accesses. However, one access can create one, many or no dependencies. If an access have path each part of the path creates a dependency. This is an example this.
+\lstinputlisting[language=modelica]{modelica/import1.mo}
+The class E have an access P.A.B.D referring to P.C.D. The access also creates dependencies to P, P.A and P.A.B. If P, P.A or P.A.B is removed E will fail to build since the path P.A.B.D is broken. Another case to consider is if B redefines D, D in E will then have changed.
+
+
+\subsection{Rules}
+\begin{enumerate}
+\item A class depends on its parent class. 
+\item A class depends on all accesses within it. (TODO: What about Redeclare?)
+\item A class depends on all classes in the paths of its accesses
+\item A class depends on all classes defined in a accessed class
 \end{enumerate}
-\end{enumerate}
-An immediate subtree is a tree with a single ClassDecl, the ClassDecl is allways the root.
-A immediate subtree is created by taking the AST subtree at a ClassDecl node and removing all subtrees with a ClassDecl, ElementRedeclare, child of Access or CompnentModification as root. So that the new tree only contains one ClassDecl, the root.
+
 
 In figure \ref{fig:extends}, class C is the accessed class in the immediate subtree of class A. Class B is in the path to the accessed class. Class E is an subclass to class C.
 Example:
@@ -151,7 +168,7 @@ If the constant k in package A is changed it will affect model C. Therefore we n
     \label{fig:GraphA}
 \end{figure}
 
-When we create an instance of A in model E, we want dependencies from E to A and everything in A, see figure \ref{fig:graphA}. We want to have a dependency from E to the subtree with A as a root, in this case the subtree consists of the nodes P.A, P.A.B and P.A.B.f.
+When we create an instance of A in model E, we want dependencies from E to A and everything in A, see figure \ref{fig:GraphA}. We want to have a dependency from E to the subtree with A as a root, in this case the subtree consists of the nodes P.A, P.A.B and P.A.B.f.
 
 \begin{figure}[H]
     \centering
