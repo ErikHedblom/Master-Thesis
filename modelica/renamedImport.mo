@@ -1,0 +1,1 @@
+import Conductance = Modelica.Fluid.Types.HydraulicConductance;
