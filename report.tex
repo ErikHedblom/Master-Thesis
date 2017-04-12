@@ -77,6 +77,8 @@ Det är viktig att testa mjukvara under utvecklingen för säkerställa att mjuk
 The aim of this project is too reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a method to exclude tests in a test suite unaffected by a specific change. Regression testing can then be performed with a reduced test suite without compromising quality. 
 
 \chapter[Background]{Background}
+
+\section{Model Testing Toolkit}
 \section{Regression Testing}
 Regression tests are used to make sure that regression dose not occur. Software regression is when something that did work before do not work as expected due to a change.
 \section{Test Selection}
@@ -159,7 +161,7 @@ JastAdd is a system based on reference attribute grammars, for extensible implem
 
 Collection attributes are defined by partial definitions in a number of arbitrary nodes. A node that have a partial definition of a collection attribute contributes to the value of the collection attribute. A collection attribute is usually a set where the empty set is the initial value of the collection attribute. The contributors, the nodes that contributes to the collection attribute, can for example contribute by adding elements to the set.~\cite{magnusson2007extending}
 
-\chapter[Implementation]{Implementation}
+\chapter[Dependency analysis]{Dependency analysis}
 
 \section{Dependency analysis}
 
@@ -242,7 +244,7 @@ To find the dependency from model D to function f in C, we want to add dependenc
 \subsection{Incremental updating}
 
 \section{Test selection}
-
+\chapter[Implementation]{Implementation}
 \chapter[Evaluation]{Evaluation}
 \begin{itemize}
 	\item Savings
@@ -254,18 +256,22 @@ To find the dependency from model D to function f in C, we want to add dependenc
 \chapter[Discussion]{Discussion}
 
 
+
 \begin{itemize}
 	\item Validity
 	\item Analysis granularity
+    \item Good and bad Modelica patterns for dependency analysis
 \end{itemize}
 
 \section{Related Work}
+
+% Kan kanske flyttas till bakgrunden ev till test selection delen.
 A master thesis similar to this one has previously been done at LTH. In the previously master thesis JastAdd was used to decrease the cost for testing of Android projects ~\cite{kampe2012dependroid}. There is research done on test selection. A method for safe RTS for Java has been developed before, that has many similarities with the method we are developing for Modelica. 
 
 Studies have been conducted to investigate at which granularity dependency analysis pays off the most and how much percision it can have with out getting to expensive ~\cite{DBLP:conf/sigsoft/LegunsenHSLZM16}. It has also been done work in other techniques to achieve shorter time for testing, including dynamic test selection.
 
 Det har tidigare gjorts ett liknande examensarbete på LTH. Där användes JastAdd för att minska kostnaden för testning av Android projekt. Det finns även forskning på området. Nästan precis samma sak som vi ska göra har gjorts tidigare men för Java ~\cite{DBLP:conf/pppj/OqvistHM16}. Utöver detta har det även tidigare undersökts hur finkornig en beroendeanalys kan vara utan att den blir för dyr ~\cite{DBLP:conf/sigsoft/LegunsenHSLZM16}. Det finns även arbete inom andra tekniker för att uppnå kortare test tider, till exempel dynamiskt testurval.
-
+\chapter[Conclusion]{Conclusion}
 \makebibliography{thebib}
 
 \begin{appendices}
