@@ -74,19 +74,24 @@ Det är viktig att testa mjukvara under utvecklingen för säkerställa att mjuk
 
 \section{Problem Description / Aim / Goal}
 
-The aim of this project is too reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a method to exclude tests in a test suite unaffected by a specific change. Regression testing can then be performed with a reduced test suite without compromising quality. 
+The aim of this project is too reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a method to exclude tests in a test suite unaffected by a specific change. Regression testing can then be performed with a reduced test suite without compromising quality.
+
+\section{Regression Testing}
+Regression tests are used to make sure that regression dose not occur. Software regression is when something that did work before do not work as expected due to a change.
 
 \chapter[Background]{Background}
 
 \section{Model Testing Toolkit}
-\section{Regression Testing}
-Regression tests are used to make sure that regression dose not occur. Software regression is when something that did work before do not work as expected due to a change.
+Model testing Toolkit, MTT, is based on nose tests for Python \cite{noseDoc}. Nose finds all tests automatically and runs them if nothing is specified. In MTT a test case is represented by a xml file and every test case has a Modelica model. So when you like to run test cases only associated with a specific model it's easy to select only the test cases which have the model you are interested in.
+
+When tests are run in MTT a HTML report of the results are created.
+
 \section{Test Selection}
 \begin{itemize}
 	\item What is test selection?
 	\item Different approaches
 \end{itemize}
-A safe Regression Test Selection (RTS) method will select all tests that produce a new result after a specific change. A safe RTS method is equivalent to running all tests. For a RTS method to be useful the RTS algorithm should run in less time than it takes to run the excluded tests.
+A safe Regression Test Selection (RTS) method will select all tests that produce a new result after a specific change. A safe RTS method is equivalent to running all tests. For a RTS method to be useful the RTS algorithm should run in less time than it takes to run the excluded tests. This is not necessary for each run, on average the overhead needs to be less than the time it takes to run the excluded tests.
 
 
 \section{Modelica}
@@ -179,7 +184,7 @@ The dependency model we have developed have two types of dependencies, parent an
 
 D has a dependency to A.k since it accesses the constant k. This is not a parent dependency and we will leave it for now. D also has dependencies to B and C due to Modelicas scoping and lookup rules. If k is redefined in either B or C, the reference to k in D will refer to k in C or B instead. To handle this type of dependency we say that a class has a dependency to its parent class.
 
-Another way to think about it is to consider what happens if a parent is removed. The class class can no longer be accessed since the path to it is broken. This will causes the compilation of the class to fail. The corresponding dependency graph is found in figure \ref{fig:parent1graph}.
+Another way to think about it is to consider what happens if a parent is removed. The class can no longer be accessed since the path to it is broken. This will cause the compilation of the class to fail. The corresponding dependency graph is found in figure \ref{fig:parent1graph}.
 
 Access dependencies are all the other dependencies, dependencies created by accesses. However, one access can create one, many or no dependencies. If an access have path each part of the path creates a dependency. This is an example this.
 \lstinputlisting[language=modelica]{modelica/import1.mo}
@@ -199,31 +204,31 @@ In figure \ref{fig:extends}, class C is the accessed class in the immediate subt
 Example:
 \begin{figure}[H]
     \centering
-    \subfloat{{\includegraphics[]{EPS-graphs/extends.eps}}}
-    \qquad
-    \subfloat{{\lstinputlisting[language=modelica]{modelica/extends.mo}}}
+    	\subfloat{{\includegraphics[scale=0.8]{EPS-graphs/extends.eps}}}
+    	\qquad
+    	\subfloat{\raisebox{4.5 cm}{\lstinputlisting[language=modelica]{modelica/extends.mo}}}
     \caption{Extends Graph}
     \label{fig:extends}
 \end{figure}
 Dependency rules
 \begin{figure}[H]
     \centering
-    \subfloat{{\includegraphics[]{EPS-graphs/ParentExample.eps}}}
+    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/ParentExample.eps}}}
     \qquad
-    \subfloat{{\lstinputlisting[language=modelica]{modelica/parentExample.mo}}}
+    \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{modelica/parentExample.mo}}}
     \caption{Parent graph}
     \label{fig:parentGraph}
 \end{figure}
 
-There is a constant k defined in package A. If we define a constant k in model B, the k accessed in C will be k defined in model B. Therefore we need a dependency from C to B.
+There is a constant k defined in package A, in figure \ref{fig:parentGraph}. If we define a constant k in model B, the k accessed in C will be k defined in model B instead of the k defined in A. Therefore we need a dependency from C to B.
 
-If the constant k in package A is changed it will affect model C. Therefore we need a dependency from C to A. With rule number 1 we get dependencies from C to B and from B to A. So we have an indirect dependency from C to A, figure \ref{fig:parentGraph}.
+If the constant k in package A is changed it will affect model C. Therefore we need a dependency from C to A. With rule number 1 we get dependencies from C to B and from B to A. So we have an indirect dependency from C to A.
 
 \begin{figure}[H]
     \centering
-    \subfloat{{\includegraphics[]{EPS-graphs/GraphA.eps}}}
+    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/GraphA.eps}}}
     \qquad
-    \subfloat{{\lstinputlisting[language=modelica]{modelica/exampleA.mo}}}
+    \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{modelica/exampleA.mo}}}
     \caption{Graph A}
     \label{fig:GraphA}
 \end{figure}
@@ -232,10 +237,14 @@ When we create an instance of A in model E, we want dependencies from E to A and
 
 \begin{figure}[H]
     \centering
-    \subfloat{{\includegraphics[]{EPS-graphs/DotAccess.eps}}}
+    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/DotAccess.eps}}}
     \qquad
-    \subfloat{{\lstinputlisting[language=modelica]{modelica/DotAccess.mo}}}
-    \subfloat{{\lstinputlisting[language=modelica]{modelica/DotAccessC.mo}}}
+    \subfloat{\raisebox{10 cm}{
+    	\begin{minipage}[t]{.5\textwidth}
+			\centering
+			\lstinputlisting[language=modelica]{modelica/DotAccess.mo}
+			\lstinputlisting[language=modelica]{modelica/DotAccessC.mo}
+		\end{minipage}}}
     \caption{Dot Access}
     \label{fig:dotAccess}
 \end{figure}
