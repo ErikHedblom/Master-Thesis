@@ -11,7 +11,7 @@
 
 \usepackage{hyperref}
 \usepackage{pdfpages}
-
+\usepackage{rotating}
 \usepackage{enumitem}
 \usepackage{subfig}
 \usepackage{float}
@@ -302,6 +302,20 @@ In our dependency analysis we can't analyze the dependencies in external files. 
 	\item Savings
 	\item Precision
 \end{itemize}
+
+\begin{figure}
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.5\textwidth]{EPS-graphs/one_file.eps}}
+    \caption{One file changed.}
+    \label{fig:onefile}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.5\textwidth]{EPS-graphs/history_plot.eps}}
+    \caption{history plot for MSL.}
+    \label{fig:mslhistory}
+\end{figure}
 
 \chapter[Future Work]{Future Work}
 	
