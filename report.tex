@@ -168,10 +168,10 @@ Collection attributes are defined by partial definitions in a number of arbitrar
 
 \section{Dependency Rules}
 
-To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica mainly pertaining to the lookup of names in the source tree. The rules have been adjusted to work around these limitations. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. 
+To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. 
 
 \begin{enumerate}
-\item A class depends on its parent class. 
+\item A class depends on its encapsulating class. 
 \item A class depends on all accesses within it.
 \item A class depends on all classes in the paths of its accesses.
 \item A class depends on all classes defined in an accessed class.
