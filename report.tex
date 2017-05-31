@@ -67,35 +67,34 @@ Leave a \textit{2cm} vertical space after the abstract and provide a few keyword
 \chapter[Introduction]{Introduction}
 
 \section{Motivation / Background}
-During software development, when a change is integrated into a project all previous testing have to be rerun. Test suites usually accumulates over time and regression testing can therefore be very time consuming and expensive. Depending on the change some or most of the test may be unrelated to the change and by excluding unrelated tests significant time savings could be achieved. ~\cite{DUMMY}
+During software development, when a change is integrated into a project all previous testing have to be rerun. Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the test may be unrelated to the change and by excluding unrelated tests significant time savings could be achieved. ~\cite{DUMMY}
 
 
 Det är viktig att testa mjukvara under utvecklingen för säkerställa att mjukvaran fungerar korrekt. När mjukvaran uppdateras måste testfall som redan testats utföras igen för att kontrollera att allt som fungerade innan uppdatering fortfarande fungerar efter. Det kan vara väldigt tidskrävande att köra samtliga test. Det finns därför mycket tid att spara om det går att utesluta test som garanterat inte har påverkas. För språket Modelica finns det inget verktyg för detta och det är därför intressant att utveckla ett.
 
 \section{Problem Description / Aim / Goal}
 
-The aim of this project is too reduce testing times for Modelica projects without reducing the testing quality. This will be done by developing and implementing a method to exclude tests in a test suite unaffected by a specific change. Regression testing can then be performed with a reduced test suite without compromising quality.
+The aim of this project is too reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a method to exclude tests in a test suite unaffected by a specific change. Regression testing can then be performed with a reduced test suite without compromising quality.
 
 \section{Regression Testing}
-Regression tests are used to make sure that regression does not occur. Software regression is when a software change breaks previously implemented functionality.
+Regression tests are used to make sure that regression dose not occur. Software regression is when something that did work before do not work as expected due to a change.
 
 \chapter[Background]{Background}
 
-%\section{Model Testing Toolkit}
-%Model testing Toolkit, MTT, is based on nose tests for Python \cite{noseDoc}. Nose finds all tests automatically and runs them if nothing is specified. In MTT a test case is represented by a xml file and every test case has a Modelica model. So when you like to run test cases only associated with a specific model it's easy to select only the test cases which have the model you are interested in.
+\section{Model Testing Toolkit}
+Model testing Toolkit, MTT, is based on nose tests for Python \cite{noseDoc}. Nose finds all tests automatically and runs them if nothing is specified. In MTT a test case is represented by a xml file and every test case has a Modelica model. So when you like to run test cases only associated with a specific model it's easy to select only the test cases which have the model you are interested in.
 
-%When tests are run in MTT a HTML report of the results are created.
+When tests are run in MTT a HTML report of the results are created.
 
-\section{Safe Test Selection}
+\section{Test Selection}
 \begin{itemize}
 	\item What is test selection?
 	\item Different approaches
 \end{itemize}
-To reduce testing times a test selection technique can be used. There are many different test selection techniques with different focuses. A Safe Test Selection (STS) technique focuses on not excluding tests that could fail. If a change is introduced to the system a STS will at least choose all test affected, directly or indirectly, by the change. The most naive STS is to to choose all test, but this will not yield any improvements in testing time. For a STS to be useful the STS algorithm should produce a STS smaller than all the tests. Furthermore, the overhead of the STS algorithm must be less than the savings gained buy excluding tests. This is not necessary for each run but on average there must be a net gain in savings.
+A safe Regression Test Selection (RTS) method will select all tests that produce a new result after a specific change. A safe RTS method is equivalent to running all tests. For a RTS method to be useful the RTS algorithm should run in less time than it takes to run the excluded tests. This is not necessary for each run, on average the overhead needs to be less than the time it takes to run the excluded tests.
 
 
 \section{Modelica}
-Modelica is a declarative object oriented modeling language used for physical modeling.
 \begin{itemize}
 	\item What is Modelica?
 	\item How can we perform test selection for Modelica?
@@ -103,8 +102,6 @@ Modelica is a declarative object oriented modeling language used for physical mo
 	\end{itemize}
 
 \subsection{Classes}
-
-% TODO: Mabye this should be part of the implementation section? Or reformulated, Modeluca has no concept of classes but JModelica does. Shouled we introduce it?
 Basically everything in Modelica is classes. Built in types such as Integer are Modelica classes. Packages, models and functions are classes. Modelica is an object-oriented language, inheritance is possible. The extends clause is used to create an subclass of an superclass. In figure \ref{fig:classDefinition}, P2 is a subclass to P1, which is a superclass to P2. The subclass inherits everything in the superclass. The subclass may have more content than the superclass, but all the content in the super class is also in the subclass. 
 
 \begin{figure}[H]
@@ -210,7 +207,7 @@ Example:
     \caption{Extends Graph}
     \label{fig:extends}
 \end{figure}
-Dependency rules
+
 \begin{figure}[H]
     \centering
     \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/ParentExample.eps}}}
@@ -224,16 +221,7 @@ There is a constant k defined in package A, in figure \ref{fig:parentGraph}. If 
 
 If the constant k in package A is changed it will affect model C. Therefore we need a dependency from C to A. With rule number 1 we get dependencies from C to B and from B to A. So we have an indirect dependency from C to A.
 
-\begin{figure}[H]
-    \centering
-    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/GraphA.eps}}}
-    \qquad
-    \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{modelica/exampleA.mo}}}
-    \caption{Graph A}
-    \label{fig:graphA}
-\end{figure}
-
-When we create an instance of A in model E, we want dependencies from E to A and everything in A, see figure \ref{fig:graphA}. We want to have a dependency from E to the subtree with A as a root, in this case the subtree consists of the nodes P.A, P.A.B and P.A.B.f. This is because we are working in the source tree in the compiler and there's no functionality to lookup a. We can't find f in a.B.f.
+If the components or classes that is used in a class is changed it might change the behavior of that class. Thus we need rule number 2.
 
 \begin{figure}[H]
     \centering
@@ -249,7 +237,18 @@ When we create an instance of A in model E, we want dependencies from E to A and
     \label{fig:dotAccess}
 \end{figure}
 
-To find the dependency from model D to function f in C, we want to add dependencies from all the parts of an Dot access. We want dependencies from D to A, A.B and C.f.
+In figure \ref{fig:dotAccess}, we want dependencies from model D to all parts in the path of the access of f. The parts of the access of f is P.A, P.A.B and P.C.f. If package A or B is deleted it will cause a compilation error when  model D is compiled. This is way rule number 3 is needed.
+
+\begin{figure}[H]
+    \centering
+    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/GraphA.eps}}}
+    \qquad
+    \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{modelica/exampleA.mo}}}
+    \caption{Instantiation}
+    \label{fig:instantiation}
+\end{figure}
+
+When we create an instance of A in model E, we want dependencies from E to A and everything in A, see figure \ref{fig:instantiation}. We want to have a dependency from E to the subtree with A as a root, in this case the subtree consists of the nodes P.A, P.A.B and P.A.B.f. This is because we are working in the source tree in the compiler and there's no functionality to lookup a, the instance of A. We can't find f in a.B.f. This is way rule number 4 is needed.
 
 \begin{figure}[H]
     \centering
@@ -271,7 +270,7 @@ If Modelica had been imported the lookup of Modelica.Constants.pi had succeeded 
     \label{fig:newPackageWithoutImport}
 \end{figure}
 
-Handling imports as other accesses a lot of extra dependencies, and in case of imports it's not necessary to dependencies to classes defined in the imported class. And therefore we need rule number 5. In case of an import, the other rules makes sure that when something in the imported class is used we get a dependency to all the accessed classes. In figure \ref{fig:importRootPackage}, we get a dependency from Modelica.Fluid.Pipes to Modelica.Constants and not to all classes that might be in the package Modelica.
+Handling imports as other accesses a lot of extra dependencies, and in case of imports it's not necessary to dependencies to classes defined in the imported class. And therefore we need rule number 5. In case of an import, the other rules makes sure that when something in the imported class is used we get a dependency to all the accessed classes. In figure \ref{fig:importRootPackage}, we get a dependency from Modelica.Fluid.Pipes to Modelica.Constants, not to all classes that might be in the package Modelica.
 
 
 \subsection{Incremental updating}

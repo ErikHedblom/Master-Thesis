@@ -1,7 +1,8 @@
 package P
-
   package A
-    package B = C;
+    package B
+      extends C;
+    end B;
   end A;
 
   package C
@@ -12,5 +13,4 @@ package P
   package E
     import P.A.B.D;
   end E;
-
 end P;
