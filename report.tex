@@ -104,13 +104,9 @@ A safe Regression Test Selection (RTS) method will select all tests that produce
 \subsection{Classes}
 Basically everything in Modelica is classes. Built in types such as Integer are Modelica classes. Packages, models and functions are classes. Modelica is an object-oriented language, inheritance is possible. The extends clause is used to create an subclass of an superclass. In figure \ref{fig:classDefinition}, P2 is a subclass to P1, which is a superclass to P2. The subclass inherits everything in the superclass. The subclass may have more content than the superclass, but all the content in the super class is also in the subclass. 
 
-Modelica allows short declarations of classes. The definition of a class to the left in figure \ref{fig:classDefinition}, is equivalent to the definition to the right \cite{modelicamodelica}.
-
 \begin{figure}[H]
     \centering
     \subfloat{{\lstinputlisting[language=modelica]{modelica/packageDecl.mo}}}
-    \qquad
-    \subfloat{{\lstinputlisting[language=modelica]{modelica/shortPackageDecl.mo}}}
     \caption{Class definition}
     \label{fig:classDefinition}
 \end{figure}
@@ -186,7 +182,7 @@ D has a dependency to A.k since it accesses the constant k. This is not a parent
 
 Another way to think about it is to consider what happens if a parent is removed. The class can no longer be accessed since the path to it is broken. This will cause the compilation of the class to fail. The corresponding dependency graph is found in figure \ref{fig:parent1graph}.
 
-Access dependencies are all the other dependencies, dependencies created by accesses. However, one access can create one, many or no dependencies. If an access have path each part of the path creates a dependency. This is an example this.
+Access dependencies are all the other dependencies, dependencies created by accesses. However, one access can create one, many or no dependencies. If an access have a path,s each part of the path creates a dependency. This is an example:
 \lstinputlisting[language=modelica]{modelica/import1.mo}
 The class E have an access P.A.B.D referring to P.C.D. The access also creates dependencies to P, P.A and P.A.B. If P, P.A or P.A.B is removed E will fail to build since the path P.A.B.D is broken. Another case to consider is if B redefines D, D in E will then have changed.
 
@@ -194,9 +190,10 @@ The class E have an access P.A.B.D referring to P.C.D. The access also creates d
 \subsection{Rules}
 \begin{enumerate}
 \item A class depends on its parent class. 
-\item A class depends on all accesses within it. (TODO: What about Redeclare?)
-\item A class depends on all classes in the paths of its accesses
-\item A class depends on all classes defined in a accessed class
+\item A class depends on all accesses within it.
+\item A class depends on all classes in the paths of its accesses.
+\item A class depends on all classes defined in an accessed class.
+\item Exception of rule 4. A class doesn't depend on classes defined in an accessed class if the accessed class is accessed through an import.
 \end{enumerate}
 
 
@@ -233,7 +230,7 @@ If the constant k in package A is changed it will affect model C. Therefore we n
     \label{fig:graphA}
 \end{figure}
 
-When we create an instance of A in model E, we want dependencies from E to A and everything in A, see figure \ref{fig:graphA}. We want to have a dependency from E to the subtree with A as a root, in this case the subtree consists of the nodes P.A, P.A.B and P.A.B.f.
+When we create an instance of A in model E, we want dependencies from E to A and everything in A, see figure \ref{fig:graphA}. We want to have a dependency from E to the subtree with A as a root, in this case the subtree consists of the nodes P.A, P.A.B and P.A.B.f. This is because we are working in the source tree in the compiler and there's no functionality to lookup a. We can't find f in a.B.f.
 
 \begin{figure}[H]
     \centering
@@ -250,6 +247,30 @@ When we create an instance of A in model E, we want dependencies from E to A and
 \end{figure}
 
 To find the dependency from model D to function f in C, we want to add dependencies from all the parts of an Dot access. We want dependencies from D to A, A.B and C.f.
+
+\begin{figure}[H]
+    \centering
+    \lstinputlisting[language=modelica]{modelica/importRootPackage.mo}
+    \caption{Root package import}
+    \label{fig:importRootPackage}
+\end{figure}
+
+If we look at figure \ref{fig:importRootPackage}, Modelica.Constants.pi could be accessed without first importing Modelica since the package Pipes, which Modelica.Constants.pi is used in, is in the same enclosing package as the package Constants.
+
+But now we instead look at figure \ref{fig:newPackageWithoutImport}, where Modelica not is imported and there is a new package also named Modelica in the package Fluid. When the new package Modelica.Fluid.Modelica is added pi won't be found. When trying to lookup Modelica.Constants.pi the package Modelica.Fluid.Modelica will found and it doesn't contain a class with the name Constants, so the lookup will fail.
+
+If Modelica had been imported the lookup of Modelica.Constants.pi had succeeded since an import starts at a root level package. This is the reason for the imports of the root package that are unnecessary at the moment but guarantees the right class or component always will be found. Even if someone in the future adds a new package with same name as an existing package.
+
+\begin{figure}[H]
+    \centering
+    \lstinputlisting[language=modelica]{modelica/newPackageWithoutImport.mo}
+    \caption{New package without import}
+    \label{fig:newPackageWithoutImport}
+\end{figure}
+
+Handling imports as other accesses a lot of extra dependencies, and in case of imports it's not necessary to dependencies to classes defined in the imported class. And therefore we need rule number 5. In case of an import, the other rules makes sure that when something in the imported class is used we get a dependency to all the accessed classes. In figure \ref{fig:importRootPackage}, we get a dependency from Modelica.Fluid.Pipes to Modelica.Constants and not to all classes that might be in the package Modelica.
+
+
 \subsection{Incremental updating}
 
 \section{Test selection}
@@ -259,9 +280,9 @@ We have implemented two different options for the dependency analysis, it can ei
 
 If a class depends on something in, a library that aren't a part of any of the following: 
 \begin{itemize}
-	\item The root library the class is in.
-	\item The root library any of the other specified classes are in.
-	\item The root library of, a library that are set to be included in the analysis
+	\item The library the class is in.
+	\item The library any of the other specified classes are in.
+	\item The library of, a class that are set to be included in the analysis
 \end{itemize}
 the dependency to that library is not included in the dependency graph. Lets look at an example where we specify that class P.A, in figure \ref{fig:libraryGraph}, has changed. Then P is the root library A is in. A have a dependency to B in library MSL, here we will not include MSL.B in the dependency analysis and by that neither classes that MSL.B depends on. When we find a dependency to MSL.B we stops the analysis there.
 
