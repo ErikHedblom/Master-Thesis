@@ -164,11 +164,23 @@ Collection attributes are defined by partial definitions in a number of arbitrar
 
 \chapter[Dependency analysis]{Dependency analysis}
 
+
+
+\section{Dependency Rules}
+
+To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica mainly pertaining to the lookup of names in the source tree. The rules have been adjusted to work around these limitations. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. 
+
+\begin{enumerate}
+\item A class depends on its parent class. 
+\item A class depends on all accesses within it.
+\item A class depends on all classes in the paths of its accesses.
+\item A class depends on all classes defined in an accessed class.
+\item Exception of rule 4. A class doesn't depend on classes defined in an accessed class if the accessed class is accessed through an import.
+\end{enumerate}
+
 \section{Dependency analysis}
 
-This dependency analysis is intended for source tree analysis.
-
-The dependency model we have developed have two types of dependencies, parent and access dependencies. Parent dependencies are dependencies that occur due to Modelicas lookup and scoping rules. This means that classes depend on the class they are defined in, their parent. consider the following code:
+The dependency model we have developed have two types of dependencies, parent and access dependencies. Parent dependencies are dependencies that occur due to Modelicas lookup and scoping rules. This means that classes depend on the class they are defined in, their parent. This is handled by rule 1. Consider the following code:
 
 \lstinputlisting[language=modelica]{modelica/parent1.mo}
 \begin{figure}
@@ -187,14 +199,7 @@ Access dependencies are all the other dependencies, dependencies created by acce
 The class E have an access P.A.B.D referring to P.C.D. The access also creates dependencies to P, P.A and P.A.B. If P, P.A or P.A.B is removed E will fail to build since the path P.A.B.D is broken. Another case to consider is if B redefines D, D in E will then have changed.
 
 
-\subsection{Rules}
-\begin{enumerate}
-\item A class depends on its parent class. 
-\item A class depends on all accesses within it.
-\item A class depends on all classes in the paths of its accesses.
-\item A class depends on all classes defined in an accessed class.
-\item Exception of rule 4. A class doesn't depend on classes defined in an accessed class if the accessed class is accessed through an import.
-\end{enumerate}
+
 
 
 In figure \ref{fig:extends}, class C is the accessed class in the immediate subtree of class A. Class B is in the path to the accessed class. Class E is an subclass to class C.
