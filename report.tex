@@ -226,7 +226,7 @@ In figure \ref{fig:dotAccess}, we want dependencies from model \textit{C} to all
     \label{fig:component}
 \end{figure}
 
-Rule 4 is needed to handle the case in figure \ref{fig:component}. Ideally the access \textit{a.B.f} would create dependencies to \textit{A}, \textit{B} and \textit{f}. Be cause \textit{a} is a component, \textit{P.A.B.f} cannot be resolved and now dependencies can be created. Instead rule 4 is used to create to dependences to everything defined in A when \textit{a} is declared.
+Rule 4 is needed to handle the case in figure \ref{fig:component}. Ideally the access \textit{a.B.f} would create dependencies to \textit{A}, \textit{B} and \textit{f}. Because \textit{a} is a component, \textit{P.A.B.f} cannot be resolved and now dependencies can be created. Instead rule 4 is used to create to dependencies to everything defined in A when \textit{a} is declared.
 
 \section{TODO} 
 \begin{itemize}
