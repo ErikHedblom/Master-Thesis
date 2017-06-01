@@ -194,14 +194,14 @@ To build the dependency graph we have constructed a set of rules to determine wh
 
 The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in JModelica not all accesses in a class can be follows and therefor not all dependencies from this rule can be created. We will later see how the other rules compensate for this. 
 
-The next rule, rule 2, will create a dependency from a class to it's encapsulating class. An example can be found in figure \ref{fig:parentGraph}. In the example there is a constant k defined in package A. If another with the same name were to be added in in model B the reference to k in C will change to refer to the new constant. Therefore we need a dependency from C to B.
+The next rule, rule 2, will create a dependency from a class to it's encapsulating class. An example can be found in figure \ref{fig:parentGraph}. In the example there is a constant \textit{k} defined in package \textit{A}. If another with the same name were to be added in in model \textit{B} the reference to \textit{k} in \textit{C} will change to refer to the new constant. Therefore we need a dependency from \textit{C} to \textit{B}.
 
-In figure \ref{fig:parentGraph} we also expect rule 1 to create a dependency from C to A due to k being located in A. However, the access k cannot be resolved and we will miss the dependency to A. In this case we can see that rule 2 can compensate by adding an indirect dependency from C to A. 
-If the constant k in package A is changed it will affect model C. Therefore we need a dependency from C to A. With rule number 1 we get dependencies from C to B and from B to A. So we have an indirect dependency from C to A.
+In figure \ref{fig:parentGraph} we also expect rule 1 to create a dependency from \textit{C} to \textit{A} due to \textit{k} being located in \textit{A}. However, the access \textit{k} cannot be resolved and we will miss the dependency to \textit{A}. In this case we can see that rule 2 can compensate by adding an indirect dependency from \textit{C} to \textit{A}. 
+If the constant k in package \textit{A} is changed it will affect model \textit{C}. Therefore we need a dependency from \textit{C} to \textit{A}. With rule number 1 we get dependencies from \textit{C} to \textit{B} and from \textit{B} to \textit{A}. So we have an indirect dependency from \textit{C} to \textit{A}.
 
-Another way to think about rule 2 is to consider what happens if A or B is removed. The C can no longer be accessed since the path to C is broken. This will cause the compilation of C to fail.
+Another way to think about rule 2 is to consider what happens if \textit{A} or \textit{B} is removed. The \textit{C} can no longer be accessed since the path to \textit{C} is broken. This will cause the compilation of C to fail.
 
-\begin{figure}[!hbtp]
+\begin{figure}[!htbp]
     \centering
     \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/DotAccess.eps}}}
     \qquad
@@ -214,20 +214,21 @@ Another way to think about rule 2 is to consider what happens if A or B is remov
     \label{fig:dotAccess}
 \end{figure}
 
-In figure \ref{fig:dotAccess}, we want dependencies from model C to all parts of the access to f. This means that in addition to a dependency to f a dependency to A is also required. If package A is removed it will cause a compilation error when model C is compiled. This is caught by rule 3 and is why it is needed.
+In figure \ref{fig:dotAccess}, we want dependencies from model \textit{C} to all parts of the access to \textit{f}. This means that in addition to a dependency to \textit{f} a dependency to \textit{A} is also required. If package \textit{A} is removed it will cause a compilation error when model \textit{C} is compiled. This is caught by rule 3 and is why it is needed.
 
-\section{TODO} 
 
 \begin{figure}[!htbp]
     \centering
-    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/GraphA.eps}}}
+    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/Component.eps}}}
     \qquad
-    \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{modelica/exampleA.mo}}}
-    \caption{Instantiation}
-    \label{fig:instantiation}
+    \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{modelica/Component.mo}}}
+    \caption{Access though component}
+    \label{fig:component}
 \end{figure}
 
-When we create an instance of A in model E, we want dependencies from E to A and everything in A, see figure \ref{fig:instantiation}. We want to have a dependency from E to the subtree with A as a root, in this case the subtree consists of the nodes P.A, P.A.B and P.A.B.f. This is because we are working in the source tree in the compiler and there's no functionality to lookup a, the instance of A. We can't find f in a.B.f. This is way rule number 4 is needed.
+Rule 4 is needed to handle the case in figure \ref{fig:component}. Ideally the access \textit{a.B.f} would create dependencies to \textit{A}, \textit{B} and \textit{f}. Be cause \textit{a} is a component, \textit{P.A.B.f} cannot be resolved and now dependencies can be created. Instead rule 4 is used to create to dependences to everything defined in A when \textit{a} is declared.
+
+\section{TODO} 
 
 \begin{figure}[!htbp]
     \centering
