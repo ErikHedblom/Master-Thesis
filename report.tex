@@ -80,12 +80,6 @@ The aim of this project is too reduce testing times for Modelica projects withou
 Regression tests are used to make sure that regression dose not occur. Software regression is when something that did work before do not work as expected due to a change.
 
 \chapter[Background]{Background}
-
-\section{Model Testing Toolkit}
-Model testing Toolkit, MTT, is based on nose tests for Python \cite{noseDoc}. Nose finds all tests automatically and runs them if nothing is specified. In MTT a test case is represented by a xml file and every test case has a Modelica model. So when you like to run test cases only associated with a specific model it's easy to select only the test cases which have the model you are interested in.
-
-When tests are run in MTT a HTML report of the results are created.
-
 \section{Test Selection}
 \begin{itemize}
 	\item What is test selection?
@@ -93,13 +87,24 @@ When tests are run in MTT a HTML report of the results are created.
 \end{itemize}
 A safe Regression Test Selection (RTS) method will select all tests that produce a new result after a specific change. A safe RTS method is equivalent to running all tests. For a RTS method to be useful the RTS algorithm should run in less time than it takes to run the excluded tests. This is not necessary for each run, on average the overhead needs to be less than the time it takes to run the excluded tests.
 
+\section{Compiler}
+\begin{itemize}
+	\item SourceTree, InstanceTree, FlatTree
+\end{itemize}
+JModelica is an open source compiler that is developed and maintained by Modelon. OPTIMICA Compiler Toolkit is the commercial version of JModelica.
+
+\section{Model Testing Toolkit}
+Model testing Toolkit, MTT is a model testing toolkit that's going to use the test selection, MTT calls the OPTIMICA Compiler Toolkit where the dependency analysis is implemented.
+
+MTT is based on nose tests for Python \cite{noseDoc}. Nose finds all tests automatically and runs them if nothing is specified. In MTT a test case is represented by a xml file and every test case has a Modelica model. So when you like to run test cases only associated with a specific model it's easy to select only the test cases which have the model you are interested in. When tests are run in MTT a HTML report of the results are created.
 
 \section{Modelica}
 \begin{itemize}
 	\item What is Modelica?
 	\item How can we perform test selection for Modelica?
-	\item SourceTree, InstanceTree, FlatTree
 	\end{itemize}
+
+Modelica is an declarative, object oriented programming language where models are described by equations. It's used to get high performance simulations.
 
 \subsection{Classes}
 Basically everything in Modelica is classes. Built in types such as Integer are Modelica classes. Packages, models and functions are classes. Modelica is an object-oriented language, inheritance is possible. The extends clause is used to create an subclass of an superclass. In figure \ref{fig:classDefinition}, P2 is a subclass to P1, which is a superclass to P2. The subclass inherits everything in the superclass. The subclass may have more content than the superclass, but all the content in the super class is also in the subclass. 
@@ -119,23 +124,6 @@ A redeclare can be used to replace the declaration of an class or component with
     \label{fig:redeclare}
 \end{figure}
 
-\subsection{Import}
-Imports are possible in Modelica to refer to a class or component in an other package. An import creates an alias. In the import below HydralicConductance will be mapped to the fully qualified name Modelica.Fluid.Types.HydralicConductance.
-
-\lstinputlisting[language=modelica]{modelica/import.mo}
-
-Modelica offers the option to rename an import. Here an alias will be created where the name Conductance is mapped to the fully qualified name Modelica.Fluid.Types.HydralicConductance.
-
-\lstinputlisting[language=modelica]{modelica/renamedImport.mo}
-
-Modelica allows the use of wildcard imports. Using wildcards it isn't possible to rename the import. This wildcard import will create an alias for every definition in Modelica.Fluid.
-
-\lstinputlisting[language=modelica]{modelica/wildcardImport.mo}
-
-To avoid multiple imports and wildcard imports, an multiple definition import can be used, from Modelica specification 3.3 \cite{modelicamodelica}. This multiple definition import creates two aliases, one mapping HydralicConductance to Modelica.Fluid.Types.HydralicConductance and one mapping HydralicResistance to Modelica.Fluid.Types.HydralicResistance.
-
-\lstinputlisting[language=modelica]{modelica/multipleDefinitionImport.mo}
-
 \subsection{Name lookup}
 In order to find a match for a name, Modelica starts by looking at the first name in a qualified name. Take for example the fully qualified name Modelica.Fluid.Pipes.StaticPipe. In this example Modelica is the first name in the qualified name.
 
@@ -154,6 +142,23 @@ If a match for the name still not is found, Modelica continues by using the same
 The search is done in the same way for the first name in a qualified name and an unqualified name. An unqualified name doesn't contain a dot, an unqualified name consists of only one name. StaticPipe is an example of an unqualified name.
 
 If a name is a part of a qualified name and isn't the first name in the qualified name, it must be a nested definition within the definition of the previous name in the qualified name. In the example Modelica.Fluid.Pipes.StaticPipe, Fluid must be a nested definition within Modelica.\cite{modelicamodelica, tillermodelica}
+
+\subsection{Import}
+Imports are possible in Modelica to refer to a class or component in another package that is not in the same enclosing package. To find an imported object Modelica looks at root packages, so the fully qualified name needs to be used in an import. An import creates an alias. In the import below HydralicConductance will be mapped to the fully qualified name Modelica.Fluid.Types.HydralicConductance.
+
+\lstinputlisting[language=modelica]{modelica/import.mo}
+
+Modelica offers the option to rename an import. Here an alias will be created where the name Conductance is mapped to the fully qualified name Modelica.Fluid.Types.HydralicConductance.
+
+\lstinputlisting[language=modelica]{modelica/renamedImport.mo}
+
+Modelica allows the use of wildcard imports. Using wildcards it isn't possible to rename the import. This wildcard import will create an alias for every definition in Modelica.Fluid.
+
+\lstinputlisting[language=modelica]{modelica/wildcardImport.mo}
+
+To avoid multiple imports and wildcard imports, an multiple definition import can be used, from Modelica specification 3.3 \cite{modelicamodelica}. This multiple definition import creates two aliases, one mapping HydralicConductance to Modelica.Fluid.Types.HydralicConductance and one mapping HydralicResistance to Modelica.Fluid.Types.HydralicResistance.
+
+\lstinputlisting[language=modelica]{modelica/multipleDefinitionImport.mo}
 
 \subsection{Accesses}
 
@@ -247,7 +252,7 @@ When we create an instance of A in model E, we want dependencies from E to A and
 
 If we look at figure \ref{fig:importRootPackage}, Modelica.Constants.pi could be accessed without first importing Modelica since the package Pipes, which Modelica.Constants.pi is used in, is in the same enclosing package as the package Constants.
 
-But now we instead look at figure \ref{fig:newPackageWithoutImport}, where Modelica not is imported and there is a new package also named Modelica in the package Fluid. When the new package Modelica.Fluid.Modelica is added pi won't be found. When trying to lookup Modelica.Constants.pi the package Modelica.Fluid.Modelica will found and it doesn't contain a class with the name Constants, so the lookup will fail.
+But now we instead look at figure \ref{fig:newPackageWithoutImport}, where Modelica not is imported and there is a new package also named Modelica in the package Fluid. When the new package Modelica.Fluid.Modelica is added pi won't be found. When trying to lookup Modelica.Constants.pi the package Modelica.Fluid.Modelica will be found and it doesn't contain a class with the name Constants, so the lookup will fail.
 
 If Modelica had been imported the lookup of Modelica.Constants.pi had succeeded since an import starts at a root level package. This is the reason for the imports of the root package that are unnecessary at the moment but guarantees the right class or component always will be found. Even if someone in the future adds a new package with same name as an existing package.
 
@@ -274,7 +279,7 @@ If a class depends on something in, a library that aren't a part of any of the f
 	\item The library any of the other specified classes are in.
 	\item The library of, a class that are set to be included in the analysis
 \end{itemize}
-the dependency to that library is not included in the dependency graph. Lets look at an example where we specify that class P.A, in figure \ref{fig:libraryGraph}, has changed. Then P is the root library A is in. A have a dependency to B in library MSL, here we will not include MSL.B in the dependency analysis and by that neither classes that MSL.B depends on. When we find a dependency to MSL.B we stops the analysis there.
+the dependency to that library is not included in the dependency graph. Lets look at an example where we specify that class P.A, in figure \ref{fig:libraryGraph}, has changed. Then P is the library A is in. A have a dependency to B in library MSL, here we will not include MSL.B in the dependency analysis and by that neither classes that MSL.B depends on. When we find a dependency to MSL.B we stops the analysis there.
 
 \begin{figure}[H]
     \centering
