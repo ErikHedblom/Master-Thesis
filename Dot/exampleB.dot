@@ -1,0 +1,13 @@
+digraph DependencyGraph {
+	"TestLib14"
+	"TestLib14.A" -> "TestLib14"
+	"TestLib14.A.B" -> "TestLib14.A"
+	"TestLib14.A.B" -> "TestLib14.C"
+	"TestLib14.A.B" -> "TestLib14.C.f"
+	"TestLib14.D" -> "TestLib14"
+	"TestLib14.D" -> "TestLib14.A"
+	"TestLib14.D" -> "TestLib14.A.B"
+	"TestLib14.D" -> "TestLib14.C.f"
+	"TestLib14.C" -> "TestLib14"
+	"TestLib14.C.f" -> "TestLib14.C"
+}

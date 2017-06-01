@@ -128,18 +128,18 @@ A redeclare can be used to replace the declaration of an class or component with
 
 \subsection{Name lookup}
 In order to find a match for a name, Modelica starts by looking at the first name in a qualified name. Take for example the fully qualified name Modelica.Fluid.Pipes.StaticPipe. In this example Modelica is the first name in the qualified name.
+\begin{itemize}
+\item To find a match for the name, Modelica first checks if it's a built in type. If it's a built in type Modelica has found a match for the name.
 
-To find a match for the name, Modelica first checks if it's a built in type. If it's a built in type Modelica has found a match for the name.
+\item If it's not a built in type Modelica looks in the class where the name is used, including inherited definitions, for a nested definition of the name. 
 
-If it's not a built in type Modelica looks in the class where the name is used, including inherited definitions, for a nested definition of the name. 
+\item If there is no nested definition of the name, Modelica looks in the imports in the class where the name is used, inherited imports are not included, to find a match for the name.
 
-If there is no nested definition of the name, Modelica looks in the imports in the class where the name is used, inherited imports are not included, to find a match for the name.
+\item If a match for the name is not found in the imports, Modelica looks for a nested definition in the enclosing package, including inherited definitions.
 
-If a match for the name is not found in the imports, Modelica looks for a nested definition in the parent package, including inherited definitions.
-
-If the definition of the name isn't found in the parent package, Modelica looks for a imported definition, not including inherited imports, in the parent package.
-
-If a match for the name still not is found, Modelica continues by using the same method and looking in the parent packages parent package and so on until: the parent package has the encapsulated qualifier or a package doesn't have a parent package. In the first case the search for the name terminates and in the second case Modelica searches for a match in root level packages.
+\item If the definition of the name isn't found in the enclosing package, Modelica looks for a imported definition, not including inherited imports, in the enclosing package.
+\end{itemize}
+If a match for the name still not is found, Modelica continues by using the same method and looking in the enclosing packages enclosing package and so on until: the enclosing package has the encapsulated qualifier or a package is a root package, in which case it doesn't have an enclosing package. In the first case the search for the name terminates and in the second case Modelica searches for a match in root level packages.
 
 The search is done in the same way for the first name in a qualified name and an unqualified name. An unqualified name doesn't contain a dot, an unqualified name consists of only one name. StaticPipe is an example of an unqualified name.
 
