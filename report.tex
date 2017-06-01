@@ -178,7 +178,7 @@ To build the dependency graph we have constructed a set of rules to determine wh
 \item A class depends on all accesses within it.
 \item A class depends on its encapsulating class. 
 \item A class depends on all classes in the paths of its accesses.
-\item A class depends on all classes defined in an accessed class.
+\item A class depends on all classes defined in an accessed class. %TODO: If and acces can't be reloved?
 \item Exception of rule 4. A class doesn't depend on classes defined in an accessed class if the accessed class is accessed through an import.
 \end{enumerate}
 
@@ -229,7 +229,10 @@ In figure \ref{fig:dotAccess}, we want dependencies from model \textit{C} to all
 Rule 4 is needed to handle the case in figure \ref{fig:component}. Ideally the access \textit{a.B.f} would create dependencies to \textit{A}, \textit{B} and \textit{f}. Be cause \textit{a} is a component, \textit{P.A.B.f} cannot be resolved and now dependencies can be created. Instead rule 4 is used to create to dependences to everything defined in A when \textit{a} is declared.
 
 \section{TODO} 
-
+\begin{itemize}
+    \item Imports
+    \item Unresolvable Dot access.
+\end{itemize}
 \begin{figure}[!htbp]
     \centering
     \lstinputlisting[language=modelica]{modelica/importRootPackage.mo}
