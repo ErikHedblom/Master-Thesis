@@ -1,13 +1,18 @@
-within ;
-
 package P
   package A
-    package B
-	  extends C;
-    end B
-  end A;
+    extends B;
+  end A
 
-  model D
-    Real x = A.B.f(10);
-  end D;
+  package B
+    function f
+      input Real x;
+      output Real y;
+    algorithm
+      y := x;
+    end f;
+  end B;
+
+  model C
+    Real x = A.f(0);
+  end C;
 end P;
