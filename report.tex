@@ -164,44 +164,38 @@ Collection attributes are defined by partial definitions in a number of arbitrar
 
 \chapter[Dependency analysis]{Dependency analysis}
 
+To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. First we introduce the rules and then we will go on and explain and motivate each one.
 
-
-\section{Dependency Rules}
-
-To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. 
-
+\paragraph{Rules}
 \begin{enumerate}
-\item A class depends on its encapsulating class. 
 \item A class depends on all accesses within it.
+\item A class depends on its encapsulating class. 
 \item A class depends on all classes in the paths of its accesses.
 \item A class depends on all classes defined in an accessed class.
 \item Exception of rule 4. A class doesn't depend on classes defined in an accessed class if the accessed class is accessed through an import.
 \end{enumerate}
 
-\section{Dependency analysis}
 
-The dependency model we have developed have two types of dependencies, parent and access dependencies. Parent dependencies are dependencies that occur due to Modelicas lookup and scoping rules. This means that classes depend on the class they are defined in, their parent. This is handled by rule 1. Consider the following code:
-
-\lstinputlisting[language=modelica]{modelica/parent1.mo}
-\begin{figure}
+\begin{figure}[h]
     \centering
-    \includegraphics[]{EPS-graphs/parent1.eps}
-  \caption{The dependency graph}
-  \label{fig:parent1graph}
+    \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{modelica/parentExample.mo}}}
+    \qquad
+    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/ParentExample.eps}}}
+    \caption{Parent graph}
+    \label{fig:parentGraph}
 \end{figure}
 
-D has a dependency to A.k since it accesses the constant k. This is not a parent dependency and we will leave it for now. D also has dependencies to B and C due to Modelicas scoping and lookup rules. If k is redefined in either B or C, the reference to k in D will refer to k in C or B instead. To handle this type of dependency we say that a class has a dependency to its parent class.
-
-Another way to think about it is to consider what happens if a parent is removed. The class can no longer be accessed since the path to it is broken. This will cause the compilation of the class to fail. The corresponding dependency graph is found in figure \ref{fig:parent1graph}.
-
-Access dependencies are all the other dependencies, dependencies created by accesses. However, one access can create one, many or no dependencies. If an access have a path, each part of the path creates a dependency, Rule 3. This is an example:
-\lstinputlisting[language=modelica]{modelica/import1.mo}
-The class E have an access P.A.B.D referring to P.C.D. The access also creates dependencies to P, P.A and P.A.B. If P, P.A or P.A.B is removed E will fail to build since the path P.A.B.D is broken. Another case to consider is if B redefines D, D in E will then have changed.
+The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in JModelica not all accesses in a class can be follows and therefor not all dependencies from this rule can be created. We will later see how the other rules compensate for this. 
 
 
+The next rule, rule 2, will create a dependency from a class to it's encapsulating class. An example can be found in figure \ref{fig:parentGraph}. In the example there is a constant k defined in package A. If another with the same name were to be added in in model B the reference to k in C will change to refer to the new constant. Therefore we need a dependency from C to B.
 
+In figure \ref{fig:parentGraph} we also expect rule 1 to create a dependency from C to A due to k being located in A. However, the access k cannot be resolved and we will miss the dependency to A. In this case we can see that rule 2 can compensate by adding an indirect dependency from C to A. 
+If the constant k in package A is changed it will affect model C. Therefore we need a dependency from C to A. With rule number 1 we get dependencies from C to B and from B to A. So we have an indirect dependency from C to A.
 
+Another way to think about rule 2 is to consider what happens if A or B is removed. The C can no longer be accessed since the path to C is broken. This will cause the compilation of C to fail.
 
+\section{TODO}
 In figure \ref{fig:extends}, class C is the accessed class in the immediate subtree of class A. Class B is in the path to the accessed class. Class E is an subclass to class C.
 Example:
 \begin{figure}[H]
@@ -213,18 +207,7 @@ Example:
     \label{fig:extends}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/ParentExample.eps}}}
-    \qquad
-    \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{modelica/parentExample.mo}}}
-    \caption{Parent graph}
-    \label{fig:parentGraph}
-\end{figure}
 
-There is a constant k defined in package A, in figure \ref{fig:parentGraph}. If we define a constant k in model B, the k accessed in C will be k defined in model B instead of the k defined in A. Therefore we need a dependency from C to B.
-
-If the constant k in package A is changed it will affect model C. Therefore we need a dependency from C to A. With rule number 1 we get dependencies from C to B and from B to A. So we have an indirect dependency from C to A.
 
 If the components or classes that is used in a class is changed it might change the behavior of that class. Thus we need rule number 2.
 
