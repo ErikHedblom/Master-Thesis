@@ -249,13 +249,13 @@ The exception to rule 4 is added to improve the precision of the test selection.
 \chapter[Implementation]{Implementation}
 We have implemented two different options for the dependency analysis, it can either be done based on files or Modelica classes. To do the dependency analysis and get an inverted dependency graph from the Modelica compiler, we specify which files or models that has changed. The dependency analysis are done for the specified Modelica classes or for all Modelica classes in the specified files. After the dependency analysis is done we invert the graph and returns a set of Modelica classes that may have changed.
 
-If a class depends on something in, a library that aren't a part of any of the following: 
+If a class depends on something in, a library that aren't any of the following: 
 \begin{itemize}
-	\item The library the class is in.
-	\item The library any of the other specified classes are in.
-	\item The library of, a class that are set to be included in the analysis
+	\item The library the class is in
+	\item A library any of the other specified classes are in
+	\item A library that is set to be included in the analysis
 \end{itemize}
-the dependency to that library is not included in the dependency graph. Lets look at an example where we specify that class P.A, in figure \ref{fig:libraryGraph}, has changed. Then P is the library A is in. A have a dependency to B in library MSL, here we will not include MSL.B in the dependency analysis and by that neither classes that MSL.B depends on. When we find a dependency to MSL.B we stops the analysis there.
+the dependency to that library is not included in the dependency graph. Lets look at an example where we specify that class \textit{P.A}, in figure \ref{fig:libraryGraph}, has changed. Then \textit{P} is the library \textit{A} is in. \textit{A} have a dependency to \textit{B} in library \textit{MSL}, here we will not include \textit{MSL.B} in the dependency analysis and by that neither classes that \textit{MSL.B} have dependencies to, in this case in figure \ref{fig:libraryGraph} \textit{MSL.C}, (if those classes aren't included by other dependencies). When we find a dependency to \textit{MSL.B} we stops the analysis there.
 
 \begin{figure}[H]
     \centering
@@ -276,9 +276,9 @@ Summary of approach:
     \caption{Dependency graph.}
     \label{fig:dependencyGraph}
 \end{figure}
-In the example above figure \ref{fig:dependencyGraph}, we have two Modelica classes, C1 and C2. C2 have a dependency to C1. We also have two tests, T1 and T2. T1 tests C1 and T2 tests C2. When C1 is changed both tests, T1 and T2 should be selected. When C2 is changed only test T2 needs to be selected.
+In the example above figure \ref{fig:dependencyGraph}, we have two Modelica classes, \textit{C1} and \textit{C2}. \textit{C2} have a dependency to \textit{C1}. We also have two tests, \textit{T1} and \textit{T2}. \textit{T1} tests \textit{C1} and \textit{T2} tests \textit{C2}. When \textit{C1} is changed both tests, \textit{T1} and \textit{T2} should be selected. When \textit{C2} is changed only test \textit{T2} needs to be selected.
 
-When we specify that a class has changed, we want to get a set containing all classes that may be affected. So if we specify that C2 has changed, C2 is the only class that can be affected. If we instead say that C1 has changed both C1 and C2 may be affected. Starting from C1, the problem is to find all classes that depends on C1. To solve this we need to invert the dependency graph, in figure \ref{fig:dependencyGraph}, and then get the inverted dependency graph in figure \ref{fig:invertedGraph}. 
+When we specify that a class has changed, we want to get a set containing all classes that may be affected. So if we specify that \textit{C2} has changed, \textit{C2} is the only class that can be affected. If we instead say that \textit{C1} has changed both \textit{C1} and \textit{C2} may be affected. Starting from \textit{C1}, the problem is to find all classes that depends on \textit{C1}. To solve this we need to invert the dependency graph, in figure \ref{fig:dependencyGraph}, and then get the inverted dependency graph in figure \ref{fig:invertedGraph}. 
 \begin{figure}[H]
     \centering
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/InvertedGraphExample.eps}}}
