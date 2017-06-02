@@ -1,0 +1,8 @@
+digraph ModelicaGraph {
+	node [shape=record];
+	P1 [label="package P1"];
+	P2 [label="package P2"];
+	A [label="model A"];
+	P1 -> P2;
+	P2 -> A;
+}

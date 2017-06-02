@@ -108,8 +108,19 @@ MTT is based on nose tests for Python \cite{noseDoc}. Nose finds all tests autom
 
 Modelica is an declarative, object oriented programming language where models are described by equations. It's used to get high performance simulations.
 
+\subsection{Modelica names}
+A dot is used to separate classes in the path to a class or component in a qualified name. A fully qualified Modelica name starts with a root level package. The fully qualified name of model \textit{A} in figure \ref{fig:modelicaExample} is P1.P2.A. An unqualified name consists of only one name, it doesn't contain a dot. \textit{A} is the unqualified name of the model in figure \ref{fig:modelicaExample}.
+\begin{figure}[!htbp]
+    \centering
+    \subfloat{{\includegraphics[scale=0.8]{dotGenerated/ModelicaExample.eps}}}
+    \qquad
+    \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{modelica/ModelicaExample.mo}}}
+    \caption{Example of Modelica structure}
+    \label{fig:modelicaExample}
+\end{figure}
+
 \subsection{Classes}
-Basically everything in Modelica is classes. Built in types such as Integer are Modelica classes. Packages, models and functions are classes. Modelica is an object-oriented language, inheritance is possible. The extends clause is used to create an subclass of an superclass. In figure \ref{fig:classDefinition}, P2 is a subclass to P1, which is a superclass to P2. The subclass inherits everything in the superclass. The subclass may have more content than the superclass, but all the content in the super class is also in the subclass. 
+Basically everything in Modelica is classes. Built in types such as Integer are Modelica classes. Packages, models and functions are classes. Modelica is an object-oriented language, inheritance is possible. The extends clause is used to create an subclass of an superclass. In figure \ref{fig:classDefinition}, \textit{P2} is a subclass to \textit{P1}, which is a superclass to \textit{P2}. The subclass inherits everything in the superclass. The subclass may have more content than the superclass, but all the content in the super class is also in the subclass. 
 
 \begin{figure}[H]
     \centering
@@ -118,7 +129,7 @@ Basically everything in Modelica is classes. Built in types such as Integer are 
     \label{fig:classDefinition}
 \end{figure}
 
-A redeclare can be used to replace the declaration of an class or component with a new declaration. A component is a variable or an instance of a class. In figure ~\ref{fig:redeclare}, x is declared in model A. An instance of A is created in model C where x is redeclared. The y in model B, B.y, will have the value 1, while the y in model C, C.y, will have the value 2.
+A redeclare can be used to replace the declaration of an class or component with a new declaration. A component is a variable or an instance of a class. In figure ~\ref{fig:redeclare}, \textit{x} is declared in model \textit{A}. An instance of \textit{A} is created in model \textit{C} where \textit{x} is redeclared. The \textit{y} in model \textit{B}, \textit{B.y}, will have the value 1, while the \textit{y} in model \textit{C}, \textit{C.y}, will have the value 2.
 
 \begin{figure}[H]
 	\lstinputlisting[language=modelica]{modelica/redeclare.mo}
@@ -141,24 +152,24 @@ In order to find a match for a name, Modelica starts by looking at the first nam
 \end{itemize}
 If a match for the name still not is found, Modelica continues by using the same method and looking in the enclosing packages enclosing package and so on until: the enclosing package has the encapsulated qualifier or a package is a root package, in which case it doesn't have an enclosing package. In the first case the search for the name terminates and in the second case Modelica searches for a match in root level packages.
 
-The search is done in the same way for the first name in a qualified name and an unqualified name. An unqualified name doesn't contain a dot, an unqualified name consists of only one name. StaticPipe is an example of an unqualified name.
+The search is done in the same way for the first name in a qualified name and an unqualified name.
 
 If a name is a part of a qualified name and isn't the first name in the qualified name, it must be a nested definition within the definition of the previous name in the qualified name. In the example Modelica.Fluid.Pipes.StaticPipe, Fluid must be a nested definition within Modelica.\cite{modelicamodelica, tillermodelica}
 
 \subsection{Import}
-Imports are possible in Modelica to refer to a class or component in another package that is not in the same enclosing package. To find an imported object Modelica looks at root packages, so the fully qualified name needs to be used in an import. An import creates an alias. In the import below HydralicConductance will be mapped to the fully qualified name Modelica.Fluid.Types.HydralicConductance.
+Imports are possible in Modelica to refer to a class or component in another package that is not in the same enclosing package. To find an imported object Modelica looks at root packages, so the fully qualified name needs to be used in an import. An import creates an alias. In the import below \textit{HydralicConductance} will be mapped to the fully qualified name \textit{Modelica.Fluid.Types.HydralicConductance}.
 
 \lstinputlisting[language=modelica]{modelica/import.mo}
 
-Modelica offers the option to rename an import. Here an alias will be created where the name Conductance is mapped to the fully qualified name Modelica.Fluid.Types.HydralicConductance.
+Modelica offers the option to rename an import. Here an alias will be created where the name \textit{Conductance} is mapped to the fully qualified name \textit{Modelica.Fluid.Types.HydralicConductance}.
 
 \lstinputlisting[language=modelica]{modelica/renamedImport.mo}
 
-Modelica allows the use of wildcard imports. Using wildcards it isn't possible to rename the import. This wildcard import will create an alias for every definition in Modelica.Fluid.
+Modelica allows the use of wildcard imports. Using wildcards it isn't possible to rename the import. This wildcard import will create an alias for every definition in \textit{Modelica.Fluid}.
 
 \lstinputlisting[language=modelica]{modelica/wildcardImport.mo}
 
-To avoid multiple imports and wildcard imports, an multiple definition import can be used, from Modelica specification 3.3 \cite{modelicamodelica}. This multiple definition import creates two aliases, one mapping HydralicConductance to Modelica.Fluid.Types.HydralicConductance and one mapping HydralicResistance to Modelica.Fluid.Types.HydralicResistance.
+To avoid multiple imports and wildcard imports, an multiple definition import can be used, from Modelica specification 3.3 \cite{modelicamodelica}. This multiple definition import creates two aliases, one mapping \textit{HydralicConductance} to \textit{Modelica.Fluid.Types.HydralicConductance} and one mapping \textit{HydralicResistance} to \textit{Modelica.Fluid.Types.HydralicResistance}.
 
 \lstinputlisting[language=modelica]{modelica/multipleDefinitionImport.mo}
 
