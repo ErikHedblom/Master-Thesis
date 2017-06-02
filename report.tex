@@ -175,10 +175,10 @@ To build the dependency graph we have constructed a set of rules to determine wh
 
 \paragraph{Rules}
 \begin{enumerate}
-\item A class depends on all accesses within it.
+\item A class depends on all resolvable accesses within it.
 \item A class depends on its encapsulating class. 
-\item A class depends on all classes in the paths of its accesses.
-\item A class depends on all classes defined in an accessed class. %TODO: If and acces can't be reloved?
+\item All resolvable accesses in the path of an access generates dependencies to the encapsulating class.
+\item A class depends on all classes encapsulated by the accessed class.
 \item Exception of rule 4. A class doesn't depend on classes defined in an accessed class if the accessed class is accessed through an import.
 \end{enumerate}
 
@@ -227,6 +227,16 @@ In figure \ref{fig:dotAccess}, we want dependencies from model \textit{C} to all
 \end{figure}
 
 Rule 4 is needed to handle the case in figure \ref{fig:component}. Ideally the access \textit{a.B.f} would create dependencies to \textit{A}, \textit{B} and \textit{f}. Because \textit{a} is a component, \textit{P.A.B.f} cannot be resolved and now dependencies can be created. Instead rule 4 is used to create to dependencies to everything defined in A when \textit{a} is declared.
+It is also possible that an access can not be fully resolved. This is the case in \ref{fig:brokenAccess}, where the access \textit{P.a.f} cannot be resolved because the constant \textit{a} is a component. In this case the only resolvable part is \textit{P} and a  dependency is created to \textit{P} by rule 3. \textit{P} have dependencies to \textit{A} and \textit{f} through due to rule 4. Hence, it is not a problem that rule 4 cannot be applied to \textit{P.a.f}.
+
+\begin{figure}[!htbp]
+    \centering
+    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/BrokenAccess.eps}}}
+    \qquad
+    \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{modelica/BrokenAccess.mo}}}
+    \caption{Access though component}
+    \label{fig:brokenAccess}
+\end{figure}
 
 \section{TODO} 
 \begin{itemize}
