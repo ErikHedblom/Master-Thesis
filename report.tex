@@ -227,7 +227,7 @@ In figure \ref{fig:dotAccess}, we want dependencies from model \textit{C} to all
 \end{figure}
 
 Rule 4 is needed to handle the case in figure \ref{fig:component}. Ideally the access \textit{a.B.f} would create dependencies to \textit{A}, \textit{B} and \textit{f}. Because \textit{a} is a component, \textit{P.A.B.f} cannot be resolved and now dependencies can be created. Instead rule 4 is used to create to dependencies to everything defined in A when \textit{a} is declared.
-It is also possible that an access can not be fully resolved. This is the case in \ref{fig:brokenAccess}, where the access \textit{P.a.f} cannot be resolved because the constant \textit{a} is a component. In this case the only resolvable part is \textit{P} and a  dependency is created to \textit{P} by rule 3. \textit{P} have dependencies to \textit{A} and \textit{f} through due to rule 4. Hence, it is not a problem that rule 4 cannot be applied to \textit{P.a.f}.
+It is also possible that an access can not be fully resolved. This is the case in \ref{fig:brokenAccess}, where the access \textit{P.a.f} cannot be resolved because the constant \textit{a} is a component. In this case the only resolvable part is \textit{P} and a  dependency is created to \textit{P} by rule 3. \textit{P} have dependencies to \textit{A} and \textit{f} through rule 4. Hence, it is not a problem that rule 4 cannot be applied to \textit{P.a.f}.
 
 \begin{figure}[!htbp]
     \centering
