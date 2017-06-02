@@ -179,7 +179,7 @@ To build the dependency graph we have constructed a set of rules to determine wh
 \item A class depends on its encapsulating class. 
 \item All resolvable accesses in the path of an access generates dependencies to the encapsulating class.
 \item A class depends on all classes encapsulated by the accessed class.
-\item Exception of rule 4. A class doesn't depend on classes defined in an accessed class if the accessed class is accessed through an import.
+\item Exception to rule 4: Rule 4 is not applicable to import statements. An import should not add dependences to classes not imported but the import.
 \end{enumerate}
 
 
@@ -188,7 +188,7 @@ To build the dependency graph we have constructed a set of rules to determine wh
     \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/Parent.eps}}}
     \qquad
     \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{modelica/Parent.mo}}}
-    \caption{Parent graph}
+    \caption{A class depends on its encapsulating class}
     \label{fig:parentGraph}
 \end{figure}
 
@@ -210,7 +210,7 @@ Another way to think about rule 2 is to consider what happens if \textit{A} or \
         \centering
         \lstinputlisting[language=modelica]{modelica/DotAccess.mo}
         \end{minipage}}}
-    \caption{Dot Access}
+    \caption{Access with more access in its path, \textit{A.f}}
     \label{fig:dotAccess}
 \end{figure}
 
@@ -234,36 +234,12 @@ It is also possible that an access can not be fully resolved. This is the case i
     \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/BrokenAccess.eps}}}
     \qquad
     \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{modelica/BrokenAccess.mo}}}
-    \caption{Access though component}
+    \caption{Access containing a component}
     \label{fig:brokenAccess}
 \end{figure}
 
-\section{TODO} 
-\begin{itemize}
-    \item Imports
-    \item Unresolvable Dot access.
-\end{itemize}
-\begin{figure}[!htbp]
-    \centering
-    \lstinputlisting[language=modelica]{modelica/importRootPackage.mo}
-    \caption{Root package import}
-    \label{fig:importRootPackage}
-\end{figure}
+The exception to rule 4 is added to improve the precision of the test selection. Imports are specific and it is enough to add dependencies to what is actually imported. It is not uncommon to import packages located high up in the library structure. Without this exception unnecessary dependencies would be added to all or large part of the library. For example in Modelica's standard library there are several imports of Modelica, which is the top level package. Such import would create dependencies to every single class in the library. (Such imports may seem unnecessary and in fact they often are, but they can be used to affect the name lookup if there exists classes with the same name in the library)  
 
-If we look at figure \ref{fig:importRootPackage}, P.B.b could be accessed without first importing P since the model A, which P.B.b is used in, is in the same enclosing package as the model B.
-
-But now we instead look at figure \ref{fig:newPackageWithoutImport}, where P not is imported and there is a new package also named P in the package P2. When the new package P.P2.P is added pi won't be found. When trying to lookup P.B.b the package P.P2.P will be found and it doesn't contain a class with the name B, so the lookup will fail.
-
-If P had been imported the lookup of P.B.b had succeeded since an import starts at a root level package. This is the reason for the imports of the root package that are unnecessary at the moment but guarantees the right class or component always will be found. Even if someone in the future adds a new package with same name as an existing package.
-
-\begin{figure}[!htbp]
-    \centering
-    \lstinputlisting[language=modelica]{modelica/newPackageWithoutImport.mo}
-    \caption{New package without import}
-    \label{fig:newPackageWithoutImport}
-\end{figure}
-
-Handling imports as other accesses add a lot of extra dependencies, and in case of imports it's not necessary to create dependencies to classes defined in the imported class. Hence, rule 5 exists to reduce the size of the graph and improve the precision of the test selection. In figure \ref{fig:importRootPackage}, we get a dependency from P.P2.A to P and not to all the other classes.
 
 
 \subsection{Incremental updating}
