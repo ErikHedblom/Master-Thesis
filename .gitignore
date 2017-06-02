@@ -178,8 +178,4 @@ TSWLatexianTemp*
 
 # KBibTeX
 *~[0-9]*
-EPS-graphs/Parent.eps
-EPS-graphs/DotAccess.eps
-EPS-graphs/Component.eps
-EPS-graphs/BrokenAccess.eps
-EPS-graphs/GraphExample.eps
+dotGenerated/

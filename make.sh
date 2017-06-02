@@ -1,9 +1,10 @@
 #!/bin/sh
-dot -Teps Dot/DotAccess.dot -o EPS-graphs/DotAccess.eps
-dot -Teps Dot/Parent.dot -o EPS-graphs/Parent.eps
-dot -Teps Dot/Component.dot -o EPS-graphs/Component.eps
-dot -Teps Dot/BrokenAccess.dot -o EPS-graphs/BrokenAccess.eps
-dot -Teps Dot/GraphExample.dot -o EPS-graphs/GraphExample.eps
+mkdir -p dotGenerated
+cd Dot
+for f in *; do
+	dot -Teps "$f" -o "../dotGenerated/${f%.dot}.eps"
+done
+cd ..
 
 pdflatex report
 bibtex report

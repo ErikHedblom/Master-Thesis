@@ -185,7 +185,7 @@ To build the dependency graph we have constructed a set of rules to determine wh
 
 \begin{figure}[!htbp]
     \centering
-    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/Parent.eps}}}
+    \subfloat{{\includegraphics[scale=0.8]{dotGenerated/Parent.eps}}}
     \qquad
     \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{modelica/Parent.mo}}}
     \caption{A class depends on its encapsulating class}
@@ -203,7 +203,7 @@ Another way to think about rule 2 is to consider what happens if \textit{A} or \
 
 \begin{figure}[!htbp]
     \centering
-    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/DotAccess.eps}}}
+    \subfloat{{\includegraphics[scale=0.8]{dotGenerated/DotAccess.eps}}}
     \qquad
     \subfloat{\raisebox{10 cm}{
         \begin{minipage}[t]{.5\textwidth}
@@ -219,7 +219,7 @@ In figure \ref{fig:dotAccess}, we want dependencies from model \textit{C} to all
 
 \begin{figure}[!htbp]
     \centering
-    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/Component.eps}}}
+    \subfloat{{\includegraphics[scale=0.8]{dotGenerated/Component.eps}}}
     \qquad
     \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{modelica/Component.mo}}}
     \caption{Access though component}
@@ -231,7 +231,7 @@ It is also possible that an access can not be fully resolved. This is the case i
 
 \begin{figure}[!htbp]
     \centering
-    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/BrokenAccess.eps}}}
+    \subfloat{{\includegraphics[scale=0.8]{dotGenerated/BrokenAccess.eps}}}
     \qquad
     \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{modelica/BrokenAccess.mo}}}
     \caption{Access containing a component}
@@ -259,7 +259,7 @@ the dependency to that library is not included in the dependency graph. Lets loo
 
 \begin{figure}[H]
     \centering
-    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/LibraryExample.eps}}}
+    \subfloat{{\includegraphics[scale=0.8]{dotGenerated/LibraryExample.eps}}}
     \caption{Dependency graph}
     \label{fig:libraryGraph}
 \end{figure}
@@ -272,7 +272,7 @@ Summary of approach:
 \section{Inverted dependency graph}
 \begin{figure}[H]
     \centering
-    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/GraphExample.eps}}}
+    \subfloat{{\includegraphics[scale=0.8]{dotGenerated/GraphExample.eps}}}
     \caption{Dependency graph.}
     \label{fig:dependencyGraph}
 \end{figure}
@@ -281,7 +281,7 @@ In the example above figure \ref{fig:dependencyGraph}, we have two Modelica clas
 When we specify that a class has changed, we want to get a set containing all classes that may be affected. So if we specify that C2 has changed, C2 is the only class that can be affected. If we instead say that C1 has changed both C1 and C2 may be affected. Starting from C1, the problem is to find all classes that depends on C1. To solve this we need to invert the dependency graph, in figure \ref{fig:dependencyGraph}, and then get the inverted dependency graph in figure \ref{fig:invertedGraph}. 
 \begin{figure}[H]
     \centering
-    \subfloat{{\includegraphics[scale=0.8]{EPS-graphs/InvertedGraphExample.eps}}}
+    \subfloat{{\includegraphics[scale=0.8]{dotGenerated/InvertedGraphExample.eps}}}
     \caption{Inverted dependency graph.}
     \label{fig:invertedGraph}
 \end{figure}
@@ -297,21 +297,21 @@ In our dependency analysis we can't analyze the dependencies in external files. 
 
 \begin{figure}
     \centering
-    \makebox[\textwidth][c]{\includegraphics[width=1.5\textwidth]{EPS-graphs/HXL_one_file.eps}}
+    \makebox[\textwidth][c]{\includegraphics[width=1.5\textwidth]{Graphs/HXL_one_file.eps}}
     \caption{One file changed in HXL.}
     \label{fig:hxlonefile}
 \end{figure}
 
 \begin{figure}
     \centering
-    \makebox[\textwidth][c]{\includegraphics[width=1.5\textwidth]{EPS-graphs/MSL_one_file.eps}}
+    \makebox[\textwidth][c]{\includegraphics[width=1.5\textwidth]{Graphs/MSL_one_file.eps}}
     \caption{One file changed in MSL.}
     \label{fig:mslonefile}
 \end{figure}
 
 \begin{figure}
     \centering
-    \makebox[\textwidth][c]{\includegraphics[width=1.5\textwidth]{EPS-graphs/MSL_history_plot.eps}}
+    \makebox[\textwidth][c]{\includegraphics[width=1.5\textwidth]{Graphs/MSL_history_plot.eps}}
     \caption{History plot for MSL.}
     \label{fig:mslhistory}
 \end{figure}
