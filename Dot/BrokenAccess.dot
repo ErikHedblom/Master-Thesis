@@ -1,0 +1,7 @@
+digraph DependencyGraph {
+	"P" ->"P.A"
+	"P" ->"P.A.f"
+	"P.A" -> "P"
+	"P.A.f" -> "P.A"
+	"P.B" -> "P"
+}
