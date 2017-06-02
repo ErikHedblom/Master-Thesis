@@ -240,11 +240,11 @@ Rule 4 is needed to handle the case in figure \ref{fig:component}. Ideally the a
     \label{fig:importRootPackage}
 \end{figure}
 
-If we look at figure \ref{fig:importRootPackage}, Modelica.Constants.pi could be accessed without first importing Modelica since the package Pipes, which Modelica.Constants.pi is used in, is in the same enclosing package as the package Constants.
+If we look at figure \ref{fig:importRootPackage}, P.B.b could be accessed without first importing P since the model A, which P.B.b is used in, is in the same enclosing package as the model B.
 
-But now we instead look at figure \ref{fig:newPackageWithoutImport}, where Modelica not is imported and there is a new package also named Modelica in the package Fluid. When the new package Modelica.Fluid.Modelica is added pi won't be found. When trying to lookup Modelica.Constants.pi the package Modelica.Fluid.Modelica will be found and it doesn't contain a class with the name Constants, so the lookup will fail.
+But now we instead look at figure \ref{fig:newPackageWithoutImport}, where P not is imported and there is a new package also named P in the package P2. When the new package P.P2.P is added pi won't be found. When trying to lookup P.B.b the package P.P2.P will be found and it doesn't contain a class with the name B, so the lookup will fail.
 
-If Modelica had been imported the lookup of Modelica.Constants.pi had succeeded since an import starts at a root level package. This is the reason for the imports of the root package that are unnecessary at the moment but guarantees the right class or component always will be found. Even if someone in the future adds a new package with same name as an existing package.
+If P had been imported the lookup of P.B.b had succeeded since an import starts at a root level package. This is the reason for the imports of the root package that are unnecessary at the moment but guarantees the right class or component always will be found. Even if someone in the future adds a new package with same name as an existing package.
 
 \begin{figure}[!htbp]
     \centering
@@ -253,7 +253,7 @@ If Modelica had been imported the lookup of Modelica.Constants.pi had succeeded 
     \label{fig:newPackageWithoutImport}
 \end{figure}
 
-Handling imports as other accesses add a lot of extra dependencies, and in case of imports it's not necessary to create dependencies to classes defined in the imported class. Hence, rule 5 exists to reduce the size of the graph and improve the precision of the test selection. In figure \ref{fig:importRootPackage}, we get a dependency from Modelica.Fluid.Pipes to Modelica and not to all the other classes.
+Handling imports as other accesses add a lot of extra dependencies, and in case of imports it's not necessary to create dependencies to classes defined in the imported class. Hence, rule 5 exists to reduce the size of the graph and improve the precision of the test selection. In figure \ref{fig:importRootPackage}, we get a dependency from P.P2.A to P and not to all the other classes.
 
 
 \subsection{Incremental updating}

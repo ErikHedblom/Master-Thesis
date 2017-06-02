@@ -1,16 +1,14 @@
-package Modelica
-  package Fluid
-    package Modelica
-    end Modelica;
-		
-    package Pipes
-      Real r = 5;
-      Real A = r*r*Modelica.Constants.pi;
-    end Pipes;
-  end Fluid;
+package P
+  package P
+  end P;
+
+  package P2  
+    model A
+      Real a = P.B.b;
+    end A;
+  end P2;
 	
-  package Constants
-    final constant Real pi=
-	2*Modelica.Math.asin(1.0);
-  end Constants;
-end Modelica;
+  model B
+    final constant Real b = 1;
+  end B;
+end P;
