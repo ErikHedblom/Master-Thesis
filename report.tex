@@ -114,7 +114,7 @@ A dot is used to separate classes in the path to a class or component in a quali
     \centering
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/ModelicaExample.eps}}}
     \qquad
-    \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{modelica/ModelicaExample.mo}}}
+    \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{Modelica/ModelicaExample.mo}}}
     \caption{Example of Modelica structure}
     \label{fig:modelicaExample}
 \end{figure}
@@ -124,7 +124,7 @@ Basically everything in Modelica is classes. Built in types such as Integer are 
 
 \begin{figure}[H]
     \centering
-    \subfloat{{\lstinputlisting[language=modelica]{modelica/packageDecl.mo}}}
+    \subfloat{{\lstinputlisting[language=modelica]{Modelica/packageDecl.mo}}}
     \caption{Class definition}
     \label{fig:classDefinition}
 \end{figure}
@@ -132,7 +132,7 @@ Basically everything in Modelica is classes. Built in types such as Integer are 
 A redeclare can be used to replace the declaration of an class or component with a new declaration. A component is a variable or an instance of a class. In figure ~\ref{fig:redeclare}, \textit{x} is declared in model \textit{A}. An instance of \textit{A} is created in model \textit{C} where \textit{x} is redeclared. The \textit{y} in model \textit{B}, \textit{B.y}, will have the value 1, while the \textit{y} in model \textit{C}, \textit{C.y}, will have the value 2.
 
 \begin{figure}[H]
-	\lstinputlisting[language=modelica]{modelica/redeclare.mo}
+	\lstinputlisting[language=modelica]{Modelica/redeclare.mo}
     \caption{Redeclare}
     \label{fig:redeclare}
 \end{figure}
@@ -159,19 +159,19 @@ If a name is a part of a qualified name and isn't the first name in the qualifie
 \subsection{Import}
 Imports are possible in Modelica to refer to a class or component in another package that is not in the same enclosing package. To find an imported object Modelica looks at root packages, so the fully qualified name needs to be used in an import. An import creates an alias. In the import below \textit{HydralicConductance} will be mapped to the fully qualified name \textit{Modelica.Fluid.Types.HydralicConductance}.
 
-\lstinputlisting[language=modelica]{modelica/import.mo}
+\lstinputlisting[language=modelica]{Modelica/import.mo}
 
 Modelica offers the option to rename an import. Here an alias will be created where the name \textit{Conductance} is mapped to the fully qualified name \textit{Modelica.Fluid.Types.HydralicConductance}.
 
-\lstinputlisting[language=modelica]{modelica/renamedImport.mo}
+\lstinputlisting[language=modelica]{Modelica/renamedImport.mo}
 
 Modelica allows the use of wildcard imports. Using wildcards it isn't possible to rename the import. This wildcard import will create an alias for every definition in \textit{Modelica.Fluid}.
 
-\lstinputlisting[language=modelica]{modelica/wildcardImport.mo}
+\lstinputlisting[language=modelica]{Modelica/wildcardImport.mo}
 
 To avoid multiple imports and wildcard imports, an multiple definition import can be used, from Modelica specification 3.3 \cite{modelicamodelica}. This multiple definition import creates two aliases, one mapping \textit{HydralicConductance} to \textit{Modelica.Fluid.Types.HydralicConductance} and one mapping \textit{HydralicResistance} to \textit{Modelica.Fluid.Types.HydralicResistance}.
 
-\lstinputlisting[language=modelica]{modelica/multipleDefinitionImport.mo}
+\lstinputlisting[language=modelica]{Modelica/multipleDefinitionImport.mo}
 
 \subsection{Accesses}
 
@@ -198,7 +198,7 @@ To build the dependency graph we have constructed a set of rules to determine wh
     \centering
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/Parent.eps}}}
     \qquad
-    \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{modelica/Parent.mo}}}
+    \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{Modelica/Parent.mo}}}
     \caption{A class depends on its encapsulating class}
     \label{fig:parentGraph}
 \end{figure}
@@ -219,7 +219,7 @@ Another way to think about rule 2 is to consider what happens if \textit{A} or \
     \subfloat{\raisebox{10 cm}{
         \begin{minipage}[t]{.5\textwidth}
         \centering
-        \lstinputlisting[language=modelica]{modelica/DotAccess.mo}
+        \lstinputlisting[language=modelica]{Modelica/DotAccess.mo}
         \end{minipage}}}
     \caption{Access with more access in its path, \textit{A.f}}
     \label{fig:dotAccess}
@@ -232,7 +232,7 @@ In figure \ref{fig:dotAccess}, we want dependencies from model \textit{C} to all
     \centering
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/Component.eps}}}
     \qquad
-    \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{modelica/Component.mo}}}
+    \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{Modelica/Component.mo}}}
     \caption{Access though component}
     \label{fig:component}
 \end{figure}
@@ -244,7 +244,7 @@ It is also possible that an access can not be fully resolved. This is the case i
     \centering
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/BrokenAccess.eps}}}
     \qquad
-    \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{modelica/BrokenAccess.mo}}}
+    \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{Modelica/BrokenAccess.mo}}}
     \caption{Access containing a component}
     \label{fig:brokenAccess}
 \end{figure}
