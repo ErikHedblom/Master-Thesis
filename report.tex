@@ -96,15 +96,22 @@ There is a trade of between the precision of the test selection and the overhead
 \end{itemize}
 JModelica is an open source compiler that is developed and maintained by Modelon. OPTIMICA Compiler Toolkit is the commercial version of JModelica.
 
-The compilation of Modelica code is done in several steps. In the first step name and type analysis of the source code is done, identifiers are bound to declarations etc. An AST (Abstract Syntax Tree) is built in form of a source tree.
+The compilation of Modelica code is done in several steps, see figure \ref{fig:compilerSteps}. In the first step name and type analysis of the source code is done, identifiers are bound to declarations etc. An AST (Abstract Syntax Tree) is built in form of a source tree.
 
-In step two a new AST in form of a instance tree is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The instance tree of instances of models. The root is the model choosen by the user to be flattened.
+In step two a new AST in form of a instance tree is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The instance tree consists of instances of models. The root is the model choosen by the user to be flattened.
 
 In the third step the Modelica code is flattened, a flat model is generated from the instance tree. In this step class, component and inheritance structures are removed. This results in a model that only has a set of equations and a set of variables.
 
 In the fourth step the equations are sorted and optimized.
 
-In the last step C-code is generated.
+In the last step C-code is generated.\cite{aakesson2010implementation}
+
+\begin{figure}[!htbp]
+    \centering
+    {\includegraphics[scale=0.5]{dotGenerated/CompilerSteps.eps}}
+    \caption{The steps in the compilation.}
+    \label{fig:compilerSteps}
+\end{figure}
 
 
 

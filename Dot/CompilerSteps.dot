@@ -1,0 +1,14 @@
+digraph compiler {
+	node [shape=box, fontsize=20];
+	MC [label="Modelica\nSource\nCode", color="white"];
+	ST [label="Source\nTree"];
+	IT [label="Instance\nTree"];
+	FT [label="Flat\nTree"];
+	EO [label="Equation\nOptimization"];
+	CG [label="Code\nGeneration"];
+	CC [label="C-Code", color="white"];
+
+	rank = same;
+	MC -> ST -> IT -> FT -> EO -> CG -> CC;
+	rankdir = LR;
+}
