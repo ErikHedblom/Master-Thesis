@@ -210,7 +210,7 @@ To build the dependency graph we have constructed a set of rules to determine wh
 \item A class depends on its encapsulating class. 
 \item All resolvable accesses in the path of an access generates dependencies to the encapsulating class.
 \item A class depends on all classes encapsulated by the accessed class.
-\item Exception to rule 4: Rule 4 is not applicable to import statements. An import should not add dependences to classes not imported but the import.
+\item Exception to rule 4: Rule 4 is not applicable to import statements. An import should not add dependencies to classes not imported but the import.
 \end{enumerate}
 
 
@@ -225,9 +225,9 @@ To build the dependency graph we have constructed a set of rules to determine wh
 
 The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in JModelica not all accesses in a class can be follows and therefor not all dependencies from this rule can be created. We will later see how the other rules compensate for this. 
 
-The next rule, rule 2, will create a dependency from a class to it's encapsulating class. An example can be found in figure \ref{fig:parentGraph}. In the example there is a constant \textit{k} defined in package \textit{A}. If another with the same name were to be added in in model \textit{B} the reference to \textit{k} in \textit{C} will change to refer to the new constant. Therefore we need a dependency from \textit{C} to \textit{B}.
+The next rule, rule 2, will create a dependency from a class to it's encapsulating class. An example can be found in figure \ref{fig:parentGraph}. In the example there is a constant \textit{k} defined in package \textit{A}. If another constant with the same name were to be added in in model \textit{B} the reference to \textit{k} in \textit{C} will change to refer to the new constant. Therefore we need a dependency from \textit{C} to \textit{B}.
 
-In figure \ref{fig:parentGraph} we also expect rule 1 to create a dependency from \textit{C} to \textit{A} due to \textit{k} being located in \textit{A}. However, the access \textit{k} cannot be resolved and we will miss the dependency to \textit{A}. In this case we can see that rule 2 can compensate by adding an indirect dependency from \textit{C} to \textit{A}. 
+In figure \ref{fig:parentGraph} we also expect rule 1 to create a dependency from \textit{C} to \textit{A} due to \textit{k} being located in \textit{A}. However, the accessed \textit{k} cannot be resolved and we will miss the dependency to \textit{A}. In this case we can see that rule 2 can compensate by adding an indirect dependency from \textit{C} to \textit{A}. 
 If the constant k in package \textit{A} is changed it will affect model \textit{C}. Therefore we need a dependency from \textit{C} to \textit{A}. With rule number 1 we get dependencies from \textit{C} to \textit{B} and from \textit{B} to \textit{A}. So we have an indirect dependency from \textit{C} to \textit{A}.
 
 Another way to think about rule 2 is to consider what happens if \textit{A} or \textit{B} is removed. The \textit{C} can no longer be accessed since the path to \textit{C} is broken. This will cause the compilation of C to fail.
@@ -257,7 +257,7 @@ In figure \ref{fig:dotAccess}, we want dependencies from model \textit{C} to all
     \label{fig:component}
 \end{figure}
 
-Rule 4 is needed to handle the case in figure \ref{fig:component}. Ideally the access \textit{a.B.f} would create dependencies to \textit{A}, \textit{B} and \textit{f}. Because \textit{a} is a component, \textit{P.A.B.f} cannot be resolved and now dependencies can be created. Instead rule 4 is used to create to dependencies to everything defined in A when \textit{a} is declared.
+Rule 4 is needed to handle the case in figure \ref{fig:component}. Ideally the access \textit{a.B.f} would create dependencies to \textit{A}, \textit{B} and \textit{f}. Because \textit{a} is a component, \textit{P.A.B.f} cannot be resolved and now dependencies can be created. Instead rule 4 is used to create dependencies to everything defined in A when \textit{a} is declared.
 It is also possible that an access can not be fully resolved. This is the case in \ref{fig:brokenAccess}, where the access \textit{P.a.f} cannot be resolved because the constant \textit{a} is a component. In this case the only resolvable part is \textit{P} and a  dependency is created to \textit{P} by rule 3. \textit{P} have dependencies to \textit{A} and \textit{f} through rule 4. Hence, it is not a problem that rule 4 cannot be applied to \textit{P.a.f}.
 
 \begin{figure}[!htbp]
