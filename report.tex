@@ -90,6 +90,8 @@ A safe Regression Test Selection (RTS) method will select all tests that produce
 
 There is a trade of between the precision of the test selection and the overhead. If a RTS algorithm has full precision it doesn't select any tests that can't fail. But the higher precision the more complex algorithm is needed. For a more complex algorithm its harder to follow the rules and verify that the RTS method is safe. A more complex algorithm also creates more overhead.
 
+To make the test selection we have chosen to build a dependency graph for Modelica classes. We will produce a set of rules to be used when the dependency graph is built. The rules need to make sure that all dependencies between classes, that are need for a safe test selection, are included. We will probably not be able to reach full precision, it's likely that we need to include unnecessary dependencies to be keep the test selection safe.
+
 \section{Compiler}
 \begin{itemize}
 	\item SourceTree, InstanceTree, FlatTree \cite{aakesson2010implementation}
@@ -98,7 +100,7 @@ JModelica is an open source compiler that is developed and maintained by Modelon
 
 The compilation of Modelica code is done in several steps, see figure \ref{fig:compilerSteps}. In the first step name and type analysis of the source code is done, identifiers are bound to declarations etc. An AST (Abstract Syntax Tree) is built in form of a source tree.
 
-In step two a new AST in form of a instance tree is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The instance tree consists of instances of models. The root is the model choosen by the user to be flattened.
+In step two a new AST in form of a instance tree is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The instance tree consists of instances of models. The root is the model chosen by the user to be flattened.
 
 In the third step the Modelica code is flattened, a flat model is generated from the instance tree. In this step class, component and inheritance structures are removed. This results in a model that only has a set of equations and a set of variables.
 
@@ -121,10 +123,6 @@ Model testing Toolkit, MTT is a model testing toolkit that's going to use the te
 MTT is based on nose tests for Python \cite{noseDoc}. Nose finds all tests automatically and runs them if nothing is specified. In MTT a test case is represented by a xml file and every test case has a Modelica model. So when you like to run test cases only associated with a specific model it's easy to select only the test cases which have the model you are interested in. When tests are run in MTT a HTML report of the results are created.
 
 \section{Modelica}
-\begin{itemize}
-	\item What is Modelica?
-	\item How can we perform test selection for Modelica?
-	\end{itemize}
 
 Modelica is an declarative, object oriented programming language where models are described by equations. It's used to get high performance simulations.
 
@@ -321,6 +319,8 @@ In our dependency analysis we can't analyze the dependencies in external files. 
 	\item Savings
 	\item Precision
 \end{itemize}
+The time it takes to run the dependency analysis is not included in any of the graphs in this chapter.
+To assess how much time our test selection can save we have run all the tests several times for some Modelica libraries to get the average time it takes to run each test. Then we have done the test selection for each Modelica file in the library and summed up the time for all tests that are selected when we say that file has changed. In figure \ref{fig:hxlonefile} the total time to run the tests selected for each file in HXL is plotted. The files are on the x-axis and on the y-axis is the time for the selected tests, in percent of the time it takes run all tests. HXL is the Heat Exchanger Library developed by Modelon. The corresponding graph for MSL is in figure \ref{fig:mslonefile}. MSL is the Modelica Standard Library.
 
 \begin{figure}
     \centering
@@ -336,12 +336,16 @@ In our dependency analysis we can't analyze the dependencies in external files. 
     \label{fig:mslonefile}
 \end{figure}
 
+In figure \ref{fig:mslhistory} we have used all the commits in the commit history for MSL. On the x-axis we have commits. On the y-axis we have the time for running all the tests that are selected when the test selection is done for the files that has changed in that commit. The time is here too plotted as the percent of the total time for running all tests.
+
 \begin{figure}
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.5\textwidth]{Graphs/MSL_history_plot.eps}}
     \caption{History plot for MSL.}
     \label{fig:mslhistory}
 \end{figure}
+ 
+ Booth rule number 4, that we need due to limitations of the lookup in the source tree and the handling of files that isn't Modelica files, lowers the precision of test selection and creates extra overhead.
 
 \chapter[Future Work]{Future Work}
 	
