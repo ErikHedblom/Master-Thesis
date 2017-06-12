@@ -83,36 +83,6 @@ A safe Regression Test Selection (RTS) method will select at least all tests tha
 
 There is a trade-off between the precision of the test selection and the overhead. If a RTS algorithm has full precision it doesn't select any tests that can't fail. But the higher precision the more complex algorithm is needed. For a more complex algorithm its harder to follow the rules and verify that the RTS method is safe. A more complex algorithm also creates more overhead.
 
-\section{Compiler}
-JModelica is an open source compiler that is developed and maintained by Modelon. Optimica Compiler Toolkit (OCT) is the commercial version of JModelica. Our solution will be developed in OCT but will not use any OCT specific functionality. 
-
-The compilation of Modelica code is done in several steps, see figure \ref{fig:compilerSteps}. In the first step name and type analysis of the source code is done, identifiers are bound to declarations etc. An AST (Abstract Syntax Tree) is built in form of a source tree.
-
-
-%TODO Why setep 2 and 3?
-In step two a new AST in form of a instance tree is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The instance tree consists of instances of models. The root is the model chosen by the user to be flattened.
-
-In the third step the Modelica code is flattened, a flat model is generated from the instance tree. In this step class, component and inheritance structures are removed. This results in a model that only has a set of equations and a set of variables.
-
-In the fourth step the equations are sorted and optimized.
-
-In the last step C-code is generated.\cite{aakesson2010implementation}
-
-\begin{figure}[!htbp]
-    \centering
-    {\includegraphics[scale=0.5]{dotGenerated/CompilerSteps.eps}}
-    \caption{The steps in the compilation.}
-    \label{fig:compilerSteps}
-\end{figure}
-
-
-
-\section{Model Testing Toolkit}
-%TODO: What is MTT, What can it do? What is it used for? Not how it works. Rework this section
-Model testing Toolkit, MTT is a model testing toolkit that's going to use the test selection, MTT calls the OCT where the dependency analysis is implemented.
-
-MTT is based on nose tests for Python \cite{noseDoc}. Nose finds all tests automatically and runs them if nothing is specified. In MTT a test case is represented by a xml file and every test case has a Modelica model. So when you like to run test cases only associated with a specific model it's easy to select only the test cases which have the model you are interested in. When tests are run in MTT a HTML report of the results are created.
-
 \section{Modelica}
 
 Modelica is an declarative, object oriented programming language where models are described by equations. It's used to get high performance simulations.
@@ -184,6 +154,35 @@ To avoid multiple imports and wildcard imports, an multiple definition import ca
 
 \subsection{Accesses}
 
+\section{Compiler}
+JModelica is an open source compiler that is developed and maintained by Modelon. Optimica Compiler Toolkit (OCT) is the commercial version of JModelica. Our solution will be developed in OCT but will not use any OCT specific functionality. 
+
+The compilation of Modelica code is done in several steps, see figure \ref{fig:compilerSteps}. In the first step name and type analysis of the source code is done, identifiers are bound to declarations etc. An AST (Abstract Syntax Tree) is built in form of a source tree.
+
+
+%TODO Why setep 2 and 3?
+In step two a new AST in form of a instance tree is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The instance tree consists of instances of models. The root is the model chosen by the user to be flattened.
+
+In the third step the Modelica code is flattened, a flat model is generated from the instance tree. In this step class, component and inheritance structures are removed. This results in a model that only has a set of equations and a set of variables.
+
+In the fourth step the equations are sorted and optimized.
+
+In the last step C-code is generated.\cite{aakesson2010implementation}
+
+\begin{figure}[!htbp]
+    \centering
+    {\includegraphics[scale=0.5]{dotGenerated/CompilerSteps.eps}}
+    \caption{The steps in the compilation.}
+    \label{fig:compilerSteps}
+\end{figure}
+
+
+
+\section{Model Testing Toolkit}
+%TODO: What is MTT, What can it do? What is it used for? Not how it works. Rework this section
+Model testing Toolkit, MTT is a model testing toolkit that's going to use the test selection, MTT calls the OCT where the dependency analysis is implemented.
+
+MTT is based on nose tests for Python \cite{noseDoc}. Nose finds all tests automatically and runs them if nothing is specified. In MTT a test case is represented by a xml file and every test case has a Modelica model. So when you like to run test cases only associated with a specific model it's easy to select only the test cases which have the model you are interested in. When tests are run in MTT a HTML report of the results are created.
 \section{JastAdd}
 JastAdd is a system based on reference attribute grammars, for extensible implementation of compilers. An Abstract Syntax Tree (AST) is used to represent a program. Attribute Grammars is amethod for declerativly defining computations on an AST. A node in an AST can have a synthezied attribute or an inherited attribute. An attribue is defined by an equation. A synthezied attribyte is defined in the node, an inherired attribute is defined in an ancestor node. A JastAdd specification is used to create an object-oriented framework.~\cite{aakesson2008development}
 
