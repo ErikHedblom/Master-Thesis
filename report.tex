@@ -280,7 +280,7 @@ When we specify that a class has changed, we want to get a set containing all cl
 \section{External functions}
 The Modelica language allows the use of external functions that are not defined in a Modelica file. The external functions are often defined in a C-file.\cite{modelicamodelica}
 
-In our dependency analysis we can't analyze the dependencies in external files. To handle this, and keep the test selection safe, if a file that isn't a Modelica file has changed we assume that every Modelica class that has a reference to an external has changed.
+In our dependency analysis we do not analyze the dependencies in external files. To handle this, and keep the test selection safe, if a file that is not a Modelica file has changed we assume that every Modelica class that has a reference to an external is affected.
 \chapter[Evaluation]{Evaluation}
 \begin{itemize}
 	\item Savings
@@ -288,6 +288,8 @@ In our dependency analysis we can't analyze the dependencies in external files. 
 \end{itemize}
 The time it takes to run the dependency analysis is not included in any of the graphs in this chapter.
 To assess how much time our test selection can save we have run all the tests several times for some Modelica libraries to get the average time it takes to run each test. Then we have done the test selection for each Modelica file in the library and summed up the time for all tests that are selected when we say that file has changed. In figure \ref{fig:hxlonefile} the total time to run the tests selected for each file in HXL is plotted. The files are on the x-axis and on the y-axis is the time for the selected tests, in percent of the time it takes run all tests. HXL is the Heat Exchanger Library developed by Modelon. The corresponding graph for MSL is in figure \ref{fig:mslonefile}. MSL is the Modelica Standard Library.
+
+%TODO: The dependency analysis is not rerun for every version in the history
 
 \begin{figure}
     \centering
@@ -312,7 +314,7 @@ In figure \ref{fig:mslhistory} we have used all the commits in the commit histor
     \label{fig:mslhistory}
 \end{figure}
  
- Booth rule number 4, that we need due to limitations of the lookup in the source tree and the handling of files that isn't Modelica files, lowers the precision of test selection and creates extra overhead.
+ Booth rule number 4, that we need due to limitations of the lookup in the source tree and the handling of files that isn't Modelica files, lowers the precision of the test selection and creates extra overhead.
 
 \chapter[Future Work]{Future Work}
 	
