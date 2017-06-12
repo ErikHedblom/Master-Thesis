@@ -67,18 +67,14 @@ Leave a \textit{2cm} vertical space after the abstract and provide a few keyword
 \makefrontmatter
 \chapter[Introduction]{Introduction}
 
-\section{Motivation / Background}
-During software development, when a change is integrated into a project all previous testing have to be rerun. Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the test may be unrelated to the change and by excluding unrelated tests significant time savings could be achieved. ~\cite{DUMMY}
+\section{Motivation}
+During software development, when a change is integrated into a project all previous testing have to be rerun. This is know as regression testing. Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the test may be unrelated to the change and therefore unnecessary to run. By excluding unrelated tests significant time savings could be achieved. This is called test selection and have to our knowledge not been previously been done for Modelica. 
 
 
-Det är viktig att testa mjukvara under utvecklingen för säkerställa att mjukvaran fungerar korrekt. När mjukvaran uppdateras måste testfall som redan testats utföras igen för att kontrollera att allt som fungerade innan uppdatering fortfarande fungerar efter. Det kan vara väldigt tidskrävande att köra samtliga test. Det finns därför mycket tid att spara om det går att utesluta test som garanterat inte har påverkas. För språket Modelica finns det inget verktyg för detta och det är därför intressant att utveckla ett.
+\section{Goal}
 
-\section{Problem Description / Aim / Goal}
+The aim of this project is too reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a method to exclude tests in a test suite unaffected by a specific change. Regression testing can then be performed with a reduced test suite without compromising testing quality.
 
-The aim of this project is too reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a method to exclude tests in a test suite unaffected by a specific change. Regression testing can then be performed with a reduced test suite without compromising quality.
-
-\section{Regression Testing}
-Regression tests are used to make sure that regression dose not occur. Software regression is when something that did work before do not work as expected due to a change.
 
 \chapter[Background]{Background}
 \section{Test Selection}
