@@ -172,15 +172,14 @@ In the last step C-code is generated.\cite{aakesson2010implementation}
     \label{fig:compilerSteps}
 \end{figure}
 
-
+\section{JastAdd}
+JModelica is developed using the Meta compiler JastAdd. JastAdd is a system based on reference attribute grammars, for extensible implementation of compilers. An Abstract Syntax Tree (AST) is used to represent a program. Attribute Grammars is amethod for declerativly defining computations on an AST. A node in an AST can have a synthezied attribute or an inherited attribute. An attribue is defined by an equation. A synthezied attribyte is defined in the node, an inherired attribute is defined in an ancestor node. A JastAdd specification is used to create an object-oriented framework.~\cite{aakesson2008development}
 
 \section{Model Testing Toolkit}
 %TODO: What is MTT, What can it do? What is it used for? Not how it works. Rework this section
 Model testing Toolkit, MTT is a model testing toolkit that's going to use the test selection, MTT calls the OCT where the dependency analysis is implemented.
 
 MTT is based on nose tests for Python \cite{noseDoc}. Nose finds all tests automatically and runs them if nothing is specified. In MTT a test case is represented by a xml file and every test case has a Modelica model. So when you like to run test cases only associated with a specific model it's easy to select only the test cases which have the model you are interested in. When tests are run in MTT a HTML report of the results are created.
-\section{JastAdd}
-JastAdd is a system based on reference attribute grammars, for extensible implementation of compilers. An Abstract Syntax Tree (AST) is used to represent a program. Attribute Grammars is amethod for declerativly defining computations on an AST. A node in an AST can have a synthezied attribute or an inherited attribute. An attribue is defined by an equation. A synthezied attribyte is defined in the node, an inherired attribute is defined in an ancestor node. A JastAdd specification is used to create an object-oriented framework.~\cite{aakesson2008development}
 
 Collection attributes are defined by partial definitions in a number of arbitrary nodes. A node that have a partial definition of a collection attribute contributes to the value of the collection attribute. A collection attribute is usually a set where the empty set is the initial value of the collection attribute. The contributors, the nodes that contributes to the collection attribute, can for example contribute by adding elements to the set.~\cite{magnusson2007extending}
 
