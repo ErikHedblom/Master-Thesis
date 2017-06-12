@@ -264,21 +264,19 @@ To do the dependency analysis and get an inverted dependency graph from the Mode
 %TODO: Update to match current implementation, MTT does some magic.
 
 \section{Inverted dependency graph}
+
+In figure \ref{fig:invertedGraph},the left graph has two Modelica classes, \textit{C1} and \textit{C2}. \textit{C2} Has a dependency to \textit{C1}. We also have two tests, \textit{T1} and \textit{T2}. \textit{T1} tests \textit{C1} and \textit{T2} tests \textit{C2}. When \textit{C1} is changed both tests, \textit{T1} and \textit{T2} should be selected. When \textit{C2} is changed only test \textit{T2} needs to be selected.
+
+When we specify that a class has changed, we want to get a set containing all classes that may be affected. So if we specify that \textit{C2} has changed, \textit{C2} is the only class that can be affected. If we instead say that \textit{C1} has changed both \textit{C1} and \textit{C2} may be affected. Starting from \textit{C1}, the problem is to find all classes that depends on \textit{C1}. To solve this we need to invert the dependency graph, see right graph.
 \begin{figure}[!htbp]
     \centering
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/GraphExample.eps}}}
-    \caption{Dependency graph.}
-    \label{fig:dependencyGraph}
-\end{figure}
-In the example above figure \ref{fig:dependencyGraph}, we have two Modelica classes, \textit{C1} and \textit{C2}. \textit{C2} have a dependency to \textit{C1}. We also have two tests, \textit{T1} and \textit{T2}. \textit{T1} tests \textit{C1} and \textit{T2} tests \textit{C2}. When \textit{C1} is changed both tests, \textit{T1} and \textit{T2} should be selected. When \textit{C2} is changed only test \textit{T2} needs to be selected.
-
-When we specify that a class has changed, we want to get a set containing all classes that may be affected. So if we specify that \textit{C2} has changed, \textit{C2} is the only class that can be affected. If we instead say that \textit{C1} has changed both \textit{C1} and \textit{C2} may be affected. Starting from \textit{C1}, the problem is to find all classes that depends on \textit{C1}. To solve this we need to invert the dependency graph, in figure \ref{fig:dependencyGraph}, and then get the inverted dependency graph in figure \ref{fig:invertedGraph}. 
-\begin{figure}[!htbp]
-    \centering
+    \qquad
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/InvertedGraphExample.eps}}}
     \caption{Inverted dependency graph.}
     \label{fig:invertedGraph}
 \end{figure}
+
 \section{External functions}
 The Modelica language allows the use of external functions that are not defined in a Modelica file. The external functions are often defined in a C-file.\cite{modelicamodelica}
 
