@@ -188,10 +188,11 @@ Collection attributes are defined by partial definitions in a number of arbitrar
 To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. First we introduce the rules and then we will go on and explain and motivate each one.
 
 \paragraph{Rules}
+%TODO Rework rule formulations
 \begin{enumerate}
 \item A class depends on all resolvable accesses within it.
 \item A class depends on its encapsulating class. 
-\item All resolvable accesses in the path of an access generates dependencies to the encapsulating class.
+\item All resolvable accesses in the path of an access generate dependencies.
 \item A class depends on all classes encapsulated by the accessed class.
 \item Exception to rule 4: Rule 4 is not applicable to import statements. An import should not add dependencies to classes not imported but the import.
 \end{enumerate}
@@ -206,11 +207,11 @@ To build the dependency graph we have constructed a set of rules to determine wh
     \label{fig:parentGraph}
 \end{figure}
 
-The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in JModelica not all accesses in a class can be follows and therefor not all dependencies from this rule can be created. We will later see how the other rules compensate for this. 
+The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in JModelica not all accesses in a class can be followed and therefor not all dependencies from this rule can be created. We will later see how the other rules compensate for this. 
 
-The next rule, rule 2, will create a dependency from a class to it's encapsulating class. An example can be found in figure \ref{fig:parentGraph}. In the example there is a constant \textit{k} defined in package \textit{A}. If another constant with the same name were to be added in in model \textit{B} the reference to \textit{k} in \textit{C} will change to refer to the new constant. Therefore we need a dependency from \textit{C} to \textit{B}.
+The next rule, rule 2, will create a dependency from a class to its encapsulating class. An example can be found in figure \ref{fig:parentGraph}. In the example there is a constant \textit{k} defined in package \textit{A}. If another constant with the same name were to be added in in model \textit{B} the reference to \textit{k} in \textit{C} will change to refer to the new constant. Therefore we need a dependency from \textit{C} to \textit{B}.
 
-In figure \ref{fig:parentGraph} we also expect rule 1 to create a dependency from \textit{C} to \textit{A} due to \textit{k} being located in \textit{A}. However, the accessed \textit{k} cannot be resolved and we will miss the dependency to \textit{A}. In this case we can see that rule 2 can compensate by adding an indirect dependency from \textit{C} to \textit{A}. 
+In figure \ref{fig:parentGraph} we also expect rule 1 to create a dependency from \textit{C} to \textit{A} due to \textit{k} being located in \textit{A}. However, the access \textit{k} cannot be resolved and we will miss the dependency to \textit{A}. In this case we can see that rule 2 can compensate by adding an indirect dependency from \textit{C} to \textit{A}. 
 If the constant k in package \textit{A} is changed it will affect model \textit{C}. Therefore we need a dependency from \textit{C} to \textit{A}. With rule number 1 we get dependencies from \textit{C} to \textit{B} and from \textit{B} to \textit{A}. So we have an indirect dependency from \textit{C} to \textit{A}.
 
 Another way to think about rule 2 is to consider what happens if \textit{A} or \textit{B} is removed. The \textit{C} can no longer be accessed since the path to \textit{C} is broken. This will cause the compilation of C to fail.
@@ -228,7 +229,7 @@ Another way to think about rule 2 is to consider what happens if \textit{A} or \
     \label{fig:dotAccess}
 \end{figure}
 
-In figure \ref{fig:dotAccess}, we want dependencies from model \textit{C} to all parts of the access to \textit{f}. This means that in addition to a dependency to \textit{f} a dependency to \textit{A} is also required. If package \textit{A} is removed it will cause a compilation error when model \textit{C} is compiled. This is caught by rule 3 and is why it is needed.
+In figure \ref{fig:dotAccess}, we want dependencies from model \textit{C} to all parts of the access to \textit{f}. This means that in addition to a dependency to \textit{f}, a dependency to \textit{A} is also required. If package \textit{A} is removed it will cause a compilation error when model \textit{C} is compiled. This is caught by rule 3 and is why it is needed.
 
 
 \begin{figure}[!htbp]
@@ -255,30 +256,13 @@ It is also possible that an access can not be fully resolved. This is the case i
 The exception to rule 4 is added to improve the precision of the test selection. Imports are specific and it is enough to add dependencies to what is actually imported. It is not uncommon to import packages located high up in the library structure. Without this exception unnecessary dependencies would be added to all or large part of the library. For example in Modelica's standard library there are several imports of Modelica, which is the top level package. Such import would create dependencies to every single class in the library. (Such imports may seem unnecessary and in fact they often are, but they can be used to affect the name lookup if there exists classes with the same name in the library)  
 
 \chapter[Implementation]{Implementation}
+
+To do the dependency analysis and get an inverted dependency graph from the Modelica compiler, we specify which files or models has changed. The dependency analysis is done for the specified Modelica classes or for all Modelica classes in the specified files. After the dependency analysis is done we invert the graph and returns a set of Modelica classes that may have changed.
+
 \section{Scope}
 %TODO: Built in functionss
-We have implemented two different options for the dependency analysis, it can either be done based on files or Modelica classes. To do the dependency analysis and get an inverted dependency graph from the Modelica compiler, we specify which files or models that has changed. The dependency analysis are done for the specified Modelica classes or for all Modelica classes in the specified files. After the dependency analysis is done we invert the graph and returns a set of Modelica classes that may have changed.
+%TODO: Update to match current implementation, MTT does some magic.
 
-If a class depends on something in, a library that aren't any of the following: 
-\begin{itemize}
-	\item The library the class is in
-	\item A library any of the other specified classes are in
-	\item A library that is set to be included in the analysis
-\end{itemize}
-the dependency to that library is not included in the dependency graph. Lets look at an example where we specify that class \textit{P.A}, in figure \ref{fig:libraryGraph}, has changed. Then \textit{P} is the library \textit{A} is in. \textit{A} have a dependency to \textit{B} in library \textit{MSL}, here we will not include \textit{MSL.B} in the dependency analysis and by that neither classes that \textit{MSL.B} have dependencies to, in this case in figure \ref{fig:libraryGraph} \textit{MSL.C}, (if those classes aren't included by other dependencies). When we find a dependency to \textit{MSL.B} we stops the analysis there.
-
-\begin{figure}[!htbp]
-    \centering
-    \subfloat{{\includegraphics[scale=0.8]{dotGenerated/LibraryExample.eps}}}
-    \caption{Dependency graph}
-    \label{fig:libraryGraph}
-\end{figure}
-
-Summary of approach:
-\begin{itemize}
-	\item Only do dependency analysis on given Modelica classes
-	\item Don't continue the analysis in libraries that aren't specified
-\end{itemize}
 \section{Inverted dependency graph}
 \begin{figure}[!htbp]
     \centering

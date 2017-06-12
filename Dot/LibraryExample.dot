@@ -1,6 +1,0 @@
-digraph DependencyGraph {
-	"P"
-	"P.A" -> "P"
-	"P.A" -> "MSL.B"
-	"MSL.B" -> "MSL.C"
-}
