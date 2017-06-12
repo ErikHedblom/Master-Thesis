@@ -347,13 +347,24 @@ In our dependency analysis we can't analyze the dependencies in external files. 
 	
 \chapter[Discussion]{Discussion}
 
+\section{Validity}
+Validating the test selection and is an important step to make sure the test selection actually is safe. 
+However, is is not feasible to prove that the dependency analysis and our implementation is 100\% safe. Instead we have tried to prove that is not safe, but that can never prove that what we have built is safe. But, it will increase the our confidence in the test selection. 
+
+To do this we have a couple of approaches, firstly we hope to run our test selection parallel with the complete test suit on Modelon's build server to make sure all failed tests occurring have been caught by our test selection. This approach is inherently flawed since developers are actively trying to not commit code that breaks any tests. %%TODO write some more?
 
 
-\begin{itemize}
-	\item Validity
-	\item Analysis granularity
-    \item Good and bad Modelica patterns for dependency analysis
-\end{itemize}
+Secondly we hope to do some mutation testing by introducing semi random errors in a library and then run all tests not in the test selection. If any test fails we know that the test selection is not safe. Both these approaches are basically the same except mutation testing is probably more effective since we can guarantee that there is problems in the code base. However, depending on the test coverage could still pass. 
+
+
+\section{Granularity}
+A dependency analysis can be performed with different granularities. Our dependency analysis handles classes and is sometimes converted to a more coarse analysis handling files. Generally a more coarse analysis will have lower precision since classes in the same file will be considered having the same dependencies. On the other hand moving to a more granular analysis can be costly, both in running time, complexity and size. A more granular analysis could for example handle dependencies between lines of code instead classes. This would have to be weighted against the precision gained.
+
+We chose class granularity because is was easy to implement. Initially we wanted to perform the analysis at file level but when we started implementing it it was natural to go to class level since all the class level dependencies had to be resolved anyway to find the corresponding files. The results shows significant saving and therefor it is not motivated to increase the precision at the cost of analysis complexity, development time and running time.
+
+\section{Modelica patterns}
+%%TODO: How to write good Modelica code for this test selection
+
 
 \section{Related Work}
 
