@@ -72,7 +72,6 @@ During software development, when a change is integrated into a project all prev
 
 
 \section{Goal}
-
 The aim of this project is too reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a method to exclude tests in a test suite unaffected by a specific change. Regression testing can then be performed with a reduced test suite without compromising testing quality.
 
 
@@ -84,7 +83,6 @@ A safe Regression Test Selection (RTS) method will select at least all tests tha
 There is a trade-off between the precision of the test selection and the overhead. If a RTS algorithm has full precision it doesn't select any tests that can't fail. But the higher precision the more complex algorithm is needed. For a more complex algorithm its harder to follow the rules and verify that the RTS method is safe. A more complex algorithm also creates more overhead.
 
 \section{Modelica}
-
 Modelica is a declarative, object oriented programming language where models are described by equations. It is used to perform high performance simulations. This section will introduce the parts of Modelica important for this project.
 
 Basically everything in Modelica is classes. Built in types such as \textit{Integer} are Modelica classes. Packages, models and functions are classes. A component is a variable or an instance of a class.
@@ -92,7 +90,6 @@ Basically everything in Modelica is classes. Built in types such as \textit{Inte
 %%TODO Accesses and thier paths, Components.  
 
 \subsection{Accesses}
-
 Modelica uses dot notation like many other languages to access something inside an object. Consider the code snippet in figure \ref{fig:modelicaExample}, Model \textit{A} can be accessed though \textit{P1.P2.A}. We will call this an access. Depending on from from which scope \textit{A} is being accessed the access could also be \textit{P2.A} or just \textit{A}. An access using dot notation is basically a list of accesses and we will call all the accesses before the last a path. For instance, \textit{P1.P2} is the path of \textit{P1.P2.A}.
 
 \begin{figure}[!htbp]
@@ -115,13 +112,13 @@ In order to find a match for a name, Modelica starts by looking at the first nam
 
 \item If a match for the name is not found in the imports, Modelica looks for a nested definition in the enclosing package, including inherited definitions.
 
-\item If the definition of the name isn't found in the enclosing package, Modelica looks for a imported definition, not including inherited imports, in the enclosing package.
+\item If the definition of the name is not found in the enclosing package, Modelica looks for a imported definition, not including inherited imports, in the enclosing package.
 \end{itemize}
 If a match for the name still not is found, Modelica continues by using the same method and looking in the enclosing packages enclosing package and so on until: the enclosing package has the encapsulated qualifier or a package is a root package, in which case it doesn't have an enclosing package. In the first case the search for the name terminates and in the second case Modelica searches for a match in root level packages.
 
 The search is done in the same way for the first name in a qualified name and an unqualified name.
 
-If a name is a part of a qualified name and isn't the first name in the qualified name, it must be a nested definition within the definition of the previous name in the qualified name. In the example Modelica.Fluid.Pipes.StaticPipe, Fluid must be a nested definition within Modelica.\cite{modelicamodelica, tillermodelica}
+If a name is a part of a qualified name and is not the first name in the qualified name, it must be a nested definition within the definition of the previous name in the qualified name. In the example Modelica.Fluid.Pipes.StaticPipe, Fluid must be a nested definition within Modelica.\cite{modelicamodelica, tillermodelica}
 
 \subsection{Import}
 Imports are possible in Modelica to refer to a class or component in another package that is not in the same enclosing package. To find an imported object Modelica looks at root packages, so the fully qualified name needs to be used in an import. An import creates an alias. In the import below \textit{HydralicConductance} will be mapped to the fully qualified name \textit{Modelica.Fluid.Types.HydralicConductance}.
@@ -132,7 +129,7 @@ Modelica offers the option to rename an import. Here an alias will be created wh
 
 \lstinputlisting[language=modelica]{Modelica/renamedImport.mo}
 
-Modelica allows the use of wildcard imports. Using wildcards it isn't possible to rename the import. This wildcard import will create an alias for every definition in \textit{Modelica.Fluid}.
+Modelica allows the use of wildcard imports. Using wildcards it is not possible to rename the import. This wildcard import will create an alias for every definition in \textit{Modelica.Fluid}.
 
 \lstinputlisting[language=modelica]{Modelica/wildcardImport.mo}
 
@@ -164,11 +161,9 @@ JModelica is developed using the Meta compiler JastAdd. JastAdd is a system base
 Collection attributes are defined by partial definitions in a number of arbitrary nodes. A node that have a partial definition of a collection attribute contributes to the value of the collection attribute. A collection attribute is usually a set where the empty set is the initial value of the collection attribute. The contributors, the nodes that contributes to the collection attribute, can for example contribute by adding elements to the set.~\cite{magnusson2007extending}
 
 \section{Model Testing Toolkit}
-
 Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing of Modelica projects. It has both a command line and a graphical interface and we will add functionality and options to both to support test selection.
 
 \chapter[Dependency analysis]{Dependency analysis}
-
 To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. First we introduce the rules and then we will go on and explain and motivate each one.
 
 \paragraph{Rules}
@@ -240,11 +235,9 @@ It is also possible that an access can not be fully resolved. This is the case i
 The exception to rule 4 is added to improve the precision of the test selection. Imports are specific and it is enough to add dependencies to what is actually imported. It is not uncommon to import packages located high up in the library structure. Without this exception unnecessary dependencies would be added to all or large part of the library. For example in Modelica's standard library there are several imports of Modelica, which is the top level package. Such import would create dependencies to every single class in the library. (Such imports may seem unnecessary and in fact they often are, but they can be used to affect the name lookup if there exists classes with the same name in the library)  
 
 \chapter[Implementation]{Implementation}
-
 To do the dependency analysis and get an inverted dependency graph from the Modelica compiler, we specify which files or models has changed. The dependency analysis is done for the specified Modelica classes or for all Modelica classes in the specified files. After the dependency analysis is done we invert the graph and returns a set of Modelica classes that may have changed.
 
 \section{Scope}
-
 To speed up the dependency analysis we ask the user to specify which libraries should be search for dependencies. For example Modelica automatically link projects to the the standard library but users will rarely make changes to or test it. Hence, searching for dependencies to and in the standard library will usually be unnecessary. There might also be other dependencies in a project that are considered stable and unnecessary to analyze. In MTT this is handled by automatically search all open libraries.
 
 Furthermore, our implementation also excludes Modelica built-ins. Built-ins such as \textit{Real} should never change, and if they do, it means the compiler has changed. If the compiler has changed all test will have to be rerun anyway.
@@ -254,7 +247,6 @@ There is no automatic change detection, instead the user will manually have to s
 
 
 \section{Inverted dependency graph}
-
 In figure \ref{fig:invertedGraph},the left graph has two Modelica classes, \textit{C1} and \textit{C2}. \textit{C2} Has a dependency to \textit{C1}. We also have two tests, \textit{T1} and \textit{T2}. \textit{T1} tests \textit{C1} and \textit{T2} tests \textit{C2}. When \textit{C1} is changed both tests, \textit{T1} and \textit{T2} should be selected. When \textit{C2} is changed only test \textit{T2} needs to be selected.
 
 When we specify that a class has changed, we want to get a set containing all classes that may be affected. So if we specify that \textit{C2} has changed, \textit{C2} is the only class that can be affected. If we instead say that \textit{C1} has changed both \textit{C1} and \textit{C2} may be affected. Starting from \textit{C1}, the problem is to find all classes that depends on \textit{C1}. To solve this we need to invert the dependency graph, see right graph.
@@ -299,7 +291,7 @@ In figure \ref{fig:mslhistory} we have used all the commits in the commit histor
     \label{fig:mslhistory}
 \end{figure}
  
- Booth rule number 4, that we need due to limitations of the lookup in the source tree and the handling of files that isn't Modelica files, lowers the precision of the test selection and creates extra overhead.
+ Booth rule number 4, that we need due to limitations of the lookup in the source tree and the handling of files that is not Modelica files, lowers the precision of the test selection and creates extra overhead.
 
 \chapter[Future Work]{Future Work}
 	
@@ -325,7 +317,6 @@ We chose class granularity because is was easy to implement. Initially we wanted
 
 
 \section{Related Work}
-
 % Kan kanske flyttas till bakgrunden ev till test selection delen.
 A master thesis similar to this one has previously been done at LTH. In the previously master thesis JastAdd was used to decrease the cost for testing of Android projects ~\cite{kampe2012dependroid}. There is research done on test selection. A method for safe RTS for Java has been developed before, that has many similarities with the method we are developing for Modelica. 
 
