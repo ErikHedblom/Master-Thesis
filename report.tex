@@ -89,10 +89,10 @@ Modelica is an declarative, object oriented programming language where models ar
 
 %%TODO Accesses and thier paths, Components.  
 
-\subsection{Modelica names}
+\subsection{Accesses}
 
+Modelica uses dot notation like many other languages to access something inside an object. Consider the code snippet in figure \ref{fig:modelicaExample}, Model \textit{A} can be accessed though \textit{P1.P2.A}. We will call this an access. Depending on from from which scope \textit{A} is being accessed the access could also be \textit{P2.A} or just \textit{A}. An access using dot notation is basically a list of accesses and we will call all the accesses before the last a path. For instance, \textit{P1.P2} is the path of \textit{P1.P2.A}.
 
-A dot is used to separate classes in the path to a class or component in a qualified name. A fully qualified Modelica name starts with a root level package. The fully qualified name of model \textit{A} in figure \ref{fig:modelicaExample} is P1.P2.A. An unqualified name consists of only one name, it doesn't contain a dot. \textit{A} is the unqualified name of the model in figure \ref{fig:modelicaExample}.
 \begin{figure}[!htbp]
     \centering
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/ModelicaExample.eps}}}
@@ -151,8 +151,6 @@ Modelica offers the option to rename an import. Here an alias will be created wh
 Modelica allows the use of wildcard imports. Using wildcards it isn't possible to rename the import. This wildcard import will create an alias for every definition in \textit{Modelica.Fluid}.
 
 \lstinputlisting[language=modelica]{Modelica/wildcardImport.mo}
-
-\subsection{Accesses}
 
 \section{Compiler}
 JModelica is an open source compiler that is developed and maintained by Modelon. Optimica Compiler Toolkit (OCT) is the commercial version of JModelica. Our solution will be developed in OCT but will not use any OCT specific functionality. 
