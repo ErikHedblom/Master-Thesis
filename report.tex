@@ -51,7 +51,7 @@ Your abstract should capture, in English, the whole thesis with focus on the pro
 Leave a \textit{2cm} vertical space after the abstract and provide a few keywords relevant for your report. Use five to six words, of which at most two should be from the title.
 }
 
-\keywords{Test Selection, Modelica}
+\keywords{Test Selection, Modelica, JastAdd, Regression testing}
 
 \divisionoflabor{
 }
@@ -85,7 +85,9 @@ There is a trade-off between the precision of the test selection and the overhea
 
 \section{Modelica}
 
-Modelica is an declarative, object oriented programming language where models are described by equations. It's used to get high performance simulations.
+Modelica is an declarative, object oriented programming language where models are described by equations. It's used to perform high performance simulations. This section will introduce the parts of Modelica important for this project.
+
+
 
 \subsection{Modelica names}
 A dot is used to separate classes in the path to a class or component in a qualified name. A fully qualified Modelica name starts with a root level package. The fully qualified name of model \textit{A} in figure \ref{fig:modelicaExample} is P1.P2.A. An unqualified name consists of only one name, it doesn't contain a dot. \textit{A} is the unqualified name of the model in figure \ref{fig:modelicaExample}.
@@ -101,7 +103,7 @@ A dot is used to separate classes in the path to a class or component in a quali
 \subsection{Classes}
 Basically everything in Modelica is classes. Built in types such as Integer are Modelica classes. Packages, models and functions are classes. Modelica is an object-oriented language, inheritance is possible. The extends clause is used to create an subclass of an superclass. In figure \ref{fig:classDefinition}, \textit{P2} is a subclass to \textit{P1}, which is a superclass to \textit{P2}. The subclass inherits everything in the superclass. The subclass may have more content than the superclass, but all the content in the super class is also in the subclass. 
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
     \centering
     \subfloat{{\lstinputlisting[language=modelica]{Modelica/packageDecl.mo}}}
     \caption{Class definition}
@@ -110,7 +112,7 @@ Basically everything in Modelica is classes. Built in types such as Integer are 
 
 A redeclare can be used to replace the declaration of an class or component with a new declaration. A component is a variable or an instance of a class. In figure ~\ref{fig:redeclare}, \textit{x} is declared in model \textit{A}. An instance of \textit{A} is created in model \textit{C} where \textit{x} is redeclared. The \textit{y} in model \textit{B}, \textit{B.y}, will have the value 1, while the \textit{y} in model \textit{C}, \textit{C.y}, will have the value 2.
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 	\lstinputlisting[language=modelica]{Modelica/redeclare.mo}
     \caption{Redeclare}
     \label{fig:redeclare}
