@@ -99,7 +99,7 @@ Modelica uses dot notation like many other languages to access something inside 
 It is not apparent form an access what it is trying to access, it could be a package, model, function or a component. Due to this we will simplify the terminology by grouping models, packages and function together and just call them classes. Components are instantiations of models and will be handled separately since our solution can not resolve accesses to components yet.
 
 \subsection{Name lookup}
-In order to find a match for a name, Modelica starts by looking at the first name in a qualified name. Take for example the fully qualified name Modelica.Fluid.Pipes.StaticPipe. In this example Modelica is the first name in the qualified name.
+In order to find a match for a name, Modelica starts by looking at the first name in a qualified name. Take for example the qualified name Modelica.Fluid.Pipes.StaticPipe. In this example Modelica is the first name in the qualified name.
 \begin{itemize}
 \item To find a match for the name, Modelica first checks if it's a built in type. If it's a built in type Modelica has found a match for the name.
 
@@ -118,11 +118,11 @@ The search is done in the same way for the first name in a qualified name and an
 If a name is a part of a qualified name and is not the first name in the qualified name, it must be a nested definition within the definition of the previous name in the qualified name. In the example Modelica.Fluid.Pipes.StaticPipe, Fluid must be a nested definition within Modelica.\cite{modelicamodelica, tillermodelica}
 
 \subsection{Import}
-Imports are possible in Modelica to refer to a class or component in another package that is not in the same enclosing package. To find an imported object Modelica looks at root packages, so the fully qualified name needs to be used in an import. An import creates an alias. In the import below \textit{HydralicConductance} will be mapped to the fully qualified name \textit{Modelica.Fluid.Types.HydralicConductance}.
+Imports are possible in Modelica to refer to a class or component in another package that is not in the same enclosing package. To find an imported object Modelica looks at root packages, so the qualified name needs to be used in an import. An import creates an alias. In the import below \textit{HydralicConductance} will be mapped to the qualified name \textit{Modelica.Fluid.Types.HydralicConductance}.
 
 \lstinputlisting[language=modelica]{Modelica/import.mo}
 
-Modelica offers the option to rename an import. Here an alias will be created where the name \textit{Conductance} is mapped to the fully qualified name \textit{Modelica.Fluid.Types.HydralicConductance}.
+Modelica offers the option to rename an import. Here an alias will be created where the name \textit{Conductance} is mapped to the qualified name \textit{Modelica.Fluid.Types.HydralicConductance}.
 
 \lstinputlisting[language=modelica]{Modelica/renamedImport.mo}
 
