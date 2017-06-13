@@ -85,12 +85,7 @@ There is a trade-off between the precision of the test selection and the overhea
 \section{Modelica}
 Modelica is a declarative, object oriented programming language where models are described by equations. It is used to perform high performance simulations. This section will introduce the parts of Modelica important for this project.
 
-Basically everything in Modelica is classes. Built in types such as \textit{Integer} are Modelica classes. Packages, models and functions are classes. A component is a variable or an instance of a class.
-
-%%TODO Accesses and thier paths, Components.  
-
-\subsection{Accesses}
-Modelica uses dot notation like many other languages to access something inside an object. Consider the code snippet in figure \ref{fig:modelicaExample}, Model \textit{A} can be accessed though \textit{P1.P2.A}. We will call this an access. Depending on from from which scope \textit{A} is being accessed the access could also be \textit{P2.A} or just \textit{A}. An access using dot notation is basically a list of accesses and we will call all the accesses before the last a path. For instance, \textit{P1.P2} is the path of \textit{P1.P2.A}.
+Modelica uses dot notation like many other languages to access something inside an object. Consider the code snippet in figure \ref{fig:modelicaExample}, Model \textit{A} can be accessed though \textit{P1.P2.A}. We will call this an access. Depending on from from which scope \textit{A} is being accessed the access could also be \textit{P2.A} or just \textit{A}. An access using dot notation is basically a list of accesses and we will call all the accesses before the last a path. For instance, \textit{P1.P2} is the path of \textit{P1.P2.A}. We will also denote an access, where the first part of it is referencing the top package in the library, as a qualified name.
 
 \begin{figure}[!htbp]
     \centering
@@ -100,6 +95,8 @@ Modelica uses dot notation like many other languages to access something inside 
     \caption{Example of Modelica structure}
     \label{fig:modelicaExample}
 \end{figure}
+
+It is not apparent form an access what it is trying to access, it could be a package, model, function or a component. Due to this we will simplify the terminology by grouping models, packages and function together and just call them classes. Components are instantiations of models and will be handled separately since our solution can not resolve accesses to components yet.
 
 \subsection{Name lookup}
 In order to find a match for a name, Modelica starts by looking at the first name in a qualified name. Take for example the fully qualified name Modelica.Fluid.Pipes.StaticPipe. In this example Modelica is the first name in the qualified name.
