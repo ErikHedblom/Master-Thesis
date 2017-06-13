@@ -259,9 +259,9 @@ To do the dependency analysis and get an inverted dependency graph from the Mode
 
 \section{Scope}
 
-To speed up the dependency analysis we have ask the user can specify which libraries should be search for dependencies. For example Modelica automatically link projects to the the standard library but users will rarely make changes to or test it. Hence, searching for dependencies to and in the standard library will usually be unnecessary. There might also be other dependencies in a project that are considered stable and unnecessary to analyze. In MTT this is handled by automatically search all open libraries.
+To speed up the dependency analysis we ask the user to specify which libraries should be search for dependencies. For example Modelica automatically link projects to the the standard library but users will rarely make changes to or test it. Hence, searching for dependencies to and in the standard library will usually be unnecessary. There might also be other dependencies in a project that are considered stable and unnecessary to analyze. In MTT this is handled by automatically search all open libraries.
 
-Furthermore, our implementation also excludes Modelica built-ins. Built-ins such as \textit{Real} should never changes, hand if they do it means the compiler has changed. If the compiler has changed all test will have to be rerun anyway.
+Furthermore, our implementation also excludes Modelica built-ins. Built-ins such as \textit{Real} should never change, and if they do, it means the compiler has changed. If the compiler has changed all test will have to be rerun anyway.
 
 \section{Change detection}
 There is no automatic change detection, instead the user will manually have to specify which models or files should be considered changed.
