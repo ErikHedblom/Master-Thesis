@@ -218,7 +218,7 @@ Another way to think about rule 2 is to consider what happens if \textit{A} or \
     \centering
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/DotAccess.eps}}}
     \qquad
-    \subfloat{\raisebox{10 cm}{
+    \subfloat{\raisebox{9.5 cm}{
         \begin{minipage}[t]{.5\textwidth}
         \centering
         \lstinputlisting[language=modelica]{Modelica/DotAccess.mo}
@@ -286,15 +286,9 @@ The Modelica language allows the use of external functions that are not defined 
 
 In our dependency analysis we do not analyze the dependencies in external files. To handle this, and keep the test selection safe, if a file that is not a Modelica file has changed we assume that every Modelica class that has a reference to an external is affected.
 \chapter[Evaluation]{Evaluation}
-\begin{itemize}
-	\item Savings
-	\item Precision
-\end{itemize}
+%TODO: Precision
 The time it takes to run the dependency analysis is not included in any of the graphs in this chapter.
-To assess how much time our test selection can save we have run all the tests several times for some Modelica libraries to get the average time it takes to run each test. Then we have done the test selection for each Modelica file in the library and summed up the time for all tests that are selected when we say that file has changed. In figure \ref{fig:hxlonefile} the total time to run the tests selected for each file in HXL is plotted. The files are on the x-axis and on the y-axis is the time for the selected tests, in percent of the time it takes run all tests. HXL is the Heat Exchanger Library developed by Modelon. The corresponding graph for MSL is in figure \ref{fig:mslonefile}. MSL is the Modelica Standard Library.
-
-%TODO: State which version we have run the depedency analysis for and which commits that are in the graphs
-%TODO: Format Graphs and check title and axes
+To assess how much time our test selection can save we have run all the tests several times for some Modelica libraries to get the average time it takes to run each test. Then we have done the test selection for each Modelica file in the library and summed up the time for all tests that are selected when we say that file has changed. In figure \ref{fig:hxlonefile} the total time to run the tests selected for each file in HXL is plotted. The files are on the x-axis and on the y-axis is the time for the selected tests, in percent of the time it takes run all tests. HXL is the Heat Exchanger Library developed by Modelon. The corresponding graph for MSL version 3.2.2 is in figure \ref{fig:mslonefile}. MSL is the Modelica Standard Library.
 
 \begin{figure}
     \centering
@@ -310,7 +304,7 @@ To assess how much time our test selection can save we have run all the tests se
     \label{fig:mslonefile}
 \end{figure}
 
-In figure \ref{fig:mslhistory} we have used all the commits in the commit history for MSL. On the x-axis we have commits. On the y-axis we have the time for running all the tests that are selected when the test selection is done for the files that has changed in that commit. The time is here too plotted as the percent of the total time for running all tests. We have not run the dependency analysis for each version of the library in the commit history. We have only done the dependency analysis on the latest version and used that dependency graph for all versions.
+In figure \ref{fig:mslhistory} we have used all the commits in the commit history for MSL until commit 2260. On the x-axis we have commits. On the y-axis we have the time for running all the tests that are selected when the test selection is done for the files that has changed in that commit. The time is here too plotted as the percent of the total time for running all tests. We have not run the dependency analysis for each version of the library in the commit history. We have only done the dependency analysis on the latest version and used that dependency graph for all versions. The average time saving for test executions in figure \ref{fig:mslhistory} is 56\% per commit (time for running dependency analysis excluded).
 
 \begin{figure}
     \centering
