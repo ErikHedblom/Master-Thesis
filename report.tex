@@ -173,15 +173,13 @@ In the last step C-code is generated.\cite{aakesson2010implementation}
 \end{figure}
 
 \section{JastAdd}
-JModelica is developed using the Meta compiler JastAdd. JastAdd is a system based on reference attribute grammars, for extensible implementation of compilers. An Abstract Syntax Tree (AST) is used to represent a program. Attribute Grammars is amethod for declerativly defining computations on an AST. A node in an AST can have a synthezied attribute or an inherited attribute. An attribue is defined by an equation. A synthezied attribyte is defined in the node, an inherired attribute is defined in an ancestor node. A JastAdd specification is used to create an object-oriented framework.~\cite{aakesson2008development}
-
-\section{Model Testing Toolkit}
-%TODO: What is MTT, What can it do? What is it used for? Not how it works. Rework this section
-Model testing Toolkit, MTT is a model testing toolkit that's going to use the test selection, MTT calls the OCT where the dependency analysis is implemented.
-
-MTT is based on nose tests for Python \cite{noseDoc}. Nose finds all tests automatically and runs them if nothing is specified. In MTT a test case is represented by a xml file and every test case has a Modelica model. So when you like to run test cases only associated with a specific model it's easy to select only the test cases which have the model you are interested in. When tests are run in MTT a HTML report of the results are created.
+JModelica is developed using the Meta compiler JastAdd. JastAdd is a system based on reference attribute grammars, for extensible implementation of compilers. An Abstract Syntax Tree (AST) is used to represent a program. Attribute Grammars is a method for declaratively defining computations on an AST. A node in an AST can have a synthesized attribute or an inherited attribute. An attribute is defined by an equation. A synthesized attribute is defined in the node, an inherited attribute is defined in an ancestor node. A JastAdd specification is used to create an object-oriented framework.~\cite{aakesson2008development}
 
 Collection attributes are defined by partial definitions in a number of arbitrary nodes. A node that have a partial definition of a collection attribute contributes to the value of the collection attribute. A collection attribute is usually a set where the empty set is the initial value of the collection attribute. The contributors, the nodes that contributes to the collection attribute, can for example contribute by adding elements to the set.~\cite{magnusson2007extending}
+
+\section{Model Testing Toolkit}
+
+Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing of Modelica projects. It has both a command line and a graphical interface and we will add functionality and options to both to support test selection.
 
 \chapter[Dependency analysis]{Dependency analysis}
 
@@ -260,8 +258,14 @@ The exception to rule 4 is added to improve the precision of the test selection.
 To do the dependency analysis and get an inverted dependency graph from the Modelica compiler, we specify which files or models has changed. The dependency analysis is done for the specified Modelica classes or for all Modelica classes in the specified files. After the dependency analysis is done we invert the graph and returns a set of Modelica classes that may have changed.
 
 \section{Scope}
-%TODO: Built in functionss
-%TODO: Update to match current implementation, MTT does some magic.
+
+To speed up the dependency analysis we have ask the user can specify which libraries should be search for dependencies. For example Modelica automatically link projects to the the standard library but users will rarely make changes to or test it. Hence, searching for dependencies to and in the standard library will usually be unnecessary. There might also be other dependencies in a project that are considered stable and unnecessary to analyze. In MTT this is handled by automatically search all open libraries.
+
+Furthermore, our implementation also excludes Modelica built-ins. Built-ins such as \textit{Real} should never changes, hand if they do it means the compiler has changed. If the compiler has changed all test will have to be rerun anyway.
+
+\section{Change detection}
+There is no automatic change detection, instead the user will manually have to specify which models or files should be considered changed.
+
 
 \section{Inverted dependency graph}
 
