@@ -85,7 +85,9 @@ There is a trade-off between the precision of the test selection and the overhea
 
 \section{Modelica}
 
-Modelica is an declarative, object oriented programming language where models are described by equations. It is used to perform high performance simulations. This section will introduce the parts of Modelica important for this project.
+Modelica is a declarative, object oriented programming language where models are described by equations. It is used to perform high performance simulations. This section will introduce the parts of Modelica important for this project.
+
+Basically everything in Modelica is classes. Built in types such as \textit{Integer} are Modelica classes. Packages, models and functions are classes. A component is a variable or an instance of a class.
 
 %%TODO Accesses and thier paths, Components.  
 
@@ -100,24 +102,6 @@ Modelica uses dot notation like many other languages to access something inside 
     \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{Modelica/ModelicaExample.mo}}}
     \caption{Example of Modelica structure}
     \label{fig:modelicaExample}
-\end{figure}
-
-\subsection{Classes}
-Basically everything in Modelica is classes. Built in types such as Integer are Modelica classes. Packages, models and functions are classes. Modelica is an object-oriented language, inheritance is possible. The extends clause is used to create an subclass of an superclass. In figure \ref{fig:classDefinition}, \textit{P2} is a subclass to \textit{P1}, which is a superclass to \textit{P2}. The subclass inherits everything in the superclass. The subclass may have more content than the superclass, but all the content in the super class is also in the subclass. 
-
-\begin{figure}[!htbp]
-    \centering
-    \subfloat{{\lstinputlisting[language=modelica]{Modelica/packageDecl.mo}}}
-    \caption{Class definition}
-    \label{fig:classDefinition}
-\end{figure}
-
-A redeclare can be used to replace the declaration of an class or component with a new declaration. A component is a variable or an instance of a class. In figure ~\ref{fig:redeclare}, \textit{x} is declared in model \textit{A}. An instance of \textit{A} is created in model \textit{C} where \textit{x} is redeclared. The \textit{y} in model \textit{B}, \textit{B.y}, will have the value 1, while the \textit{y} in model \textit{C}, \textit{C.y}, will have the value 2.
-
-\begin{figure}[!htbp]
-	\lstinputlisting[language=modelica]{Modelica/redeclare.mo}
-    \caption{Redeclare}
-    \label{fig:redeclare}
 \end{figure}
 
 \subsection{Name lookup}
