@@ -69,18 +69,20 @@ Leave a \textit{2cm} vertical space after the abstract and provide a few keyword
 
 \section{Motivation}
 Software tests are used to verify that software works as intended.
-During software development, when a change is integrated into a project all previous testing have to be rerun. This is know as regression testing. \cite{DBLP:conf/sigsoft/LegunsenHSLZM16} Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the tests may be unrelated to the change and therefore unnecessary to run. By excluding unrelated tests significant time savings could be achieved. This is called test selection and have to our knowledge not been previously done for Modelica. Modelica is a high level programming language used for simulations in various areas. When the test selection is done for regression tests it is known as regression test selection (RTS).
+During software development, when a change is integrated into a project all previous testing have to be rerun. \cite{DBLP:conf/sigsoft/LegunsenHSLZM16, haider2016safe} This is know as regression testing. Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the tests may be unrelated to the change and therefore unnecessary to run. By excluding unrelated tests significant time savings could be achieved. This is called test selection and have to our knowledge not been previously done for Modelica. Modelica is a high level programming language used for simulations in various areas. When the test selection is done for regression tests it is known as regression test selection (RTS).
 
 
 \section{Goal}
-The aim of this project is too reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a method to exclude tests in a test suite unaffected by a specific change. Regression testing can then be performed with a reduced test suite without compromising testing quality.
+The aim of this project is to reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a safe RTS method, a method to exclude tests in a test suite unaffected by a specific change. \cite{DBLP:conf/pppj/OqvistHM16} Regression testing can then be performed with a reduced test suite without compromising testing quality.
 
+\section{Results}
+We have succeeded in decreasing the time for testing by test selection for Modelica. However we cannot prove that the method we have developed is safe.
 
 \chapter[Background]{Background}
 \section{Test Selection}
-A safe Regression Test Selection (RTS) method will select at least all tests that produce a new result after a specific change. A safe RTS method is therefore equivalent, in quality, to running all tests. For a RTS method to be useful the RTS algorithm should run in less time than it takes to run the excluded tests. This is not necessary for each run, but on average the overhead needs to be less than the time it takes to run the excluded tests.
+A safe Regression Test Selection (RTS) method will select at least all tests that produce a new result after a specific change. \cite{DBLP:conf/pppj/OqvistHM16} A safe RTS method is therefore equivalent, in quality, to running all tests. For a RTS method to be useful the RTS algorithm should run in less time than it takes to run the excluded tests. This is not necessary for each run, but on average the overhead needs to be less than the time it takes to run the excluded tests.
 
-Precision is a measurement of how good the test selection is. If fewer redundant tests are selected the test selection has higher precision. There is a trade-off between the precision of the test selection and the overhead. If a RTS algorithm has full precision it doesn't select any tests that can't fail. But the higher precision the more complex algorithm is needed. For a more complex algorithm its harder to follow the rules and verify that the RTS method is safe. A more complex algorithm also creates more overhead.
+Precision is a measurement of how good the test selection is. \cite{DBLP:conf/sigsoft/LegunsenHSLZM16} If fewer redundant tests are selected the test selection has higher precision. There is a trade-off between the precision of the test selection and the overhead. If a RTS algorithm has full precision it doesn't select any tests that can't fail. But the higher precision the more complex algorithm is needed. For a more complex algorithm its harder to follow the rules and verify that the RTS method is safe. A more complex algorithm also creates more overhead.
 
 \section{Modelica}
 Modelica is a declarative, object oriented programming language where models are described by equations. It is used to perform high performance simulations. This section will introduce the parts of Modelica important for this project.
