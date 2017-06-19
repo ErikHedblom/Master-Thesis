@@ -207,7 +207,7 @@ If the constant k in package \texttt{P} is changed it will affect model \texttt{
     \label{fig:dotAccess}
 \end{figure}
 
-In Figure \ref{fig:dotAccess}, we want dependencies from model \texttt{M} to all parts of the access to \texttt{f}. This means that in addition to a dependency to \texttt{f}, a dependency to \texttt{P2} is also required. If package \texttt{P2} is removed it will cause a compilation error when model \texttt{M} is compiled. Or if a new definition of \texttt{f} is added in \texttt{P2} it will change the behavior of model \texttt{M}. This is caught by Rule 3, that creates dependencies from \texttt{M} to \texttt{f} and \texttt{P2}.
+In Figure \ref{fig:dotAccess}, we want dependencies from model \texttt{M} to all parts of the access to \texttt{f}. This means that in addition to a dependency to \texttt{f}, a dependency to \texttt{P3} is also required. If package \texttt{P3} is removed it will cause a compilation error when model \texttt{M} is compiled. Also, if \texttt{f} is shadowed in \texttt{P3} the behavior of model \texttt{M} will change. This is caught by Rule 3, that creates dependencies from \texttt{M} to \texttt{f} and \texttt{P3}.
 
 
 \begin{figure}[!htbp]
@@ -331,6 +331,8 @@ A master thesis similar to this one has previously been done at LTH. In the prev
 Studies have been conducted to investigate at which granularity dependency analysis pays off the most and how much precision it can have without getting to expensive ~\cite{DBLP:conf/sigsoft/LegunsenHSLZM16}. It has also been done work in other techniques to achieve shorter time for testing, including dynamic test selection.
 
 \chapter[Conclusion]{Conclusion}
+
+\section{Future work}
 \makebibliography{thebib}
 
 \begin{appendices}

@@ -1,11 +1,11 @@
 digraph DependencyGraph {
 	"P1"
 	"P1.P2" -> "P1"
-	"P1.P2" -> "P1.P3"
-	"P1.P2" -> "P1.P3.f"
+	"P1.P2.f" -> "P1.P2"
 	"P1.P3" -> "P1"
-	"P1.P3.f" -> "P1.P3"
+	"P1.P3" -> "P1.P2"
+	"P1.P3" -> "P1.P2.f"
 	"P1.M" -> "P1"
-	"P1.M" -> "P1.P2"
-	"P1.M" -> "P1.P3.f"
+	"P1.M" -> "P1.P3"
+	"P1.M" -> "P1.P2.f"
 }
