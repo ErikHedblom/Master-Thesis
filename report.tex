@@ -84,7 +84,7 @@ Precision is a measurement of how good the test selection is. If fewer redundant
 \section{Modelica}
 Modelica is a declarative, object oriented programming language where models are described by equations. It is used to perform high performance simulations. This section will introduce the parts of Modelica important for this project.
 
-Modelica uses dot notation like many other languages to access something inside an object. Consider the code snippet in figure \ref{fig:modelicaExample}, Model \texttt{A} can be accessed though \texttt{P1.P2.A}. We will call this an access. Depending on from which scope \texttt{A} is being accessed the access could also be \texttt{P2.A} or just \texttt{A}. An access using dot notation is basically a list of accesses and we will call all the accesses before the last access, the path. For instance, \texttt{P1.P2} is the path of \texttt{P1.P2.A}. We will also denote an access, where the first part of it is referencing the top package in the library, as a qualified name.
+Modelica uses dot notation like many other languages to access something inside an object. Consider the code snippet in figure \ref{fig:modelicaExample}, Model \texttt{M} can be accessed though \texttt{P1.P2.M}. We will call this an access. Depending on from which scope \texttt{M} is being accessed the access could also be \texttt{P2.M} or just \texttt{M}. An access using dot notation is basically a list of accesses and we will call all the accesses before the last access, the path. For instance, \texttt{P1.P2} is the path of \texttt{P1.P2.M}. We will also denote an access, where the first part of it is referencing the top package in the library, as a qualified name.
 
 \begin{figure}[!htbp]
     \centering
@@ -185,10 +185,10 @@ The first rule is perhaps the most intuitive, if a class accesses another class 
 
 The next rule, rule 2, will create a dependency from a class to its encapsulating class. An example can be found in figure \ref{fig:parentGraph}. In the example there is a constant \texttt{k} defined in package \texttt{A}. If another constant with the same name were to be added in in model \texttt{B} the reference to \texttt{k} in \texttt{C} will change to refer to the new constant. Therefore we need a dependency from \texttt{C} to \texttt{B}.
 
-In figure \ref{fig:parentGraph} we also expect rule 1 to create a dependency from \texttt{C} to \texttt{A} due to \texttt{k} being located in \texttt{A}. However, the access \texttt{k} cannot be resolved and we will miss the dependency to \texttt{A}. In this case we can see that rule 2 can compensate by adding an indirect dependency from \texttt{C} to \texttt{A}. 
-If the constant k in package \texttt{A} is changed it will affect model \texttt{C}. Therefore we need a dependency from \texttt{C} to \texttt{A}. With rule number 1 we get dependencies from \texttt{C} to \texttt{B} and from \texttt{B} to \texttt{A}. So we have an indirect dependency from \texttt{C} to \texttt{A}.
+In figure \ref{fig:parentGraph} we also expect rule 1 to create a dependency from \texttt{M2} to \texttt{P} due to \texttt{k} being located in \texttt{P}. However, the access \texttt{k} cannot be resolved and we will miss the dependency to \texttt{P}. In this case we can see that rule 2 can compensate by adding an indirect dependency from \texttt{M2} to \texttt{P}. 
+If the constant k in package \texttt{P} is changed it will affect model \texttt{M2}. Therefore we need a dependency from \texttt{M2} to \texttt{P}. With rule number 1 we get dependencies from \texttt{M2} to \texttt{M1} and from \texttt{M1} to \texttt{P}. So we have an indirect dependency from \texttt{M2} to \texttt{P}.
 
-Another way to think about rule 2 is to consider what happens if \texttt{A} or \texttt{B} is removed. The \texttt{C} can no longer be accessed since the path to \texttt{C} is broken. This will cause the compilation of C to fail.
+Another way to think about rule 2 is to consider what happens if \texttt{P} or \texttt{M1} is removed. The \texttt{M2} can no longer be accessed since the path to \texttt{M2} is broken. This will cause the compilation of \texttt{M2} to fail.
 
 \begin{figure}[!htbp]
     \centering
@@ -199,11 +199,11 @@ Another way to think about rule 2 is to consider what happens if \texttt{A} or \
         \centering
         \lstinputlisting[language=modelica]{Modelica/DotAccess.mo}
         \end{minipage}}}
-    \caption{Access with more access in its path, \texttt{A.f}}
+    \caption{Access with more access in its path, \texttt{P2.f}}
     \label{fig:dotAccess}
 \end{figure}
 
-In figure \ref{fig:dotAccess}, we want dependencies from model \texttt{C} to all parts of the access to \texttt{f}. This means that in addition to a dependency to \texttt{f}, a dependency to \texttt{A} is also required. If package \texttt{A} is removed it will cause a compilation error when model \texttt{C} is compiled. This is caught by rule 3 and is why it is needed.
+In figure \ref{fig:dotAccess}, we want dependencies from model \texttt{M} to all parts of the access to \texttt{f}. This means that in addition to a dependency to \texttt{f}, a dependency to \texttt{P2} is also required. If package \texttt{P2} is removed it will cause a compilation error when model \texttt{M} is compiled. This is caught by rule 3 and is why it is needed.
 
 
 \begin{figure}[!htbp]
@@ -211,12 +211,12 @@ In figure \ref{fig:dotAccess}, we want dependencies from model \texttt{C} to all
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/Component.eps}}}
     \qquad
     \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{Modelica/Component.mo}}}
-    \caption{Access though component}
+    \caption{Access through component}
     \label{fig:component}
 \end{figure}
 
-Rule 4 is needed to handle the case in figure \ref{fig:component}. Ideally the access \texttt{a.B.f} would create dependencies to \texttt{A}, \texttt{B} and \texttt{f}. Because \texttt{a} is a component, \texttt{P.A.B.f} cannot be resolved and now dependencies can be created. Instead rule 4 is used to create dependencies to everything defined in A when \texttt{a} is declared.
-It is also possible that an access can not be fully resolved. This is the case in \ref{fig:brokenAccess}, where the access \texttt{P.a.f} cannot be resolved because the constant \texttt{a} is a component. In this case the only resolvable part is \texttt{P} and a  dependency is created to \texttt{P} by rule 3. \texttt{P} have dependencies to \texttt{A} and \texttt{f} through rule 4. Hence, it is not a problem that rule 4 cannot be applied to \texttt{P.a.f}.
+Rule 4 is needed to handle the case in figure \ref{fig:component}. Ideally the access \texttt{m.M3.f} would create dependencies to \texttt{M2}, \texttt{M3} and \texttt{f}. Because \texttt{m} is a component, \texttt{P.M2.M3.f} cannot be resolved and no dependencies can be created. Instead rule 4 is used to create dependencies to everything defined in \texttt{M3} when \texttt{m} is declared.
+It is also possible that an access can not be fully resolved. This is the case in \ref{fig:brokenAccess}, where the access \texttt{P1.m.f} cannot be resolved because the constant \texttt{m} is a component. In this case the only resolvable part is \texttt{P1} and a  dependency is created to \texttt{P1} by rule 3. \texttt{P1} have dependencies to \texttt{M} and \texttt{f} through rule 4. Hence, it is not a problem that rule 4 cannot be applied to \texttt{P1.m.f}.
 
 \begin{figure}[!htbp]
     \centering

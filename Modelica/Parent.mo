@@ -1,11 +1,11 @@
-package A
+package P
   constant Real k = 1;
-  model B
-    model C
+  model M1
+    model M2
       Real x = k;
-    end C;
-  end B;
-end A;
+    end M2;
+  end M1;
+end P;
 
 
 

@@ -1,6 +1,6 @@
 package P1
   package P2
-    model A
-    end A;
+    model M
+    end M;
   end P2;
 end P1;

@@ -1,18 +1,18 @@
-package P
-  package A
-    extends B;
-  end A
+package P1
+  package P2
+    extends P3;
+  end P2
 
-  package B
+  package P3
     function f
       input Real x;
       output Real y;
     algorithm
       y := x;
     end f;
-  end B;
+  end P3;
 
-  model C
-    Real x = A.f(0);
-  end C;
-end P;
+  model M
+    Real x = P2.f(0);
+  end M;
+end P1;
