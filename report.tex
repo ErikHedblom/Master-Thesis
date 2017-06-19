@@ -247,12 +247,12 @@ There is no automatic change detection, instead the user manually have to specif
 \section{Dependency analysis}
 We have previously described how the dependency analysis should be performed. In this section we will look at some of the aspects not handles by the rules presented in Chapter 3. OCT receives a set of files of a set of models and is expected return the set of affected models in the project.
 
-\section{Scope}
+\subsection{Scope}
 To speed up the dependency analysis we ask the user to specify which libraries should be search for dependencies. For example, the standard library is automatically included in projects but users will rarely make changes to or test it. Hence, searching for dependencies to and in the standard library will usually be unnecessary. There might also be other dependencies in a project that are considered stable and unnecessary to analyze. In MTT this is handled by automatically search all open libraries.
 
 Furthermore, our implementation also excludes Modelica built-ins. Built-ins such as \texttt{Real} should never change, and if they do, it means the compiler has changed. If the compiler has changed all test will have to be rerun anyway.
 
-\section{Inverted dependency graph}
+\subsection{Inverted dependency graph}
 The dependency graph produced in Chapter 3 show the dependencies from the compilers perspective. To find out which models are affected by a change the graph has to be inverted. Consider Figure \ref{fig:invertedGraph}, in the left graph, if \texttt{C2} is changed the graph has to be search backwards to find out that \texttt{T2} should be selected. This is implemented by inverting the graph, resulting in the right graph.
 
 \begin{figure}[!htbp]
@@ -264,7 +264,7 @@ The dependency graph produced in Chapter 3 show the dependencies from the compil
     \label{fig:invertedGraph}
 \end{figure}
 
-\section{External functions}
+\subsection{External functions}
 The Modelica language allows the use of external functions that are not defined in a Modelica file. The external functions are often defined in a C-file.\cite{modelicamodelica}. In our dependency analysis we do not analyze the dependencies in external files. To handle this, and keep the test selection safe, if a non Modelica file is changed we assume that every Modelica class that depend on externals is affected.
 
 
