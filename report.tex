@@ -164,11 +164,11 @@ Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing 
     Write about runconfigs?
 
 \chapter[Dependency analysis]{Dependency analysis}
-To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica.org, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. First we introduce the rules and then we will go on and explain and motivate each one.
+To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica.org, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. When the look of an access fails in the source tree we say the access is not resolvable. This means that an valid access can still fail to resolve. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. First we introduce the rules and then we will go on and explain and motivate each one. In th
 
 \paragraph{Dependency Rules}
 \begin{enumerate}
-\item A class depends on all accesses within it, that can be resolved in the source tree by the JModelica.org compiler.
+\item A class depends on all resolvable accesses within it.
 \item A class depends on its encapsulating class. 
 \item All resolvable accesses in the path of an access yields dependencies.
 \item A class depends on all classes encapsulated by the accessed class. If the access is not resolvable, the last resolvable access in the path will be used instead.
