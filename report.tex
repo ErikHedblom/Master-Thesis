@@ -132,7 +132,7 @@ Modelica allows the use of wildcard imports. Using wildcards it is not possible 
 \section{Compiler}
 JModelica.org is an open source compiler that is developed and maintained by Modelon. Optimica Compiler Toolkit (OCT) is the commercial version of JModelica.org. Our solution will be developed in OCT but will not use any OCT specific functionality. 
 
-The compilation of Modelica code is done in several steps, see Figure \ref{fig:compilerSteps}. In the first step name and type analysis of the source code is done, identifiers are bound to declarations etc. An AST (Abstract Syntax Tree) is built in form of a source tree.
+The compilation of Modelica code is done in several steps, see Figure \ref{fig:compilerSteps}. \cite{aakesson2010implementation} In the first step name and type analysis of the source code is done, identifiers are bound to declarations etc. An AST (Abstract Syntax Tree) is built in form of a source tree.
 
 
 %TODO: Why setep 2 and 3?
@@ -142,7 +142,7 @@ In the third step the Modelica code is flattened, a flat model is generated from
 
 In the fourth step the equations are sorted and optimized.
 
-In the last step C-code is generated.\cite{aakesson2010implementation}
+In the last step C-code is generated.
 
 \begin{figure}[!htbp]
     \centering
@@ -165,11 +165,11 @@ Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing 
 \chapter[Dependency analysis]{Dependency analysis}
 To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica.org, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. First we introduce the rules and then we will go on and explain and motivate each one.
 
-\paragraph{Rules}
+\paragraph{Dependency Rules}
 \begin{enumerate}
-\item A class depends on all resolvable accesses within it.
+\item A class depends on all accesses within it, that can be resolved in the source tree by the JModelica.org compiler.
 \item A class depends on its encapsulating class. 
-\item All resolvable accesses in the path of an access generates dependencies.
+\item All resolvable accesses in the path of an access yields dependencies.
 \item A class depends on all classes encapsulated by the accessed class. If the access is not resolvable, the last resolvable access in the path will be used instead.
 \item Exception to Rule 4: Rule 4 is not applicable to import statements. An import should not add dependencies to classes not imported but the import.
 \end{enumerate}
@@ -186,12 +186,10 @@ To build the dependency graph we have constructed a set of rules to determine wh
 
 The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in JModelica.org not all accesses in a class can be followed and therefor not all dependencies from this rule can be created. We will later see how the other rules compensate for this. 
 
-The next rule, Rule 2, will create a dependency from a class to its encapsulating class. An example can be found in Figure \ref{fig:parentGraph}. In the example there is a constant \texttt{k} defined in package \texttt{A}. If another constant with the same name were to be added in in model \texttt{B} the reference to \texttt{k} in \texttt{C} will change to refer to the new constant. Therefore we need a dependency from \texttt{C} to \texttt{B}.
+The next rule, Rule 2, will create a dependency from a class to its encapsulating class. An example can be found in Figure \ref{fig:parentGraph}. In the example there is a constant \texttt{k} defined in package \texttt{P}. If another constant with the same name were to be added in in model \texttt{M1} the reference to \texttt{k} in \texttt{M2} will change to refer to the new constant and shadow the k in \texttt{P}. Therefore we need a dependency from \texttt{M2} to \texttt{M1} to handle name shadowing.
 
-In Figure \ref{fig:parentGraph} we also expect Rule 1 to create a dependency from \texttt{M2} to \texttt{P} due to \texttt{k} being located in \texttt{P}. However, the access \texttt{k} cannot be resolved and we will miss the dependency to \texttt{P}. In this case we can see that Rule 2 can compensate by adding an indirect dependency from \texttt{M2} to \texttt{P}. 
+In Figure \ref{fig:parentGraph} we also expect Rule 1 to create a dependency from \texttt{M2} to \texttt{P} due to \texttt{k} being located in \texttt{P}. However, the access \texttt{k} cannot be resolved by the JModelica.org compiler in the source tree and we will miss the dependency to \texttt{P}. In this case we can see that Rule 2 can compensate by adding an indirect dependency from \texttt{M2} to \texttt{P}. 
 If the constant k in package \texttt{P} is changed it will affect model \texttt{M2}. Therefore we need a dependency from \texttt{M2} to \texttt{P}. With Rule number 1 we get dependencies from \texttt{M2} to \texttt{M1} and from \texttt{M1} to \texttt{P}. So we have an indirect dependency from \texttt{M2} to \texttt{P}.
-
-Another way to think about Rule 2 is to consider what happens if \texttt{P} or \texttt{M1} is removed. The \texttt{M2} can no longer be accessed since the path to \texttt{M2} is broken. This will cause the compilation of \texttt{M2} to fail.
 
 \begin{figure}[!htbp]
     \centering
@@ -206,7 +204,7 @@ Another way to think about Rule 2 is to consider what happens if \texttt{P} or \
     \label{fig:dotAccess}
 \end{figure}
 
-In Figure \ref{fig:dotAccess}, we want dependencies from model \texttt{M} to all parts of the access to \texttt{f}. This means that in addition to a dependency to \texttt{f}, a dependency to \texttt{P2} is also required. If package \texttt{P2} is removed it will cause a compilation error when model \texttt{M} is compiled. This is caught by Rule 3 and is why it is needed.
+In Figure \ref{fig:dotAccess}, we want dependencies from model \texttt{M} to all parts of the access to \texttt{f}. This means that in addition to a dependency to \texttt{f}, a dependency to \texttt{P2} is also required. If package \texttt{P2} is removed it will cause a compilation error when model \texttt{M} is compiled. Or if a new definition of \texttt{f} is added in \texttt{P2} it will change the behavior of model \texttt{M}. This is caught by Rule 3, that creates dependencies from \texttt{M} to \texttt{f} and \texttt{P2}.
 
 
 \begin{figure}[!htbp]
@@ -218,8 +216,8 @@ In Figure \ref{fig:dotAccess}, we want dependencies from model \texttt{M} to all
     \label{fig:component}
 \end{figure}
 
-Rule 4 is needed to handle the case in Figure \ref{fig:component}. Ideally the access \texttt{m.M3.f} would create dependencies to \texttt{M2}, \texttt{M3} and \texttt{f}. Because \texttt{m} is a component, \texttt{P.M2.M3.f} cannot be resolved and no dependencies can be created. Instead Rule 4 is used to create dependencies to everything defined in \texttt{M3} when \texttt{m} is declared.
-It is also possible that an access can not be fully resolved. This is the case in \ref{fig:brokenAccess}, where the access \texttt{P1.m.f} cannot be resolved because the constant \texttt{m} is a component. In this case the only resolvable part is \texttt{P1} and a  dependency is created to \texttt{P1} by Rule 3. \texttt{P1} have dependencies to \texttt{M} and \texttt{f} through Rule 4. Hence, it is not a problem that Rule 4 cannot be applied to \texttt{P1.m.f}.
+Rule 4 is needed to handle the case in Figure \ref{fig:component}. Ideally the access \texttt{m.M3.f} would create dependencies to \texttt{M2}, \texttt{M3} and \texttt{f}. Because \texttt{m} is a component and the analysis is done in the source tree, \texttt{P.M2.M3.f} cannot be resolved and no dependencies can be created. Instead Rule 4 is used to create dependencies to everything defined in \texttt{M3} when \texttt{m} is declared.
+It is also possible that an access cannot be fully resolved. This is the case in \ref{fig:brokenAccess}, where the access \texttt{P1.m.f} cannot be resolved because the constant \texttt{m} is a component. In this case the only resolvable part is \texttt{P1} and a  dependency is created to \texttt{P1} by Rule 3. \texttt{P1} have dependencies to \texttt{M} and \texttt{f} through Rule 4. Hence, it is not a problem that Rule 4 cannot be applied to \texttt{P1.m.f}.
 
 \begin{figure}[!htbp]
     \centering
