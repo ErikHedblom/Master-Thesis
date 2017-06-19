@@ -68,8 +68,14 @@ If you want to thank people, do it here, on a separate right-hand page. Both the
 
 \section{Motivation}
 Software tests are used to verify that software works as intended.
-During software development, when a change is integrated into a project all previous testing have to be rerun. \cite{DBLP:conf/sigsoft/LegunsenHSLZM16, haider2016safe} This is know as regression testing. Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the tests may be unrelated to the change and therefore unnecessary to run. By excluding unrelated tests significant time savings could be achieved. This is called test selection and have to our knowledge not been previously done for Modelica. Modelica is a high level programming language used for simulations in various areas. When the test selection is done for regression tests it is known as regression test selection (RTS).
+During software development, when a change is integrated into a project all previous testing have to be rerun. \cite{DBLP:conf/sigsoft/LegunsenHSLZM16, haider2016safe} This is know as regression testing. Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the tests may be unrelated to the change and therefore unnecessary to run. By excluding unrelated tests significant time savings could be achieved. This is called test selection and have to our knowledge not been previously done for Modelica. Modelica is a high level programming language used for simulations in various areas. In Figure \ref{fig:bouncingBallCode} is an example of Modelica code, it shows a model of a bouncing ball and a model with two instances of a bouncing ball. When the test selection is done for regression tests it is known as regression test selection (RTS). 
 
+\begin{figure}[!htbp]
+    \centering
+    {\lstinputlisting[language=modelica]{Modelica/BouncingBall.mo}}
+    \caption{Modelica example bouncing ball, retrieved from \cite{aakesson2010implementation}}.
+    \label{fig:bouncingBallCode}
+\end{figure}
 
 \section{Goal}
 The aim of this project is to reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a safe RTS method, a method to exclude tests in a test suite unaffected by a specific change. \cite{DBLP:conf/pppj/OqvistHM16} Regression testing can then be performed with a reduced test suite without compromising testing quality.
@@ -85,13 +91,6 @@ Precision is a measurement of how good the test selection is. \cite{DBLP:conf/si
 
 \section{Modelica}
 Modelica is a declarative, object oriented programming language where models are described by equations. It is used to perform high performance simulations. This section will introduce the parts of Modelica important for this project.
-
-\begin{figure}[!htbp]
-    \centering
-    {\lstinputlisting[language=modelica]{Modelica/ModelicaExample.mo}}
-    \caption{Modelica example bouncing ball, from \cite{aakesson2010implementation}.
-    \label{fig:bouncingBallCode}
-\end{figure}
 
 Modelica uses dot notation like many other languages to access something inside an object. Consider the code snippet in Figure \ref{fig:modelicaExample}, Model \texttt{M} can be accessed though \texttt{P1.P2.M}. We will call this an access. Depending on from which scope \texttt{M} is being accessed the access could also be \texttt{P2.M} or just \texttt{M}. An access using dot notation is basically a list of accesses and we will call all the accesses before the last access, the path. For instance, \texttt{P1.P2} is the path of \texttt{P1.P2.M}. We will also denote an access, where the first part of it is referencing the top package in the library, as a qualified name.
 
