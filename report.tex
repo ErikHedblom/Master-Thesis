@@ -155,7 +155,7 @@ In the last step C-code is generated.
 \end{figure}
 
 \section{JastAdd}
-JModelica.org is developed using the Meta compiler JastAdd. JastAdd is a system based on reference attribute grammars, for extensible implementation of compilers. An Abstract Syntax Tree (AST) is used to represent a program. Attribute Grammars is a method for declaratively defining computations on an AST. A node in an AST can have a synthesized attribute or an inherited attribute. An attribute is defined by an equation. A synthesized attribute is defined in the node, an inherited attribute is defined in an ancestor node. A JastAdd specification is used to create an object-oriented framework.~\cite{aakesson2008development}
+JModelica.org is developed using the Meta compiler JastAdd. JastAdd is a system based on reference attribute grammars, for extensible implementation of compilers. An Abstract Syntax Tree (AST) is used to represent a program. Attribute Grammars is a method for declaratively defining computations on an AST. A node in an AST can have a synthesized attribute or an inherited attribute. An attribute is defined by an equation. A synthesized attribute is defined in the node, an inherited attribute is defined in an ancestor node. A JastAdd specification is used to create an object-oriented framework.~\cite{aakesson2010implementation}
 
 Collection attributes are defined by partial definitions in a number of arbitrary nodes. A node that have a partial definition of a collection attribute contributes to the value of the collection attribute. A collection attribute is usually a set where the empty set is the initial value of the collection attribute. The contributors, the nodes that contributes to the collection attribute, can for example contribute by adding elements to the set.~\cite{magnusson2007extending}
 
@@ -328,6 +328,8 @@ We chose class granularity because is was easy to implement. Initially we wanted
 A master thesis similar to this one has previously been done at LTH. In the previously master thesis JastAdd was used to decrease the cost for testing of Android projects ~\cite{kampe2012dependroid}. There is research done on test selection. A method for safe RTS for Java has been developed before, that has many similarities with the method we are developing for Modelica. 
 
 Studies have been conducted to investigate at which granularity dependency analysis pays off the most and how much precision it can have without getting to expensive ~\cite{DBLP:conf/sigsoft/LegunsenHSLZM16}. It has also been done work in other techniques to achieve shorter time for testing, including dynamic test selection.
+
+%TODO: ~\cite{DBLP:conf/pppj/OqvistHM16}
 
 \chapter[Conclusion]{Conclusion}
 
