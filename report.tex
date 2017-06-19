@@ -84,7 +84,7 @@ Precision is a measurement of how good the test selection is. If fewer redundant
 \section{Modelica}
 Modelica is a declarative, object oriented programming language where models are described by equations. It is used to perform high performance simulations. This section will introduce the parts of Modelica important for this project.
 
-Modelica uses dot notation like many other languages to access something inside an object. Consider the code snippet in figure \ref{fig:modelicaExample}, Model \texttt{M} can be accessed though \texttt{P1.P2.M}. We will call this an access. Depending on from which scope \texttt{M} is being accessed the access could also be \texttt{P2.M} or just \texttt{M}. An access using dot notation is basically a list of accesses and we will call all the accesses before the last access, the path. For instance, \texttt{P1.P2} is the path of \texttt{P1.P2.M}. We will also denote an access, where the first part of it is referencing the top package in the library, as a qualified name.
+Modelica uses dot notation like many other languages to access something inside an object. Consider the code snippet in Figure \ref{fig:modelicaExample}, Model \texttt{M} can be accessed though \texttt{P1.P2.M}. We will call this an access. Depending on from which scope \texttt{M} is being accessed the access could also be \texttt{P2.M} or just \texttt{M}. An access using dot notation is basically a list of accesses and we will call all the accesses before the last access, the path. For instance, \texttt{P1.P2} is the path of \texttt{P1.P2.M}. We will also denote an access, where the first part of it is referencing the top package in the library, as a qualified name.
 
 \begin{figure}[!htbp]
     \centering
@@ -130,9 +130,9 @@ Modelica allows the use of wildcard imports. Using wildcards it is not possible 
 \lstinputlisting[language=modelica]{Modelica/wildcardImport.mo}
 
 \section{Compiler}
-JModelica is an open source compiler that is developed and maintained by Modelon. Optimica Compiler Toolkit (OCT) is the commercial version of JModelica. Our solution will be developed in OCT but will not use any OCT specific functionality. 
+JModelica.org is an open source compiler that is developed and maintained by Modelon. Optimica Compiler Toolkit (OCT) is the commercial version of JModelica.org. Our solution will be developed in OCT but will not use any OCT specific functionality. 
 
-The compilation of Modelica code is done in several steps, see figure \ref{fig:compilerSteps}. In the first step name and type analysis of the source code is done, identifiers are bound to declarations etc. An AST (Abstract Syntax Tree) is built in form of a source tree.
+The compilation of Modelica code is done in several steps, see Figure \ref{fig:compilerSteps}. In the first step name and type analysis of the source code is done, identifiers are bound to declarations etc. An AST (Abstract Syntax Tree) is built in form of a source tree.
 
 
 %TODO: Why setep 2 and 3?
@@ -152,7 +152,7 @@ In the last step C-code is generated.\cite{aakesson2010implementation}
 \end{figure}
 
 \section{JastAdd}
-JModelica is developed using the Meta compiler JastAdd. JastAdd is a system based on reference attribute grammars, for extensible implementation of compilers. An Abstract Syntax Tree (AST) is used to represent a program. Attribute Grammars is a method for declaratively defining computations on an AST. A node in an AST can have a synthesized attribute or an inherited attribute. An attribute is defined by an equation. A synthesized attribute is defined in the node, an inherited attribute is defined in an ancestor node. A JastAdd specification is used to create an object-oriented framework.~\cite{aakesson2008development}
+JModelica.org is developed using the Meta compiler JastAdd. JastAdd is a system based on reference attribute grammars, for extensible implementation of compilers. An Abstract Syntax Tree (AST) is used to represent a program. Attribute Grammars is a method for declaratively defining computations on an AST. A node in an AST can have a synthesized attribute or an inherited attribute. An attribute is defined by an equation. A synthesized attribute is defined in the node, an inherited attribute is defined in an ancestor node. A JastAdd specification is used to create an object-oriented framework.~\cite{aakesson2008development}
 
 Collection attributes are defined by partial definitions in a number of arbitrary nodes. A node that have a partial definition of a collection attribute contributes to the value of the collection attribute. A collection attribute is usually a set where the empty set is the initial value of the collection attribute. The contributors, the nodes that contributes to the collection attribute, can for example contribute by adding elements to the set.~\cite{magnusson2007extending}
 
@@ -160,7 +160,7 @@ Collection attributes are defined by partial definitions in a number of arbitrar
 Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing of Modelica projects. It has both a command line and a graphical interface and we will add functionality and options to both to support test selection.
 
 \chapter[Dependency analysis]{Dependency analysis}
-To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. First we introduce the rules and then we will go on and explain and motivate each one.
+To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica.org, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. First we introduce the rules and then we will go on and explain and motivate each one.
 
 \paragraph{Rules}
 \begin{enumerate}
@@ -168,7 +168,7 @@ To build the dependency graph we have constructed a set of rules to determine wh
 \item A class depends on its encapsulating class. 
 \item All resolvable accesses in the path of an access generates dependencies.
 \item A class depends on all classes encapsulated by the accessed class. If the access is not resolvable, the last resolvable access in the path will be used instead.
-\item Exception to rule 4: Rule 4 is not applicable to import statements. An import should not add dependencies to classes not imported but the import.
+\item Exception to Rule 4: Rule 4 is not applicable to import statements. An import should not add dependencies to classes not imported but the import.
 \end{enumerate}
 
 
@@ -181,14 +181,14 @@ To build the dependency graph we have constructed a set of rules to determine wh
     \label{fig:parentGraph}
 \end{figure}
 
-The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in JModelica not all accesses in a class can be followed and therefor not all dependencies from this rule can be created. We will later see how the other rules compensate for this. 
+The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in JModelica.org not all accesses in a class can be followed and therefor not all dependencies from this rule can be created. We will later see how the other rules compensate for this. 
 
-The next rule, rule 2, will create a dependency from a class to its encapsulating class. An example can be found in figure \ref{fig:parentGraph}. In the example there is a constant \texttt{k} defined in package \texttt{A}. If another constant with the same name were to be added in in model \texttt{B} the reference to \texttt{k} in \texttt{C} will change to refer to the new constant. Therefore we need a dependency from \texttt{C} to \texttt{B}.
+The next rule, Rule 2, will create a dependency from a class to its encapsulating class. An example can be found in Figure \ref{fig:parentGraph}. In the example there is a constant \texttt{k} defined in package \texttt{A}. If another constant with the same name were to be added in in model \texttt{B} the reference to \texttt{k} in \texttt{C} will change to refer to the new constant. Therefore we need a dependency from \texttt{C} to \texttt{B}.
 
-In figure \ref{fig:parentGraph} we also expect rule 1 to create a dependency from \texttt{M2} to \texttt{P} due to \texttt{k} being located in \texttt{P}. However, the access \texttt{k} cannot be resolved and we will miss the dependency to \texttt{P}. In this case we can see that rule 2 can compensate by adding an indirect dependency from \texttt{M2} to \texttt{P}. 
-If the constant k in package \texttt{P} is changed it will affect model \texttt{M2}. Therefore we need a dependency from \texttt{M2} to \texttt{P}. With rule number 1 we get dependencies from \texttt{M2} to \texttt{M1} and from \texttt{M1} to \texttt{P}. So we have an indirect dependency from \texttt{M2} to \texttt{P}.
+In Figure \ref{fig:parentGraph} we also expect Rule 1 to create a dependency from \texttt{M2} to \texttt{P} due to \texttt{k} being located in \texttt{P}. However, the access \texttt{k} cannot be resolved and we will miss the dependency to \texttt{P}. In this case we can see that Rule 2 can compensate by adding an indirect dependency from \texttt{M2} to \texttt{P}. 
+If the constant k in package \texttt{P} is changed it will affect model \texttt{M2}. Therefore we need a dependency from \texttt{M2} to \texttt{P}. With Rule number 1 we get dependencies from \texttt{M2} to \texttt{M1} and from \texttt{M1} to \texttt{P}. So we have an indirect dependency from \texttt{M2} to \texttt{P}.
 
-Another way to think about rule 2 is to consider what happens if \texttt{P} or \texttt{M1} is removed. The \texttt{M2} can no longer be accessed since the path to \texttt{M2} is broken. This will cause the compilation of \texttt{M2} to fail.
+Another way to think about Rule 2 is to consider what happens if \texttt{P} or \texttt{M1} is removed. The \texttt{M2} can no longer be accessed since the path to \texttt{M2} is broken. This will cause the compilation of \texttt{M2} to fail.
 
 \begin{figure}[!htbp]
     \centering
@@ -203,7 +203,7 @@ Another way to think about rule 2 is to consider what happens if \texttt{P} or \
     \label{fig:dotAccess}
 \end{figure}
 
-In figure \ref{fig:dotAccess}, we want dependencies from model \texttt{M} to all parts of the access to \texttt{f}. This means that in addition to a dependency to \texttt{f}, a dependency to \texttt{P2} is also required. If package \texttt{P2} is removed it will cause a compilation error when model \texttt{M} is compiled. This is caught by rule 3 and is why it is needed.
+In Figure \ref{fig:dotAccess}, we want dependencies from model \texttt{M} to all parts of the access to \texttt{f}. This means that in addition to a dependency to \texttt{f}, a dependency to \texttt{P2} is also required. If package \texttt{P2} is removed it will cause a compilation error when model \texttt{M} is compiled. This is caught by Rule 3 and is why it is needed.
 
 
 \begin{figure}[!htbp]
@@ -215,8 +215,8 @@ In figure \ref{fig:dotAccess}, we want dependencies from model \texttt{M} to all
     \label{fig:component}
 \end{figure}
 
-Rule 4 is needed to handle the case in figure \ref{fig:component}. Ideally the access \texttt{m.M3.f} would create dependencies to \texttt{M2}, \texttt{M3} and \texttt{f}. Because \texttt{m} is a component, \texttt{P.M2.M3.f} cannot be resolved and no dependencies can be created. Instead rule 4 is used to create dependencies to everything defined in \texttt{M3} when \texttt{m} is declared.
-It is also possible that an access can not be fully resolved. This is the case in \ref{fig:brokenAccess}, where the access \texttt{P1.m.f} cannot be resolved because the constant \texttt{m} is a component. In this case the only resolvable part is \texttt{P1} and a  dependency is created to \texttt{P1} by rule 3. \texttt{P1} have dependencies to \texttt{M} and \texttt{f} through rule 4. Hence, it is not a problem that rule 4 cannot be applied to \texttt{P1.m.f}.
+Rule 4 is needed to handle the case in Figure \ref{fig:component}. Ideally the access \texttt{m.M3.f} would create dependencies to \texttt{M2}, \texttt{M3} and \texttt{f}. Because \texttt{m} is a component, \texttt{P.M2.M3.f} cannot be resolved and no dependencies can be created. Instead Rule 4 is used to create dependencies to everything defined in \texttt{M3} when \texttt{m} is declared.
+It is also possible that an access can not be fully resolved. This is the case in \ref{fig:brokenAccess}, where the access \texttt{P1.m.f} cannot be resolved because the constant \texttt{m} is a component. In this case the only resolvable part is \texttt{P1} and a  dependency is created to \texttt{P1} by Rule 3. \texttt{P1} have dependencies to \texttt{M} and \texttt{f} through Rule 4. Hence, it is not a problem that Rule 4 cannot be applied to \texttt{P1.m.f}.
 
 \begin{figure}[!htbp]
     \centering
@@ -227,7 +227,7 @@ It is also possible that an access can not be fully resolved. This is the case i
     \label{fig:brokenAccess}
 \end{figure}
 
-The exception to rule 4 is added to improve the precision of the test selection. Imports are specific and it is enough to add dependencies to what is actually imported. It is not uncommon to import packages located high up in the library structure. Without this exception unnecessary dependencies would be added to all or large part of the library. For example in Modelica's standard library there are several imports of Modelica, which is the top level package. Such import would create dependencies to every single class in the library. (Such imports may seem unnecessary and in fact they often are, but they can be used to affect the name lookup if there exists classes with the same name in the library)  
+The exception to Rule 4 is added to improve the precision of the test selection. Imports are specific and it is enough to add dependencies to what is actually imported. It is not uncommon to import packages located high up in the library structure. Without this exception unnecessary dependencies would be added to all or large part of the library. For example in Modelica's standard library there are several imports of Modelica, which is the top level package. Such import would create dependencies to every single class in the library. (Such imports may seem unnecessary and in fact they often are, but they can be used to affect the name lookup if there exists classes with the same name in the library)  
 
 \chapter[Implementation]{Implementation}
 To do the dependency analysis and get an inverted dependency graph from the Modelica compiler, we specify which files or models has changed. The dependency analysis is done for the specified Modelica classes or for all Modelica classes in the specified files. After the dependency analysis is done we invert the graph and returns a set of Modelica classes that may have changed.
@@ -242,7 +242,7 @@ There is no automatic change detection, instead the user will manually have to s
 
 
 \section{Inverted dependency graph}
-In figure \ref{fig:invertedGraph},the left graph has two Modelica classes, \texttt{C1} and \texttt{C2}. \texttt{C2} Has a dependency to \texttt{C1}. We also have two tests, \texttt{T1} and \texttt{T2}. \texttt{T1} tests \texttt{C1} and \texttt{T2} tests \texttt{C2}. When \texttt{C1} is changed both tests, \texttt{T1} and \texttt{T2} should be selected. When \texttt{C2} is changed only test \texttt{T2} needs to be selected.
+In Figure \ref{fig:invertedGraph},the left graph has two Modelica classes, \texttt{C1} and \texttt{C2}. \texttt{C2} Has a dependency to \texttt{C1}. We also have two tests, \texttt{T1} and \texttt{T2}. \texttt{T1} tests \texttt{C1} and \texttt{T2} tests \texttt{C2}. When \texttt{C1} is changed both tests, \texttt{T1} and \texttt{T2} should be selected. When \texttt{C2} is changed only test \texttt{T2} needs to be selected.
 
 When we specify that a class has changed, we want to get a set containing all classes that may be affected. So if we specify that \texttt{C2} has changed, \texttt{C2} is the only class that can be affected. If we instead say that \texttt{C1} has changed both \texttt{C1} and \texttt{C2} may be affected. Starting from \texttt{C1}, the problem is to find all classes that depends on \texttt{C1}. To solve this we need to invert the dependency graph, see right graph.
 \begin{figure}[!htbp]
@@ -261,7 +261,7 @@ In our dependency analysis we do not analyze the dependencies in external files.
 \chapter[Evaluation]{Evaluation}
 %TODO: Precision
 The time it takes to run the dependency analysis is not included in any of the graphs in this chapter.
-To assess how much time our test selection can save we have run all the tests several times for some Modelica libraries to get the average time it takes to run each test. Then we have done the test selection for each Modelica file in the library and summed up the time for all tests that are selected when we say that file has changed. In figure \ref{fig:hxlonefile} the total time to run the tests selected for each file in HXL is plotted. The files are on the x-axis and on the y-axis is the time for the selected tests, in percent of the time it takes run all tests. HXL is the Heat Exchanger Library developed by Modelon. The corresponding graph for MSL version 3.2.2 is in figure \ref{fig:mslonefile}. MSL is the Modelica Standard Library.
+To assess how much time our test selection can save we have run all the tests several times for some Modelica libraries to get the average time it takes to run each test. Then we have done the test selection for each Modelica file in the library and summed up the time for all tests that are selected when we say that file has changed. In Figure \ref{fig:hxlonefile} the total time to run the tests selected for each file in HXL is plotted. The files are on the x-axis and on the y-axis is the time for the selected tests, in percent of the time it takes run all tests. HXL is the Heat Exchanger Library developed by Modelon. The corresponding graph for MSL version 3.2.2 is in Figure \ref{fig:mslonefile}. MSL is the Modelica Standard Library.
 
 \begin{figure}
     \centering
@@ -277,7 +277,7 @@ To assess how much time our test selection can save we have run all the tests se
     \label{fig:mslonefile}
 \end{figure}
 
-In figure \ref{fig:mslhistory} we have used all the commits in the commit history for MSL until commit 2260. On the x-axis we have commits. On the y-axis we have the time for running all the tests that are selected when the test selection is done for the files that has changed in that commit. The time is here too plotted as the percent of the total time for running all tests. We have not run the dependency analysis for each version of the library in the commit history. We have only done the dependency analysis on the latest version and used that dependency graph for all versions. The average time saving for test executions in figure \ref{fig:mslhistory} is 56\% per commit (time for running dependency analysis excluded).
+In Figure \ref{fig:mslhistory} we have used all the commits in the commit history for MSL until commit 2260. On the x-axis we have commits. On the y-axis we have the time for running all the tests that are selected when the test selection is done for the files that has changed in that commit. The time is here too plotted as the percent of the total time for running all tests. We have not run the dependency analysis for each version of the library in the commit history. We have only done the dependency analysis on the latest version and used that dependency graph for all versions. The average time saving for test executions in Figure \ref{fig:mslhistory} is 56\% per commit (time for running dependency analysis excluded).
 
 \begin{figure}
     \centering
@@ -286,7 +286,7 @@ In figure \ref{fig:mslhistory} we have used all the commits in the commit histor
     \label{fig:mslhistory}
 \end{figure}
  
- Both rule number 4, that we need due to limitations of the lookup in the source tree and the handling of files that is not Modelica files, lowers the precision of the test selection and creates extra overhead.
+ Both Rule number 4, that we need due to limitations of the lookup in the source tree and the handling of files that is not Modelica files, lowers the precision of the test selection and creates extra overhead.
 
 \chapter[Future Work]{Future Work}
 	
