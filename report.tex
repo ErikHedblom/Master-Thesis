@@ -68,7 +68,8 @@ Leave a \textit{2cm} vertical space after the abstract and provide a few keyword
 \chapter[Introduction]{Introduction}
 
 \section{Motivation}
-During software development, when a change is integrated into a project all previous testing have to be rerun. This is know as regression testing. Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the test may be unrelated to the change and therefore unnecessary to run. By excluding unrelated tests significant time savings could be achieved. This is called test selection and have to our knowledge not been previously been done for Modelica. 
+Software tests are used to verify that software works as intended.
+During software development, when a change is integrated into a project all previous testing have to be rerun. This is know as regression testing. \cite{DBLP:conf/sigsoft/LegunsenHSLZM16} Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the tests may be unrelated to the change and therefore unnecessary to run. By excluding unrelated tests significant time savings could be achieved. This is called test selection and have to our knowledge not been previously done for Modelica. Modelica is a high level programming language used for simulations in various areas. When the test selection is done for regression tests it is known as regression test selection (RTS).
 
 
 \section{Goal}
@@ -269,17 +270,18 @@ The Modelica language allows the use of external functions that are not defined 
 
 \chapter[Evaluation]{Evaluation}
 %TODO: Precision
+In this chapter we are going to evaluate both the time savings and the precision of our dependency analysis. We have done measurements for HXL (the Heat Exchanger Library developed by Modelon) and MSL (Modelica Standard Library).
 The time it takes to run the dependency analysis is not included in any of the graphs in this chapter.
-To assess how much time our test selection can save we have run all the tests several times for some Modelica libraries to get the average time it takes to run each test. Then we have done the test selection for each Modelica file in the library and summed up the time for all tests that are selected when we say that file has changed. In Figure \ref{fig:hxlonefile} the total time to run the tests selected for each file in HXL is plotted. The files are on the x-axis and on the y-axis is the time for the selected tests, in percent of the time it takes run all tests. HXL is the Heat Exchanger Library developed by Modelon. The corresponding graph for MSL version 3.2.2 is in Figure \ref{fig:mslonefile}. MSL is the Modelica Standard Library.
+To assess how much time our test selection can save we have run all the tests for each library several times to get the average time it takes to run each test. Then we have done the test selection for each Modelica file in the library and summed up the time for all tests that are selected when we say that file has changed. In Figure \ref{fig:hxlonefile} the total time to run the tests selected for each file in HXL is plotted. The files are on the x-axis and on the y-axis is the time for the selected tests, in percent of the time it takes to run all tests. The corresponding graph for MSL version 3.2.2 is in Figure \ref{fig:mslonefile}.
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.5\textwidth]{Graphs/HXL_one_file.eps}}
     \caption{One file changed in HXL.}
     \label{fig:hxlonefile}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.5\textwidth]{Graphs/MSL_one_file.eps}}
     \caption{One file changed in MSL.}
@@ -288,7 +290,7 @@ To assess how much time our test selection can save we have run all the tests se
 
 In Figure \ref{fig:mslhistory} we have used all the commits in the commit history for MSL until commit 2260. On the x-axis we have commits. On the y-axis we have the time for running all the tests that are selected when the test selection is done for the files that has changed in that commit. The time is here too plotted as the percent of the total time for running all tests. We have not run the dependency analysis for each version of the library in the commit history. We have only done the dependency analysis on the latest version and used that dependency graph for all versions. The average time saving for test executions in Figure \ref{fig:mslhistory} is 56\% per commit (time for running dependency analysis excluded).
 
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1.5\textwidth]{Graphs/MSL_history_plot.eps}}
     \caption{History plot for MSL.}
