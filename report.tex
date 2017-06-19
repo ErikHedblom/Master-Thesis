@@ -86,6 +86,13 @@ Precision is a measurement of how good the test selection is. \cite{DBLP:conf/si
 \section{Modelica}
 Modelica is a declarative, object oriented programming language where models are described by equations. It is used to perform high performance simulations. This section will introduce the parts of Modelica important for this project.
 
+\begin{figure}[!htbp]
+    \centering
+    {\lstinputlisting[language=modelica]{Modelica/ModelicaExample.mo}}
+    \caption{Modelica example bouncing ball, from \cite{aakesson2010implementation}.
+    \label{fig:bouncingBallCode}
+\end{figure}
+
 Modelica uses dot notation like many other languages to access something inside an object. Consider the code snippet in Figure \ref{fig:modelicaExample}, Model \texttt{M} can be accessed though \texttt{P1.P2.M}. We will call this an access. Depending on from which scope \texttt{M} is being accessed the access could also be \texttt{P2.M} or just \texttt{M}. An access using dot notation is basically a list of accesses and we will call all the accesses before the last access, the path. For instance, \texttt{P1.P2} is the path of \texttt{P1.P2.M}. We will also denote an access, where the first part of it is referencing the top package in the library, as a qualified name.
 
 \begin{figure}[!htbp]
