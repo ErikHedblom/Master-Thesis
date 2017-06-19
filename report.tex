@@ -75,7 +75,7 @@ During software development, when a change is integrated into a project all prev
 The aim of this project is to reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a safe RTS method, a method to exclude tests in a test suite unaffected by a specific change. \cite{DBLP:conf/pppj/OqvistHM16} Regression testing can then be performed with a reduced test suite without compromising testing quality.
 
 \section{Results}
-We have succeeded in decreasing the time for testing by test selection for Modelica. However we cannot prove that the method we have developed is safe.
+We have succeeded in decreasing the time for testing by test selection for Modelica. In chapter 5 we try to assess, how much time can be saved with our RTS method and the precision of the method. We look at the commit history for some Modelica libraries to see how much time would have been saved if our RTS method had been used instead of running all tests for each commit. However we cannot prove that the method we have developed is safe, we discuss this further in chapter 7.
 
 \chapter[Background]{Background}
 \section{Test Selection}
