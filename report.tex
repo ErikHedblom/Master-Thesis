@@ -8,7 +8,8 @@
 %\usepackage{makeidx}
 \usepackage{graphicx}
 \usepackage[titletoc, header, page]{appendix}
-
+\usepackage{multirow}% http://ctan.org/pkg/multirow
+\usepackage{hhline}% http://ctan.org/pkg/hhline
 \usepackage{hyperref}
 \usepackage{pdfpages}
 \usepackage{rotating}
@@ -313,6 +314,31 @@ First we preformed test selection for each Modelica file in two libraries, MSL a
 
 The results in \ref{fig:hxlonefile} and \ref{fig:mslonefile} looks very good but they do not necessary reflect a real use case. In Figure \ref{fig:mslhistory} analyzed all the commits in the commit history for MSL until commit e69f57, 24th of may 2017. On the y-axis we have commits and on the x-axis is the time for running the test selection corresponding to the commit. The time is plotted relative to the total time of the complete test suite. As the previous graphs the time for the dependency analysis is not included. Furthermore, we have not run the dependency analysis for each commit, instead the same dependency analysis was reused for all commits. This means that for most commits the dependency analysis is an approximation with lower precision for earlier commits. The average time saving for test executions in Figure \ref{fig:mslhistory} is 56\% (time for running dependency analysis excluded).
 
+
+\begin{table}[ph]
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hhline{~~--}
+\multicolumn{2}{c|}{} & Savings & Figure \\
+\hline
+\multirow{2}{*}{HXL} & models & 67\% &\ref{fig:hxlonemodel} \\
+\hhline{~---}
+ & files & 68\% &\ref{fig:hxlonefile} \\
+\hline
+\multirow{3}{*}{MSL} & models & 93\% &\ref{fig:mslonemodel} \\
+\hhline{~---}
+& files & 88\% &\ref{fig:mslonefile} \\
+\hhline{~---}
+& history & 56\% &\ref{fig:mslhistory} \\
+\hline
+
+\end{tabular}
+\caption{R, C ripple size}
+\label{T:peak}
+\end{center}
+\end{table}
+
+
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{Graphs/MSL_history_plot.eps}
@@ -321,7 +347,19 @@ The results in \ref{fig:hxlonefile} and \ref{fig:mslonefile} looks very good but
 \end{figure}
  
  Both Rule number 4, that we need due to limitations of the lookup in the source tree, and the handling of files that is not Modelica files, lowers the precision of the test selection and creates extra overhead.
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Graphs/HXL_one_model.eps}
+    \caption{One model changed in HXL. 819 models in total}
+    \label{fig:hxlonemodel}
+\end{figure}
 
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Graphs/MSL_one_model.eps}
+    \caption{One model changed in MSL. 5917 models in total}
+    \label{fig:mslonemodel}
+\end{figure}
 \chapter[Discussion]{Discussion}
 
 \section{Validity}
