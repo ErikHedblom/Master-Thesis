@@ -87,10 +87,11 @@ During software development, when a change is integrated into a project all prev
 The aim of this project is to reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a safe RTS method, a method to exclude tests in a test suite unaffected by a specific change. \cite{DBLP:conf/pppj/OqvistHM16} Regression testing can then be performed with a reduced test suite without compromising testing quality.
 
 \section{Results}
-We have succeeded in decreasing the time for testing by test selection for Modelica. In chapter 5 we try to assess, how much time can be saved with our RTS method and the precision of the method. We look at the commit history for some Modelica libraries to see how much time would have been saved if our RTS method had been used instead of running all tests for each commit. However we cannot prove that the method we have developed is safe, we discuss this further in chapter 7.
+We have succeeded in decreasing the time for testing by test selection for Modelica. In chapter 5 we try to assess how much time can be saved with our RTS method and the precision of the method. We look at the commit history for some Modelica libraries to see how much time would have been saved if our RTS method had been used instead of running all tests for each commit. However we cannot prove that the method we have developed is safe, we discuss this further in chapter 7.
 
 \chapter[Background]{Background}
 %TODO: Update the background according to Niklas's feedback.
+In this chapter we will explain concepts and give some background that is important for understanding the rest of the report. We will give a short explanation of the Modelica language and a summary of how the JModelica.org compiler works.
 
 \section{Test Selection}
 A safe Regression Test Selection (RTS) method will select at least all tests that produce a new result after a specific change. \cite{DBLP:conf/pppj/OqvistHM16} A safe RTS method is therefore equivalent, in quality, to running all tests. For a RTS method to be useful the RTS algorithm should run in less time than it takes to run the excluded tests. This is not necessary for each run, but on average the overhead needs to be less than the time it takes to run the excluded tests.
@@ -98,7 +99,7 @@ A safe Regression Test Selection (RTS) method will select at least all tests tha
 Precision is a measurement of how good the test selection is. \cite{DBLP:conf/sigsoft/LegunsenHSLZM16} If fewer redundant tests are selected the test selection has higher precision. There is a trade-off between the precision of the test selection and the overhead. If a RTS algorithm has full precision it doesn't select any tests that can't fail. But the higher precision the more complex algorithm is needed. For a more complex algorithm its harder to follow the rules and verify that the RTS method is safe. A more complex algorithm also creates more overhead.
 
 \section{Modelica}
-Modelica is a declarative, object oriented programming language where models are described by equations. It is used to perform high performance simulations. This section will introduce the parts of Modelica important for this project.
+Modelica is a declarative, object oriented programming language where models are described by equations. It is used to perform high performance simulations. This section will introduce the parts of Modelica that is important for this project.
 
 Modelica uses dot notation like many other languages to access something inside an object. Consider the code snippet in Figure \ref{fig:modelicaExample}, Model \texttt{M} can be accessed though \texttt{P1.P2.M}. We will call this an access. Depending on from which scope \texttt{M} is being accessed the access could also be \texttt{P2.M} or just \texttt{M}. An access using dot notation is basically a list of accesses and we will call all the accesses before the last access, the path. For instance, \texttt{P1.P2} is the path of \texttt{P1.P2.M}. We will also denote an access, where the first part of it is referencing the top package in the library, as a qualified name.
 
@@ -279,7 +280,7 @@ The dependency graph produced in Chapter 3 show the dependencies from the compil
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/GraphExample.eps}}}
     \qquad
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/InvertedGraphExample.eps}}}
-    \caption{To the left is a dependency graph and to the right is the corresponding inverted dependency graph. T1 and T2 are test cases and C1 and C2 are Modelica classes}
+    \caption{To the left is a dependency graph and to the right is the corresponding inverted dependency graph. T1 and T2 are test cases and C1 and C2 are Modelica classes.}
     \label{fig:invertedGraph}
 \end{figure}
 
@@ -299,14 +300,14 @@ First we preformed test selection for each Modelica file in two libraries, MSL a
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{Graphs/HXL_one_file.eps}
-    \caption{One file changed in HXL.}
+    \caption{One file changed in HXL}
     \label{fig:hxlonefile}
 \end{figure}
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{Graphs/MSL_one_file.eps}
-    \caption{One file changed in MSL.}
+    \caption{One file changed in MSL}
     \label{fig:mslonefile}
 \end{figure}
 
@@ -315,7 +316,7 @@ The results in \ref{fig:hxlonefile} and \ref{fig:mslonefile} looks very good but
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{Graphs/MSL_history_plot.eps}
-    \caption{History plot for MSL.}
+    \caption{History plot for MSL}
     \label{fig:mslhistory}
 \end{figure}
  
