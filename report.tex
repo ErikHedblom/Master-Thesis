@@ -279,6 +279,7 @@ The Modelica language allows the use of external functions that are not defined 
 %TODO: Precision
 %TODO: Hardware used
 %TODO: Rework
+%TODO: Dependency analysis time
 In this chapter we are going to evaluate both the time savings and the precision of our dependency analysis. We have done measurements for HXL (the Heat Exchanger Library developed by Modelon) and MSL (Modelica Standard Library).
 The time it takes to run the dependency analysis is not included in any of the graphs in this chapter.
 To assess how much time our test selection can save we have run all the tests for each library several times to get the average time it takes to run each test. Then we have done the test selection for each Modelica file in the library and summed up the time for all tests that are selected when we say that file has changed. In Figure \ref{fig:hxlonefile} the total time to run the tests selected for each file in HXL is plotted. The files are on the x-axis and on the y-axis is the time for the selected tests, in percent of the time it takes to run all tests. The corresponding graph for MSL version 3.2.2 is in Figure \ref{fig:mslonefile}.
@@ -338,6 +339,7 @@ Studies have been conducted to investigate at which granularity dependency analy
 %TODO: ~\cite{DBLP:conf/pppj/OqvistHM16}
 
 \chapter[Conclusion]{Conclusion}
+
 %TODO: Write
 
 \section{Future work}
