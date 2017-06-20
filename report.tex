@@ -292,9 +292,9 @@ The Modelica language allows the use of external functions that are not defined 
 %TODO: Hardware used
 %TODO: Rework
 %TODO: Dependency analysis time
-In this chapter we are going to evaluate both the time savings and the precision of our dependency analysis. We have done measurements for HXL (the Heat Exchanger Library developed by Modelon) and MSL (Modelica Standard Library).
-The time it takes to run the dependency analysis is not included in any of the graphs in this chapter.
-To assess how much time our test selection can save we have run all the tests for each library several times to get the average time it takes to run each test. Then we have done the test selection for each Modelica file in the library and summed up the time for all tests that are selected when we say that file has changed. In Figure \ref{fig:hxlonefile} the total time to run the tests selected for each file in HXL is plotted. The files are on the x-axis and on the y-axis is the time for the selected tests, in percent of the time it takes to run all tests. The corresponding graph for MSL version 3.2.2 is in Figure \ref{fig:mslonefile}.
+In this chapter we are going to evaluate both the time savings and the precision of our dependency analysis. We have performed measurements for HXL (the Heat Exchanger Library developed by Modelon) and MSL (Modelica Standard Library). To assess how much time our test selection can save. We have run the tests for each library several times, to get the average time it takes to run each test. This was done using a Intel\textregistered Core\texttrademark i5-4300M. The test times will used to simulate a test selection without having to run the tests. Some tests have very long running times, therefore we limited tests to ten minutes. Test taking longer will timeout and their running time is set to ten minutes.
+
+First we preformed test selection for each Modelica file in two libraries, MSL and HXL, and assumed only one file changed. In Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} the result for all files in HXL and MSL relative the total running time for the complete test suite is shown. Neither of the graphs include the execution time of the test selection algorithm and therefore the time savings are not completely accurate. However, in both cases the the test selection time corresponds to a fraction of a percent on the y-axis. %TODO: Add total time. And actual times to dependency analysis 
 
 \begin{figure}[!htbp]
     \centering
@@ -310,7 +310,7 @@ To assess how much time our test selection can save we have run all the tests fo
     \label{fig:mslonefile}
 \end{figure}
 
-In Figure \ref{fig:mslhistory} we have used all the commits in the commit history for MSL until commit 2260. On the x-axis we have commits. On the y-axis we have the time for running all the tests that are selected when the test selection is done for the files that has changed in that commit. The time is here too plotted as the percent of the total time for running all tests. We have not run the dependency analysis for each version of the library in the commit history. We have only done the dependency analysis on the latest version and used that dependency graph for all versions. The average time saving for test executions in Figure \ref{fig:mslhistory} is 56\% per commit (time for running dependency analysis excluded).
+The results in \ref{fig:hxlonefile} and \ref{fig:mslonefile} looks very good but they do not necessary reflect a real use case. In Figure \ref{fig:mslhistory} analyzed all the commits in the commit history for MSL until commit e69f57, 24th of may 2017. On the y-axis we have commits and on the x-axis is the time for running the test selection corresponding to the commit. The time is plotted relative to the total time of the complete test suite. As the previous graphs the time for the dependency analysis is not included. Furthermore, we have not run the dependency analysis for each commit, instead the same dependency analysis was reused for all commits. This means that for most commits the dependency analysis is an approximation with lower precision for earlier commits. The average time saving for test executions in Figure \ref{fig:mslhistory} is 56\% (time for running dependency analysis excluded).
 
 \begin{figure}[!htbp]
     \centering
@@ -319,7 +319,7 @@ In Figure \ref{fig:mslhistory} we have used all the commits in the commit histor
     \label{fig:mslhistory}
 \end{figure}
  
- Both Rule number 4, that we need due to limitations of the lookup in the source tree and the handling of files that is not Modelica files, lowers the precision of the test selection and creates extra overhead.
+ Both Rule number 4, that we need due to limitations of the lookup in the source tree, and the handling of files that is not Modelica files, lowers the precision of the test selection and creates extra overhead.
 
 \chapter[Discussion]{Discussion}
 
