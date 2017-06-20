@@ -1,5 +1,11 @@
 digraph DependencyGraph {
-	"C2" -> "C1"
-	"T1" -> "C1"
-	"T2" -> "C2"	
+	C1 [label="C1"]
+	C2 [label="C2"]
+	T1 [label="T1"]
+	T2 [label="T2"]
+
+	rank = same;
+	C2 -> C1;
+	T1 -> C1;
+	T2 -> C2;	
 }

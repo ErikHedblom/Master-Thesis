@@ -1,5 +1,13 @@
 digraph DependencyGraph {
-	"C1" -> "C2"
-	"C1" -> "T1"
-	"C2" -> "T2"
+	C1 [label="C1"]
+	C2 [label="C2"]
+	T1 [label="T1"]
+	T2 [label="T2"]
+
+	T2 -> C2 [style=invis];
+	C2 -> C1 [style=invis];
+	T1 -> C1 [style=invis];
+	C1 -> C2 [constraint=false];
+	C1 -> T1 [constraint=false];
+	C2 -> T2 [constraint=false];
 }
