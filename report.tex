@@ -244,7 +244,13 @@ In this chapter we will describe how we have implemented the test selection. The
 
 \section{Model Testing Toolkit}
 
-MTT will process the data from the user, either from the command line interface (CLI) or from the graphical user interface (GUI). We have have added an option to the CLI so the user can specify that test selection should be used and which models or files have changed. In the GUI we have added a menu option to specify which models have changed, this is shown in Figure \ref{fig:MTTrun}. In the GUI multiple models can be selected. %TODO: Add MTT Image
+MTT will process the data from the user, either from the command line interface (CLI) or from the graphical user interface (GUI). We have have added an option to the CLI so the user can specify that test selection should be used and which models or files have changed. In the GUI we have added a menu option to specify which models have changed, this is shown in Figure \ref{fig:MTTrun}. In the GUI multiple models can be selected.
+
+\begin{figure}[!hbtp]
+    \includegraphics[width=1.0\textwidth]{Pictures/MTT_Capture.png}
+    \caption{Access containing a component}
+    \label{fig:MTTrun}
+\end{figure}
 
 MTT will then send all modified files or models to OCT and ask for all affected models. Then all tests testing one of the affected models will be selected and run.
 
