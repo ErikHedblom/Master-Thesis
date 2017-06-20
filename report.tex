@@ -52,7 +52,6 @@ During software development testing of the software can be very time consuming. 
 
 }
 
-% TODO: Provide a few keywords relevant for your report. Use five to six words, of which at most two should be from the title.
 \keywords{Test Selection, Modelica, JastAdd, Regression testing, JModelica.org}
 
 \divisionoflabor{
@@ -68,6 +67,8 @@ During software development testing of the software can be very time consuming. 
 \begin{document}
 \makefrontmatter
 \chapter[Introduction]{Introduction}
+
+%TODO: Update introduction according to Niklas's feedback.
 
 \section{Motivation}
 Software tests are used to verify that software works as intended.
@@ -87,6 +88,8 @@ The aim of this project is to reduce testing times for Modelica projects without
 We have succeeded in decreasing the time for testing by test selection for Modelica. In chapter 5 we try to assess, how much time can be saved with our RTS method and the precision of the method. We look at the commit history for some Modelica libraries to see how much time would have been saved if our RTS method had been used instead of running all tests for each commit. However we cannot prove that the method we have developed is safe, we discuss this further in chapter 7.
 
 \chapter[Background]{Background}
+%TODO: Update the background according to Niklas's feedback.
+
 \section{Test Selection}
 A safe Regression Test Selection (RTS) method will select at least all tests that produce a new result after a specific change. \cite{DBLP:conf/pppj/OqvistHM16} A safe RTS method is therefore equivalent, in quality, to running all tests. For a RTS method to be useful the RTS algorithm should run in less time than it takes to run the excluded tests. This is not necessary for each run, but on average the overhead needs to be less than the time it takes to run the excluded tests.
 
