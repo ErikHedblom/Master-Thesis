@@ -81,6 +81,8 @@ During software development, when a change is integrated into a project all prev
     \label{fig:bouncingBallCode}
 \end{figure}
 
+%TODO: Include simulation results of bouncing ball
+
 \section{Goal}
 The aim of this project is to reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a safe RTS method, a method to exclude tests in a test suite unaffected by a specific change. \cite{DBLP:conf/pppj/OqvistHM16} Regression testing can then be performed with a reduced test suite without compromising testing quality.
 
@@ -148,11 +150,9 @@ JModelica.org is an open source compiler that is developed and maintained by Mod
 
 The compilation of Modelica code is done in several steps, see Figure \ref{fig:compilerSteps}. \cite{aakesson2010implementation} In the first step name and type analysis of the source code is done, identifiers are bound to declarations etc. An AST (Abstract Syntax Tree) is built in form of a source tree.
 
+In Figure \ref{fig:bouncingBallCode} when the instance of \texttt{BoncingBall}, \texttt{mBall} is created, a modification is used to set the gravity to a different value than the original. The flattening of Modelica code is complicated because of modifications that are used in Modelica. To simplify this and  prepare for the flattening, in step two a new AST in form of a instance tree is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The instance tree consists of instances of models. The root is the model chosen by the user to be flattened.
 
-%TODO: Why setep 2 and 3?
-In step two a new AST in form of a instance tree is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The instance tree consists of instances of models. The root is the model chosen by the user to be flattened.
-
-In the third step the Modelica code is flattened, a flat model is generated from the instance tree. In this step class, component and inheritance structures are removed. This results in a model that only has a set of equations and a set of variables.
+In the third step the Modelica code is flattened. In this step class, component and inheritance structures are removed. This results in a model that only has a set of equations and a set of variables. Since an instance tree is created in the previous step it is easy to traverse the instance tree and collect all variables and equations.
 
 In the fourth step the equations are sorted and optimized.
 
@@ -161,7 +161,7 @@ In the last step C-code is generated.
 \begin{figure}[!htbp]
     \centering
     {\includegraphics[scale=0.5]{dotGenerated/CompilerSteps.eps}}
-    \caption{The steps in the compilation}
+    \caption{The compilation steps in the JModelica.org compiler}
     \label{fig:compilerSteps}
 \end{figure}
 
@@ -348,7 +348,7 @@ A master thesis similar to this one has previously been done at LTH. In the prev
 
 Studies have been conducted to investigate at which granularity dependency analysis pays off the most and how much precision it can have without getting to expensive ~\cite{DBLP:conf/sigsoft/LegunsenHSLZM16}. It has also been done work in other techniques to achieve shorter time for testing, including dynamic test selection.
 
-Safe regression test selection has been developed for Java at LTH \cite{DBLP:conf/pppj/OqvistHM16}. In this work the dependency graph i stored and updated when it changes unlike our solution for Modelica, where we compute the dependency graph each time. There is two main differences between Java and Modelica interesting for test selection. Modelica regression tests takes usually much longer time to run than Java regression tests. The longest time it takes to run all tests for a Java project used in the evaluation in \cite{DBLP:conf/pppj/OqvistHM16} is less than 20 seconds (on a 4-core 3.6GHz Intel i7-3820 CPU, with 64 GiB RAM, running Linux Mint 17.0). For the Modelica Standard Library it takes more than 2 hours to run all tests. In Modelica it is possible to use classes in another package without using imports, that is not possible in Java.
+Safe regression test selection has been developed for Java at LTH \cite{DBLP:conf/pppj/OqvistHM16}. In this work the dependency graph is stored and updated when it changes unlike our solution for Modelica, where we compute the dependency graph each time. There is two main differences between Java and Modelica interesting for test selection. Modelica regression tests takes usually much longer time to run than Java regression tests. The longest time it takes to run all tests for a Java project used in the evaluation in \cite{DBLP:conf/pppj/OqvistHM16} is less than 20 seconds (on a 4-core 3.6GHz Intel i7-3820 CPU, with 64 GiB RAM, running Linux Mint 17.0). For the Modelica Standard Library it takes more than 2 hours to run all tests. In Modelica it is possible to use classes in another package without using imports, that is not possible in Java.
 %TODO: Write somthing about the hardware we used
 %TODO: Write about size of the Java project and MSL?
 
