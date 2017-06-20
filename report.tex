@@ -39,11 +39,14 @@
 %\date{January 16, 2015}
 
 \acknowledgements{
-If you want to thank people, do it here, on a separate right-hand page. Both the U.S. \textit{acknowledgments} and the British \textit{acknowledgements} spellings are acceptable.
+%TODO: Write acknowledgements
+
+%%If you want to thank people, do it here, on a separate right-hand page. Both the U.S. \textit{acknowledgments} and the British \textit{acknowledgements} spellings are acceptable.
 }
 
 \theabstract{
-%TODO: Write 150 words.
+During software development testing of the software can be very time consuming. We have developed a safe regression test selection for the programming language Modelica. By excluding tests that not will detect any errors it is possible to reduce the testing time, since Modelica tests takes very long time to run there is much time to save. As far as  we know this has previously not been done for Modelica. To do the test selection we have implemented a dependency analysis of Modelica classes in an existing Modelica compiler. When we look at the commit history of the Modelica Standard Library and compare running all tests with only running the tests selected by our test selection, the timed saved for running tests is in this case 56\% of the time it takes to run all tests.
+%TODO: Update the abstract when we have done a version of the test selection not limited by the lookup in the source tree in OCT.
 
 %%Your abstract should capture the whole thesis with focus on the problem and solution in 150 words. Avoid acronyms, footnotes, and references in the abstract if possible.
 
@@ -171,7 +174,7 @@ Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing 
     Write about runconfigs?
 
 \chapter[Dependency analysis]{Dependency analysis}
-To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica.org, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. When the look of an access fails in the source tree we say the access is not resolvable. This means that an valid access can still fail to resolve. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. First we introduce the rules and then we will go on and explain and motivate each one. In th
+To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica.org, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. When the look of an access fails in the source tree we say the access is not resolvable. This means that an valid access can still fail to resolve. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. First we introduce the rules and then we will go on and explain and motivate each one.
 
 \paragraph{Dependency Rules}
 \begin{enumerate}
