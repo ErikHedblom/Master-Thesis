@@ -24,7 +24,9 @@
 \usepackage[style=numeric]{biblatex}
 \addbibresource{thebib.bib}% 
 %\geometry{showframe}
-
+\DefineBibliographyStrings{english}{%
+  bibliography = {References},
+}
 \author{
 	Erik Hedblom \\
 	{\normalsize \href{mailto:hedblom.e@gmail.com}{\texttt{hedblom.e@gmail.com}}}
@@ -386,7 +388,7 @@ A breakdown of the graphs is shown in Table \ref{table:breakdown}, as well as so
     & 93 \%
 \\
     & \ref{fig:mslhistory}
-    & \multicolumn{1}{r}{819}
+    & \multicolumn{1}{r}{4341}
     & \multicolumn{1}{@{}l|}{commits}
     &
     &
@@ -436,7 +438,8 @@ Safe regression test selection has been developed for Java at LTH \cite{DBLP:con
 %TODO: JModelica is not perfectly suited for this
 
 \section{Future work}
-\printbibliography
+
+\printbibliography[heading=bibintoc]
 
 %\begin{appendices}
 %\chapter{About This Document}
