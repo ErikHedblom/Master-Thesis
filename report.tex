@@ -70,10 +70,8 @@ During software development testing of the software can be very time consuming. 
 \makefrontmatter
 \chapter[Introduction]{Introduction}
 
-%TODO: Write something about giving models to the compiler and getting a dependency graph
 %TODO: Related work?
-%TODO: Wy do we need a compiler
-%TODO: Mention JModelica.org
+%TODO: Niklas comment: Wy do we need a compiler
 %TODO: Bouncing ball example in Introduction or Background?
 
 \section{Motivation}
@@ -91,7 +89,9 @@ During software development, when a change is integrated into a project all prev
 TODO: Include simulation results of bouncing ball
 
 \section{Goal}
-The aim of this project is to reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a safe RTS method, a method to exclude tests in a test suite unaffected by a specific change. \cite{DBLP:conf/pppj/OqvistHM16} Regression testing can then be performed with a reduced test suite without compromising testing quality.
+%TODO: Correct to say that: we are goning to implement in the JModelica.org compiler when we acctually do it in OCT? Niklas thought that we should write about JModelica in the introduction
+%TODO: Correct to say that: the goal is to give some Modelica models to the compiler, when it origanaly was files?
+The aim of this project is to reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a safe RTS method, a method to exclude tests in a test suite unaffected by a specific change. \cite{DBLP:conf/pppj/OqvistHM16} Regression testing can then be performed with a reduced test suite without compromising testing quality. To know which tests that can be safely excluded we need to know if there is dependencies between different parts of Modelica code. To solve this we are going to implement a solution in the JModelica.org compiler. The goal is to be able to give some Modelica models to the compiler and get a dependency graph of Modelica classes.
 
 \section{Results}
 We have succeeded in significantly decreasing the time for testing by test selection for Modelica. In chapter 5 we evaluate our solution, we try to assess how much time can be saved with our RTS method and the precision of the method. We look at the commit history for some Modelica libraries to see how much time would have been saved if our RTS method had been used instead of running all tests for each commit. However we cannot prove that the method we have developed is safe, we discuss this further in chapter 6.
