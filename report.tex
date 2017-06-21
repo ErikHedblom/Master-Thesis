@@ -20,7 +20,7 @@
 \usepackage{epstopdf}
 \usepackage{comment}
 \input{listings-modelica.cfg}
-
+\usepackage{makecell}
 %\geometry{showframe}
 
 \author{
@@ -323,24 +323,57 @@ The results in \ref{fig:hxlonefile} and \ref{fig:mslonefile} looks very good but
 
 \begin{table}[ph]
 \begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hhline{~~--}
-\multicolumn{2}{c|}{} & Savings & Figure \\
-\hline
-\multirow{2}{*}{HXL} & models & 67\% &\ref{fig:hxlonemodel} \\
-\hhline{~---}
- & files & 68\% &\ref{fig:hxlonefile} \\
-\hline
-\multirow{3}{*}{MSL} & models & 93\% &\ref{fig:mslonemodel} \\
-\hhline{~---}
-& files & 88\% &\ref{fig:mslonefile} \\
-\hhline{~---}
-& history & 56\% &\ref{fig:mslhistory} \\
+\begin{tabular}{|*{7}{c|}}
+\cline{2-7}
+      \multicolumn{1}{c|}{}
+    & Savings
+    & Figure
+    & \multicolumn{2}{|c|}{Units}
+    & \makecell{Complete test \\ suite runtime}
+    & \makecell{Dependency analysis \\ runtime}
+\\ \hline
+      \multirow{2}{*}{HXL}
+    &  67 \%
+    & \ref{fig:hxlonemodel}
+    & \multicolumn{1}{r}{819}
+    & \multicolumn{1}{@{}l|}{models}
+    & \multirow{2}{*}{3h 1m 51s}
+    & \multirow{2}{*}{6.7s}\\
+\cline{2-5}
+    & 68 \%
+    & \ref{fig:hxlonefile}
+    & \multicolumn{1}{r}{552}
+    & \multicolumn{1}{@{}l|}{files}
+    &
+    &
+\\ \hline
+      \multirow{3}{*}{MSL}
+    & 93 \%
+    & \ref{fig:mslonemodel}
+    & \multicolumn{1}{r}{5917}
+    & \multicolumn{1}{@{}l|}{models}
+    & \multirow{3}{*}{3h 1m 51s}
+    & \multirow{3}{*}{18.8s}\\
+\cline{2-5}
+    & 88 \%
+    & \ref{fig:mslonefile}
+    & \multicolumn{1}{r}{197}
+    & \multicolumn{1}{@{}l|}{files}
+    & 
+    & \\
+\cline{2-5}
+    & 56 \%
+    & \ref{fig:mslhistory}
+    & \multicolumn{1}{r}{819}
+    & \multicolumn{1}{@{}l|}{commits}
+    &
+    &
+    \\
 \hline
 
 \end{tabular}
-\caption{R, C ripple size}
-\label{T:peak}
+\caption{Breakdown of Figure \ref{fig:hxlonefile} to \ref{fig:mslhistory} }
+\label{table:breakdown}
 \end{center}
 \end{table}
 
@@ -356,14 +389,14 @@ The results in \ref{fig:hxlonefile} and \ref{fig:mslonefile} looks very good but
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{Graphs/HXL_one_model.eps}
-    \caption{One model changed in HXL. 819 models in total}
+    \caption{One model changed in HXL}
     \label{fig:hxlonemodel}
 \end{figure}
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=\textwidth]{Graphs/MSL_one_model.eps}
-    \caption{One model changed in MSL. 5917 models in total}
+    \caption{One model changed in MSL}
     \label{fig:mslonemodel}
 \end{figure}
 \chapter[Discussion]{Discussion}
