@@ -300,13 +300,9 @@ The Modelica language allows use of external functions that are not defined in a
 
 
 \chapter[Evaluation]{Evaluation}
-%TODO: Precision
-%TODO: Hardware used. RAM? OS?
-%TODO: Rework
-%TODO: Dependency analysis time
-In this chapter we are going to evaluate both the time savings and the precision of our dependency analysis. We have performed measurements for HXL (the Heat Exchanger Library developed by Modelon) and MSL (Modelica Standard Library). To assess how much time our test selection can save, we have run the tests for each library several times, to get the average time it takes to run each test. This was done using a Intel\textregistered Core\texttrademark i5-4300M. The test times will be used to simulate a test selection without having to run the tests. Some tests have very long running times, therefore we limited tests to ten minutes. Test taking longer will timeout and their running time is set to ten minutes.
+In this chapter we are going to evaluate performance of our dependency analysis and test selection. We have performed measurements for HXL (the Heat Exchanger Library developed by Modelon) and MSL (Modelica Standard Library). To assess how much time our test selection can save, we have run the tests for each library several times, to get the average time it takes to run each test. This was done using a Intel\textregistered Core \texttrademark i5-4300M. The test times will be used to simulate a test selection without having to run the tests. Some tests have very long running times, therefore we limited tests to ten minutes. Test taking longer will timeout and their running time is set to ten minutes.
 
-First we preformed test selection for each Modelica file in two libraries, MSL and HXL, and assumed only one file changed. In Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} the result for all files in HXL and MSL relative the total running time for the complete test suite is shown. Neither of the graphs include the execution time of the test selection algorithm and therefore the time savings are not completely accurate. However, in both cases the the test selection time corresponds to a fraction of a percent on the y-axis. %TODO: Add total time. And actual times to dependency analysis 
+First we preformed test selection for each Modelica file in two libraries, MSL and HXL, and assumed only one file changed. In Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} the result for all files in HXL and MSL relative the total running time for the complete test suite is shown. Neither of the graphs include the execution time of the test selection algorithm and therefore the time savings are not completely accurate. However, in both cases the the test selection time corresponds to a fraction of a percent on the y-axis. Figure \ref{fig:hxlonemodel} and \ref{fig:mslonemodel} are similar to Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} but the selection is performed with a finer granularity, using models instead of files. 
 
 \begin{figure}[!htbp]
     \centering
@@ -317,54 +313,76 @@ First we preformed test selection for each Modelica file in two libraries, MSL a
 
 \begin{figure}[!htbp]
     \centering
+    \includegraphics[width=\textwidth]{Graphs/HXL_one_model.eps}
+    \caption{One model changed in HXL}
+    \label{fig:hxlonemodel}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
     \includegraphics[width=\textwidth]{Graphs/MSL_one_file.eps}
     \caption{One file changed in MSL}
     \label{fig:mslonefile}
 \end{figure}
 
-The results in \ref{fig:hxlonefile} and \ref{fig:mslonefile} looks very good but they do not necessary reflect a real use case. In Figure \ref{fig:mslhistory} are all the commits in the commit history for MSL until commit e69f57, 24th of may 2017. On the y-axis we have commits and on the x-axis is the time for running the test selection corresponding to the commit. The time is plotted relative to the total time of the complete test suite. As the previous graphs the time for the dependency analysis is not included. Furthermore, we have not run the dependency analysis for each commit, instead the same dependency analysis was reused for all commits. This means that for most commits the dependency analysis is an approximation with lower precision for earlier commits. The average time saving for test executions in Figure \ref{fig:mslhistory} is 56\% (time for running dependency analysis excluded).
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Graphs/MSL_one_model.eps}
+    \caption{One model changed in MSL}
+    \label{fig:mslonemodel}
+\end{figure}
 
+So far the results looks very good but they do not necessary reflect a real use case. In Figure \ref{fig:mslhistory} are all the commits in the commit history for MSL until commit e69f57, 24th of may 2017. On the y-axis we have commits and on the x-axis is the time for running the test selection corresponding to the commit. The time is plotted relative to the total time of the complete test suite. As the previous graphs the time for the dependency analysis is not included. Furthermore, we have not run the dependency analysis for each commit, instead the same dependency analysis was reused for all commits. This means that for most commits the dependency analysis is an approximation with lower precision for earlier commits. The average time saving for test executions in Figure \ref{fig:mslhistory} is 56\% (time for running dependency analysis excluded).
 
-\begin{table}[ph]
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Graphs/MSL_history_plot.eps}
+    \caption{History plot for MSL}
+    \label{fig:mslhistory}
+\end{figure}
+
+A breakdown of the graphs is shown in Table \ref{table:breakdown}, as well as some other information about the graphs. The textit{Savings} are the average savings for each graph relative to the running time of the full test suite, found in the \textit{Complete test suite execution time} column. We also provide an average execution time for the dependency analysis, this was obtained by measuring the execution ten times on the same computer used for the other results. However, it is usually not necessary to calculate the dependencies for all models or files unless every model or file is changed. Hence, the execution time is usually shorter in practice.
+
 \begin{center}
+\begin{table}[!htbp]
 \begin{tabular}{|*{7}{c|}}
 \cline{2-7}
       \multicolumn{1}{c|}{}
     & Figure
     & \multicolumn{2}{c|}{Units}
-    & \makecell{Complete test \\ suite runtime}
-    & \makecell{Dependency analysis \\ runtime}
+    & \makecell{Complete test suite \\ execution time}
+    & \makecell{Dependency analysis \\ execution time}
     & Savings
 \\ \hline
       \multirow{2}{*}{HXL}
-    & \ref{fig:hxlonemodel}
-    & \multicolumn{1}{r}{819}
-    & \multicolumn{1}{@{}l|}{models}
-    & \multirow{2}{*}{3h 1m 51s}
-    & \multirow{2}{*}{6.7s}
-    &  67 \%
-\\
     & \ref{fig:hxlonefile}
     & \multicolumn{1}{r}{552}
     & \multicolumn{1}{@{}l|}{files}
+    & \multirow{2}{*}{3h 1m 51s}
+    & \multirow{2}{*}{6.7s}
+    &  68 \%
+\\
+    & \ref{fig:hxlonemodel}
+    & \multicolumn{1}{r}{819}
+    & \multicolumn{1}{@{}l|}{models}
     &
     &
-    & 68 \%
+    & 67 \%
 \\ \hline
       \multirow{3}{*}{MSL}
+      & \ref{fig:mslonefile}
+    & \multicolumn{1}{r}{197}
+    & \multicolumn{1}{@{}l|}{files}
+    & \multirow{3}{*}{2h 26m 35s}
+    & \multirow{3}{*}{18.8s}
+    & 88 \%
+\\
     & \ref{fig:mslonemodel}
     & \multicolumn{1}{r}{5917}
     & \multicolumn{1}{@{}l|}{models}
-    & \multirow{3}{*}{2h 26m 35s}
-    & \multirow{3}{*}{18.8s}
+    &
+    &
     & 93 \%
-\\
-    & \ref{fig:mslonefile}
-    & \multicolumn{1}{r}{197}
-    & \multicolumn{1}{@{}l|}{files}
-    &
-    &
-    & 88 \%
 \\
     & \ref{fig:mslhistory}
     & \multicolumn{1}{r}{819}
@@ -374,35 +392,12 @@ The results in \ref{fig:hxlonefile} and \ref{fig:mslonefile} looks very good but
     & 56 \%
     \\
 \hline
-
 \end{tabular}
 \caption{Breakdown of Figure \ref{fig:hxlonefile} to \ref{fig:mslhistory} }
 \label{table:breakdown}
-\end{center}
 \end{table}
+\end{center}
 
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\textwidth]{Graphs/MSL_history_plot.eps}
-    \caption{History plot for MSL}
-    \label{fig:mslhistory}
-\end{figure}
- 
- Both Rule number 4, that we need due to limitations of the lookup in the source tree, and the handling of files that is not Modelica files, lowers the precision of the test selection and creates extra overhead.
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\textwidth]{Graphs/HXL_one_model.eps}
-    \caption{One model changed in HXL}
-    \label{fig:hxlonemodel}
-\end{figure}
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\textwidth]{Graphs/MSL_one_model.eps}
-    \caption{One model changed in MSL}
-    \label{fig:mslonemodel}
-\end{figure}
 \chapter[Discussion]{Discussion}
 
 \section{Validity}
