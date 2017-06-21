@@ -269,10 +269,10 @@ MTT will process the data from the user, either from the command line interface 
 MTT will then send all modified files or models to OCT and ask for all affected models. Then all tests testing one of the affected models will be selected and run.
 
 \subsection{Change detection}
-There is no automatic change detection, instead the user manually have to specify which models or files should be considered changed. Automatic change detection could be implemented using a version control system such as Git or SVN. A build server could look at the commit history to determine what is changed and commands such as \texttt{git status} and \texttt{svn info} could be used when a user is using the tool. Another option is to look at the file timestamps to determine what is changes.
+There is no automatic change detection, instead the user manually have to specify which models or files should be considered changed. Automatic change detection could be implemented using a version control system such as Git or SVN. A build server could look at the commit history to determine what is changed and commands such as \texttt{git status} and \texttt{svn info} could be used when a user is using the tool. Another option is to look at the file timestamps to determine what is changed.
 
 \section{Dependency analysis}
-We have previously described how the dependency analysis should be performed. In this section we will look at some of the aspects not handles by the rules presented in Chapter 3.
+We have previously described how the dependency analysis should be performed. In this section we will look at some of the aspects not handled by the rules presented in Chapter 3.
 
 \subsection{Scope}
 To speed up the dependency analysis we ask the user to specify which libraries should be search for dependencies. For example, the standard library is automatically included in projects but users will rarely make changes to or test it. Hence, searching for dependencies to and in the standard library will usually be unnecessary. There might also be other dependencies in a project that are considered stable and unnecessary to analyze. In MTT this is handled by automatically search all open libraries.
@@ -280,7 +280,7 @@ To speed up the dependency analysis we ask the user to specify which libraries s
 Furthermore, our implementation also excludes Modelica built-ins. Built-ins such as \texttt{Real} should never change, and if they do, it means the compiler has changed. If the compiler has changed all test will have to be rerun anyway.
 
 \subsection{Inverted dependency graph}
-The dependency graph produced in Chapter 3 show the dependencies from the compilers perspective. To find out which models are affected by a change the graph has to be inverted. Consider Figure \ref{fig:invertedGraph}, in the left graph, if \texttt{C2} is changed the graph has to be search backwards to find out that \texttt{T2} should be selected. This is implemented by inverting the graph, resulting in the right graph.
+The dependency graph produced in Chapter 3 shows the dependencies from the compilers perspective. To find out which models are affected by a change the graph has to be inverted. Consider Figure \ref{fig:invertedGraph}, in the left graph, if \texttt{C2} is changed the graph has to be searched backwards to find out that \texttt{T2} should be selected. This is implemented by inverting the graph, resulting in the right graph.
 
 \begin{figure}[!htbp]
     \centering
@@ -292,15 +292,15 @@ The dependency graph produced in Chapter 3 show the dependencies from the compil
 \end{figure}
 
 \subsection{External functions}
-The Modelica language allows the use of external functions that are not defined in a Modelica file. The external functions are often defined in a C-file.\cite{modelicamodelica}. In our dependency analysis we do not analyze the dependencies in external files. To handle this, and keep the test selection safe, if a non Modelica file is changed we assume that every Modelica class that depend on externals is affected.
+The Modelica language allows use of external functions that are not defined in a Modelica file. The external functions are often defined in a C-file.\cite{modelicamodelica}. In our dependency analysis we do not analyze the dependencies in external files. To handle this, and keep the test selection safe, if a non Modelica file is changed we assume that every Modelica class that depend on externals is affected.
 
 
 \chapter[Evaluation]{Evaluation}
 %TODO: Precision
-%TODO: Hardware used
+%TODO: Hardware used. RAM? OS?
 %TODO: Rework
 %TODO: Dependency analysis time
-In this chapter we are going to evaluate both the time savings and the precision of our dependency analysis. We have performed measurements for HXL (the Heat Exchanger Library developed by Modelon) and MSL (Modelica Standard Library). To assess how much time our test selection can save. We have run the tests for each library several times, to get the average time it takes to run each test. This was done using a Intel\textregistered Core\texttrademark i5-4300M. The test times will be used to simulate a test selection without having to run the tests. Some tests have very long running times, therefore we limited tests to ten minutes. Test taking longer will timeout and their running time is set to ten minutes.
+In this chapter we are going to evaluate both the time savings and the precision of our dependency analysis. We have performed measurements for HXL (the Heat Exchanger Library developed by Modelon) and MSL (Modelica Standard Library). To assess how much time our test selection can save, we have run the tests for each library several times, to get the average time it takes to run each test. This was done using a Intel\textregistered Core\texttrademark i5-4300M. The test times will be used to simulate a test selection without having to run the tests. Some tests have very long running times, therefore we limited tests to ten minutes. Test taking longer will timeout and their running time is set to ten minutes.
 
 First we preformed test selection for each Modelica file in two libraries, MSL and HXL, and assumed only one file changed. In Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} the result for all files in HXL and MSL relative the total running time for the complete test suite is shown. Neither of the graphs include the execution time of the test selection algorithm and therefore the time savings are not completely accurate. However, in both cases the the test selection time corresponds to a fraction of a percent on the y-axis. %TODO: Add total time. And actual times to dependency analysis 
 
@@ -318,7 +318,7 @@ First we preformed test selection for each Modelica file in two libraries, MSL a
     \label{fig:mslonefile}
 \end{figure}
 
-The results in \ref{fig:hxlonefile} and \ref{fig:mslonefile} looks very good but they do not necessary reflect a real use case. In Figure \ref{fig:mslhistory} analyzed all the commits in the commit history for MSL until commit e69f57, 24th of may 2017. On the y-axis we have commits and on the x-axis is the time for running the test selection corresponding to the commit. The time is plotted relative to the total time of the complete test suite. As the previous graphs the time for the dependency analysis is not included. Furthermore, we have not run the dependency analysis for each commit, instead the same dependency analysis was reused for all commits. This means that for most commits the dependency analysis is an approximation with lower precision for earlier commits. The average time saving for test executions in Figure \ref{fig:mslhistory} is 56\% (time for running dependency analysis excluded).
+The results in \ref{fig:hxlonefile} and \ref{fig:mslonefile} looks very good but they do not necessary reflect a real use case. In Figure \ref{fig:mslhistory} are all the commits in the commit history for MSL until commit e69f57, 24th of may 2017. On the y-axis we have commits and on the x-axis is the time for running the test selection corresponding to the commit. The time is plotted relative to the total time of the complete test suite. As the previous graphs the time for the dependency analysis is not included. Furthermore, we have not run the dependency analysis for each commit, instead the same dependency analysis was reused for all commits. This means that for most commits the dependency analysis is an approximation with lower precision for earlier commits. The average time saving for test executions in Figure \ref{fig:mslhistory} is 56\% (time for running dependency analysis excluded).
 
 
 \begin{table}[ph]
