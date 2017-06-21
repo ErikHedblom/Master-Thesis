@@ -1,17 +1,12 @@
-model BouncingBall //A model of a bouncing ball
-  parameter Real g = 9.81; //Acceleration due to gravity
-  parameter Real e = 0.9; //Elasticity coefficient
-  Real pos(start=1); //Position of the ball
-  Real vel(start=0); //Velocity of the ball
+model BouncingBall //The 'classic' bouncing ball model
+  parameter Real e = 0.8; //Elasticity coefficient
+  parameter Real g = 9.81; //Initial height
+  Height h(start=1); //Height of the ball
+  Velocity v(start=0); //Velocity of the ball
 equation
-  der(pos) = vel; //Newtons second law
-  der(vel) = -g;
-  when pos <= 0 then
-    reinit(vel, -e*pre(vel)); // set velocity after bounce
+  der(h) = v; //Newtons second law
+  der(v) = -g;
+  when h <= 0 then
+    reinit(v, -e*pre(v)); // Set velocity after bounce
   end when;
 end BouncingBall;
-
-model BBex
-  BouncingBall eBall; //Ball on earth
-  BouncingBall mBall(g=1.62); //Ball on the moon
-end BBex;

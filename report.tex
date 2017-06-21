@@ -80,13 +80,20 @@ During software development testing of the software can be very time consuming. 
 
 \section{Motivation}
 Software tests are used to verify that software works as intended.
-During software development, when a change is integrated into a project all previous testing have to be rerun. \cite{DBLP:conf/sigsoft/LegunsenHSLZM16, haider2016safe} This is know as regression testing. Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the tests may be unrelated to the change and therefore unnecessary to run. By excluding unrelated tests significant time savings could be achieved. This is called test selection and have to our knowledge not been previously done for Modelica. Modelica is a high level programming language used for simulations in various areas. In Figure \ref{fig:bouncingBallCode} is an example of Modelica code, it shows one model of a bouncing ball and one model with two instances of a bouncing ball. When the test selection is done for regression tests it is known as regression test selection (RTS). 
+During software development, when a change is integrated into a project all previous testing have to be rerun. \cite{DBLP:conf/sigsoft/LegunsenHSLZM16, haider2016safe} This is know as regression testing. Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the tests may be unrelated to the change and therefore unnecessary to run. By excluding unrelated tests significant time savings could be achieved. This is called test selection and have to our knowledge not been previously done for Modelica. Modelica is a high level programming language used for simulations in various areas. In Figure \ref{fig:bouncingBallCode} is an example of Modelica code, it shows one model of a bouncing ball and in Figure \ref{fig:bouncingBallSimulation} is the simulation result of bouncing ball model. When the test selection is done for regression tests it is known as regression test selection (RTS). 
 
 \begin{figure}[!htbp]
     \centering
-    {\lstinputlisting[language=modelica]{Modelica/BouncingBall.mo}}
-    \caption{Modelica example bouncing ball. This example is retrieved from "Implementation of a Modelica compiler using JastAdd attribute grammars" \cite{aakesson2010implementation}.}
+    \lstinputlisting[language=modelica]{Modelica/BouncingBall.mo}
+    \caption{Modelica example bouncing ball. This example is inspired by \textit{Implementation of a Modelica compiler using JastAdd attribute grammars} \cite{aakesson2010implementation} and \textit{Modelica by example} \cite{tillermodelica}.}
     \label{fig:bouncingBallCode}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Pictures/BB1.png}
+    \caption{The simulation result of the model in Figure \ref{fig:bouncingBallCode}. This graph is retrieved from \textit{Modelica by example} \cite{tillermodelica}}
+    \label{fig:bouncingBallSimulation}
 \end{figure}
 
 %TODO: Include simulation results of bouncing ball
@@ -162,7 +169,7 @@ JModelica.org is an open source compiler that is developed and maintained by the
 
 The compilation of Modelica code in JModelica.org is done in several steps, see Figure \ref{fig:compilerSteps}. \cite{aakesson2010implementation} In the first step, name and type analysis of the source code is done, identifiers are bound to declarations etc. An AST (Abstract Syntax Tree) is built in form of a source tree.
 
-In Figure \ref{fig:bouncingBallCode} when the instance of \texttt{BoncingBall}, \texttt{mBall} is created, a modification is used to set the gravity to a different value than the original. The flattening of Modelica code is complicated because of modifications that are used in Modelica. To simplify this and  prepare for the flattening, in step two a new AST in form of a instance tree is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The root is the model chosen by the user to be flattened. The instance tree consists of instances of all classes with the possibly given modifications at the point in the Modelica source code where the instance is created. Therefore the instance tree requires a lot more memory than the source tree and is slower to traverse. This is the reason we have chosen to implement our solution in the source tree. 
+In Figure \ref{fig:bouncingBallInstance} when the instance of \texttt{BouncingBall} in Figure \ref{fig:bouncingBallCode}, \texttt{Ball} is created, a modification is used to set the gravity to a different value than the original. The flattening of Modelica code is complicated because of modifications that are used in Modelica. To simplify this and  prepare for the flattening, in step two a new AST in form of a instance tree is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The root is the model chosen by the user to be flattened. The instance tree consists of instances of all classes with the possibly given modifications at the point in the Modelica source code where the instance is created. Therefore the instance tree requires a lot more memory than the source tree and is slower to traverse. This is the reason we have chosen to implement our solution in the source tree. 
 
 In the third step the Modelica code is flattened. In this step class, component and inheritance structures are removed. This results in a model that only has a set of equations and a set of variables. Since an instance tree is created in the previous step it is easy to traverse the instance tree and collect all variables and equations.
 
@@ -175,6 +182,13 @@ In the last step C-code is generated.
     {\includegraphics[scale=0.5]{dotGenerated/CompilerSteps.eps}}
     \caption{The compilation steps in the JModelica.org compiler}
     \label{fig:compilerSteps}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \lstinputlisting[language=modelica]{Modelica/BouncingBallInstance.mo}
+    \caption{Instance of the bouncing ball in Figure \ref{fig:bouncingBallCode} with modification. This example is inspired by \textit{Implementation of a Modelica compiler using JastAdd attribute grammars} \cite{aakesson2010implementation}.}
+    \label{fig:bouncingBallInstance}
 \end{figure}
 
 %TODO: Decide if we want a JasAdd section
