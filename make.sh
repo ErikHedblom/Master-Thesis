@@ -7,6 +7,6 @@ done
 cd ..
 
 pdflatex report
-bibtex report
+biber report
 pdflatex report
 pdflatex report
