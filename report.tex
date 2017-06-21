@@ -91,8 +91,8 @@ During software development, when a change is integrated into a project all prev
 TODO: Include simulation results of bouncing ball
 
 \section{Goal}
-%TODO: Correct to say that: we are goning to implement in the JModelica.org compiler when we acctually do it in OCT? Niklas thought that we should write about JModelica in the introduction
-%TODO: Correct to say that: the goal is to give some Modelica models to the compiler, when it origanaly was files?
+%TODO: Correct to say that: we are going to implement in the JModelica.org compiler when we acctually do it in OCT? Niklas thought that we should write about JModelica in the introduction
+%TODO: Correct to say that: the goal is to give some Modelica models to the compiler, when it origanally was files?
 The aim of this project is to reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a safe RTS method, a method to exclude tests in a test suite unaffected by a specific change. \cite{DBLP:conf/pppj/OqvistHM16} Regression testing can then be performed with a reduced test suite without compromising testing quality. To know which tests that can be safely excluded we need to know if there is dependencies between different parts of Modelica code. To solve this we are going to implement a solution in the JModelica.org compiler. The goal is to be able to give some Modelica models to the compiler and get a dependency graph of Modelica classes.
 
 \section{Results}
@@ -184,8 +184,7 @@ Collection attributes are defined by partial definitions in a number of arbitrar
 \end{comment}
 
 \section{Model Testing Toolkit}
-%TODO: Referens till MTT
-Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing of Modelica projects. It has both a command line and a graphical interface and we will add functionality and options to both to support test selection.
+Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing of Modelica projects. \cite{modelon.comMTT}It has both a command line and a graphical interface and we will add functionality and options to both to support test selection.
 
 \subsection{Tests}
     Write about runconfigs?
@@ -343,7 +342,7 @@ So far the results looks very good but they do not necessary reflect a real use 
     \label{fig:mslhistory}
 \end{figure}
 
-A breakdown of the graphs is shown in Table \ref{table:breakdown}, as well as some other information about the graphs. The textit{Savings} are the average savings for each graph relative to the running time of the full test suite, found in the \textit{Complete test suite execution time} column. We also provide an average execution time for the dependency analysis, this was obtained by measuring the execution ten times on the same computer used for the other results. However, it is usually not necessary to calculate the dependencies for all models or files unless every model or file is changed. Hence, the execution time is usually shorter in practice.
+A breakdown of the graphs is shown in Table \ref{table:breakdown}, as well as some other information about the graphs. The \textit{Savings} are the average savings for each graph relative to the running time of the full test suite, found in the \textit{Complete test suite execution time} column. We also provide an average execution time for the dependency analysis, this was obtained by measuring the execution ten times on the same computer used for the other results. However, it is usually not necessary to calculate the dependencies for all models or files unless every model or file is changed. Hence, the execution time is usually shorter in practice.
 
 \begin{center}
 \begin{table}[!htbp]
