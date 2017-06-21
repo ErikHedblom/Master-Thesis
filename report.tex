@@ -121,7 +121,7 @@ Modelica uses dot notation like many other languages to access something inside 
 It is not apparent from an access what it is trying to access, it could be a package, model, function or a component. Due to this we will simplify the terminology by grouping models, packages and function together and just call them classes. Components are instantiations of classes and will be handled separately since our solution can not resolve accesses to components yet.
 
 \subsection{Name lookup}
-In order to find a match for a name, the Modelica compiler starts by looking at the first name in a qualified name. \cite{modelicamodelica, tillermodelica} Take for example the qualified name \texttt{Modelica.Fluid.Pipes.StaticPipe}. In this example \texttt{Modelica} is the first name in the qualified name.
+In order to find a match for a name, the Modelica compiler starts by looking at the first name in a qualified name. \cite{modelicamodelica, tillermodelica} Take for example the qualified name \\ \texttt{Modelica.Fluid.Pipes.StaticPipe}. In this example \texttt{Modelica} is the first name in the qualified name.
 \begin{itemize}
 \item To find a match for the name, the Modelica compiler first checks if it's a built in type. If it's a built-in type the compiler has found a match for the name.
 
