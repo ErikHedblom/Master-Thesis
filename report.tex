@@ -96,9 +96,6 @@ During software development, when a change is integrated into a project all prev
     \label{fig:bouncingBallSimulation}
 \end{figure}
 
-%TODO: Include simulation results of bouncing ball
-TODO: Include simulation results of bouncing ball
-
 \section{Goal}
 %TODO: Correct to say that: we are going to implement in the JModelica.org compiler when we acctually do it in OCT? Niklas thought that we should write about JModelica in the introduction
 %TODO: Correct to say that: the goal is to give some Modelica models to the compiler, when it origanally was files?
@@ -442,7 +439,7 @@ A master thesis similar to this one has previously been done at LTH. In the prev
 
 Studies have been conducted to investigate at which granularity dependency analysis pays off the most and how much precision it can have without getting to expensive ~\cite{DBLP:conf/sigsoft/LegunsenHSLZM16}. It has also been done work in other techniques to achieve shorter time for testing, including dynamic test selection.
 
-Safe regression test selection has been developed for Java at LTH \cite{DBLP:conf/pppj/OqvistHM16}. In this work the dependency graph is stored and updated when it changes unlike our solution for Modelica, where we compute the dependency graph each time. There is two main differences between Java and Modelica interesting for test selection. Modelica regression tests takes usually much longer time to run than Java regression tests. The longest time it takes to run all tests for a Java project used in the evaluation in \cite{DBLP:conf/pppj/OqvistHM16} is less than 20 seconds (on a 4-core 3.6GHz Intel i7-3820 CPU, with 64 GiB RAM, running Linux Mint 17.0). For the Modelica Standard Library it takes more than 2 hours to run all tests (on a Intel Core i5-4300M), even though the tests taking more than ten minutes, are canceled after ten minutes. In Modelica it is possible to use classes in another package without using imports, that is not possible in Java.
+Safe regression test selection has been developed for Java at LTH \cite{DBLP:conf/pppj/OqvistHM16}. In this work the dependency graph is stored and updated when it changes unlike our solution for Modelica, where we compute the dependency graph each time. There is two main differences between Java and Modelica interesting for test selection. Modelica regression tests takes usually much longer time to run than Java regression tests. The longest time it takes to run all tests for a Java project used in the evaluation in \cite{DBLP:conf/pppj/OqvistHM16} is less than 20 seconds (on a 4-core 3.6GHz Intel i7-3820 CPU, with 64 GiB RAM, running Linux Mint 17.0). For the Modelica Standard Library it takes more than 2 hours to run all tests (on a Intel Core i5-4300M), even though the tests taking more than ten minutes, are canceled after ten minutes. In Modelica it is possible to use classes in another package without using imports, that is not possible in Java. This affects the dependency analysis.
 %TODO: Write about size of the Java project and MSL?
 
 \chapter[Conclusion]{Conclusion}
