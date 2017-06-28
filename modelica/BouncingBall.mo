@@ -1,6 +1,6 @@
 model BouncingBall //The 'classic' bouncing ball model
   parameter Real e = 0.8; //Elasticity coefficient
-  parameter Real g = 9.81; //Initial height
+  parameter Real g = 9.81; //Acceleration due to gravity
   Height h(start=1); //Height of the ball
   Velocity v(start=0); //Velocity of the ball
 equation
