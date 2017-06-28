@@ -148,7 +148,7 @@ The search is done in the same way for the first name in a qualified name and an
 If a name is a part of a qualified name and is not the first name in the qualified name, it must be a definition within the definition of the previous name in the qualified name. In the example \texttt{Modelica.Fluid.Pipes.StaticPipe}, \texttt{Fluid} must be a definition within \texttt{Modelica}.
 
 \subsection{Import}
-In Modelica imports can be used to access an object without using the qualified name each time, an import creates an alias. Imports are also used to affect the name lookup and avoid name shadowing. To find an imported object the Modelica compiler looks for a match for the name in root packages, so the qualified name needs to be used in an import. In the import below \texttt{HydralicConductance} will be mapped to the qualified name \texttt{Modelica.Fluid.Types.HydralicConductance}.
+In Modelica imports can be used to access objects without using the qualified name each time, an import creates an alias. Imports are also used to affect the name lookup and avoid name shadowing. To find an imported object the Modelica compiler looks for a match for the name in root packages, so the qualified name needs to be used in an import. In the import below \texttt{HydralicConductance} will be mapped to the qualified name \texttt{Modelica.Fluid.Types.HydralicConductance}.
 
 \lstinputlisting[language=modelica]{Modelica/import.mo}
 
@@ -156,7 +156,7 @@ Modelica offers the option to rename an import. Here an alias will be created wh
 
 \lstinputlisting[language=modelica]{Modelica/renamedImport.mo}
 
-Modelica allows the use of wildcard imports. Using wildcards it is not possible to rename the import. This wildcard import will create an alias for every definition in \texttt{Modelica.Fluid}.
+Modelica allows the use of wildcard imports. When using wildcard imports it is not possible to rename the import. This wildcard import will create an alias for every definition in \texttt{Modelica.Fluid}.
 
 \lstinputlisting[language=modelica]{Modelica/wildcardImport.mo}
 
