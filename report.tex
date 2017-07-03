@@ -96,12 +96,12 @@ The aim of this project is to reduce testing times for Modelica projects without
 We have succeeded in significantly decreasing the time for testing by using test selection for Modelica. In chapter 5 we evaluate our solution, we try to assess how much time can be saved with our RTS method and the precision of the method. We look at the commit history for some Modelica libraries to see how much time would have been saved if our RTS method had been used instead of running all tests for each commit. However we have not formally proved that the method we have developed is safe, we discuss this further in chapter 6.
 
 \chapter[Background]{Background}
-In this chapter we will explain concepts and give some background important to understanding the rest of the report. We will give a short explanation of the Modelica language and a summary of how the JModelica.org compiler works.
+In this chapter we will explain concepts and give some background important to understanding the rest of the report. We will give a short explanation of test selection, the Modelica language and a summary of how the JModelica.org compiler works.
 
 \section{Test Selection}
 A safe Regression Test Selection (RTS) method will select at least all tests that produce a new result after a specific change \cite{DBLP:conf/pppj/OqvistHM16}. A safe RTS method is therefore equivalent to running all tests, in the aspect of finding errors. For a RTS method to be useful the RTS algorithm should run in less time than it takes to run the excluded tests. This is not necessary for each run, but on average the overhead needs to be less than the time it takes to run the excluded tests.
 
-To measure how good the test selection is, the precision of the test selection can be used \cite{DBLP:conf/sigsoft/LegunsenHSLZM16}. If fewer redundant tests are selected the test selection has higher precision. There is a trade-off between the precision of the test selection and the overhead. If a RTS algorithm has full precision it does not select any tests that can not fail. To get higher precision a more complex algorithm may be needed. For a more complex algorithm it might be more difficult to validate that the RTS method is safe.
+To measure how good the test selection is, the precision of the test selection can be used \cite{DBLP:conf/sigsoft/LegunsenHSLZM16}. If fewer redundant tests are selected, the test selection has higher precision. There is a trade-off between the precision of the test selection and the overhead. To get higher precision, a more complex algorithm may be needed.
 
 \section{Modelica}
 Modelica is a declarative, object oriented modeling language where models are described by equations \cite{modelicamodelica}. It is used to perform high performance simulations. This section will introduce the parts of Modelica that is important for this project. In Figure \ref{fig:bouncingBallCode} is a simple Modelica example to illustrate the language. It shows a model of a bouncing ball and in Figure \ref{fig:bouncingBallSimulation} is the simulation result of the bouncing ball model.
@@ -109,7 +109,7 @@ Modelica is a declarative, object oriented modeling language where models are de
 \begin{figure}[!htbp]
     \centering
     \lstinputlisting[language=modelica]{Modelica/BouncingBall.mo}
-    \caption{Modelica example bouncing ball. This example is inspired by \textit{Implementation of a Modelica compiler using JastAdd attribute grammars} \cite{aakesson2010implementation} and \textit{Modelica by example} \cite{tillermodelica}.}
+    \caption{A Modelica model of a bouncing ball. This example is inspired by \textit{Implementation of a Modelica compiler using JastAdd attribute grammars} \cite{aakesson2010implementation} and \textit{Modelica by example} \cite{tillermodelica}.}
     \label{fig:bouncingBallCode}
 \end{figure}
 
@@ -121,44 +121,37 @@ Modelica is a declarative, object oriented modeling language where models are de
 \end{figure}
 
 %TODO: Niklas comment "ibland används begreppet qualified access"
-Modelica uses dot notation like many other languages to access something inside an object. Consider the code snippet in Figure \ref{fig:modelicaExample}, Model \texttt{M} can be accessed through \texttt{P1.P2.M}. We will call this an access. Depending on from which scope \texttt{M} is being accessed the access could also be \texttt{P2.M} or just \texttt{M}. An access using dot notation is basically a list of accesses and we will call all the accesses the path. For instance, the path of model \texttt{M} is \texttt{P1.P2.M}. We will also denote an access as a qualified name, if the first part of it is referencing the top package. In this case the qualified name for \texttt{M} is \texttt{P1.P2.M}.
+Modelica uses dot notation to access something inside an object \cite{modelicamodelica}. Consider the code snippet in Figure \ref{fig:modelicaExample}, the model \texttt{M} can be accessed through \texttt{P1.P2.M}. We will call this an \emph{access}. Depending on from which scope \texttt{M} is being accessed, the access could also be \texttt{P2.M} or just \texttt{M}. An access using dot notation is basically a list of accesses and we will call all the accesses the \emph{path}. For instance, the path of model \texttt{M} is \texttt{P1.P2.M}. We will also denote a path as a \emph{fully qualified name}, if the first part of it is referencing the top package. In this case the fully qualified name for \texttt{M} is \texttt{P1.P2.M}.
 
 \begin{figure}[!htbp]
     \centering
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/ModelicaExample.eps}}}
     \qquad
     \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{Modelica/ModelicaExample.mo}}}
-    \caption{An example of Modelica structure, where the boxes represents Modelica classes.}
+    \caption{An example of Modelica structure, where the boxes represents the Modelica classes in the Modelica code to the right.}
     \label{fig:modelicaExample}
 \end{figure}
 
 It is not apparent from an access what it is trying to access, it could be a package, model, function or a component. Due to this we will simplify the terminology by grouping models, packages and function together and just call them classes. Components are instantiations of classes and will be handled separately since our solution can not resolve accesses to components yet.
+%TODO: Niklas comment: är det accessen till komponenten eller typen för komponenten som inte kan hittas?
 
 \subsection{Name lookup}
-In order to find a match for a name, the Modelica compiler starts by looking at the first name in a qualified name \cite{modelicamodelica, tillermodelica}. Take for example the qualified name \\ \texttt{Modelica.Fluid.Pipes.StaticPipe}. In this example \texttt{Modelica} is the first name in the qualified name.
-\begin{itemize}
-\item To find a match for the name, the Modelica compiler first checks if it's a built in type. If it's a built-in type the compiler has found a match for the name.
+In this section we will give an example of a name lookup in the Modelica compiler. For an exhaustive description of the Modelica name lookup, see the Modelica specification \cite{modelicamodelica}. In order to find a match for a name, the Modelica compiler starts by looking at the first name in the path \cite{modelicamodelica, tillermodelica}. In Figure \ref{fig:nameLookup}, when \texttt{P1.P3.M.x} is defined it is initialized to the value the constant \texttt{P1.P2.k} has. To find the constant \texttt{k} through the path \texttt{P2.k}, the Modelica compiler starts by trying to find a match for the first name, \texttt{P2}, in the path. The Modelica compiler first checks if there is a definition of \texttt{P2} in the class \texttt{M}, where it is used. There is no definition of of \texttt{P2} in class \texttt{M}, so the Modelica compiler continues by looking for a definition in the enclosing class \texttt{P3}. There is still no definition of \texttt{P2}, in the next step the Modelica compiler looks for a definition in the enclosing class of \texttt{P3}, package \texttt{P1}. In package \texttt{P1} a definition of the name \texttt{P2} is found. Then the Modelica compiler looks for a definition of the name \texttt{k} in the class \texttt{P2}, and finds a definition of \texttt{P2.k}.
 
-\item If it's not a built in type the compiler looks in the class where the name is used, including inherited definitions, for a definition of the name. 
-
-\item If there is no definition of the name in the same class as the name is used, the compiler looks in the imports in the class where the name is used, inherited imports are not included, to find a match for the name.
-
-\item If a match for the name is not found in the imports, the compiler looks for a nested definition in the enclosing package, including inherited definitions.
-
-\item If the definition of the name is not found in the enclosing package, the compiler looks for a imported definition, not including inherited imports, in the enclosing package.
-\end{itemize}
-If a match for the name still not is found, the compiler continues by using the same method and looking in the enclosing packages enclosing package and so on until: the enclosing package has the encapsulated qualifier or a package is a root package, in which case it doesn't have an enclosing package. In the first case the search for the name terminates and in the second case Modelica searches for a match in root level packages.
-
-The search is done in the same way for the first name in a qualified name and an unqualified name.
-
-If a name is a part of a qualified name and is not the first name in the qualified name, it must be a definition within the definition of the previous name in the qualified name. In the example \texttt{Modelica.Fluid.Pipes.StaticPipe}, \texttt{Fluid} must be a definition within \texttt{Modelica}.
+%TODO: Make sure this figure is located in the Name lookup section in the report
+\begin{figure}[!htbp]
+    \centering
+    \lstinputlisting[language=modelica]{Modelica/NameLookup.mo}
+    \caption{An example to illustrate the name lookup in the Modelica compiler.}
+    \label{fig:nameLookup}
+\end{figure}
 
 \subsection{Import}
-In Modelica imports can be used to access objects without using the qualified name each time, an import creates an alias \cite{tillermodelica}. Imports are also used to affect the name lookup and avoid name shadowing. To find an imported object the Modelica compiler looks for a match for the name in root packages, so the qualified name needs to be used in an import. In the import below \texttt{HydralicConductance} will be mapped to the qualified name \texttt{Modelica.Fluid.Types.HydralicConductance}.
+In Modelica imports can be used to access objects without using the fully qualified name each time, an import creates an alias \cite{tillermodelica}. Imports are also used to affect the name lookup and avoid name shadowing. To find an imported object the Modelica compiler looks for a match for the name in root packages, so the fully qualified name needs to be used in an import statement. In the import below \texttt{HydralicConductance} will be mapped to the fully qualified name \texttt{Modelica.Fluid.Types.HydralicConductance}.
 
 \lstinputlisting[language=modelica]{Modelica/import.mo}
 
-Modelica offers the option to rename an import. Here an alias will be created where the name \texttt{Conductance} is mapped to the qualified name \\\texttt{Modelica.Fluid.Types.HydralicConductance}.
+Modelica offers the option to rename an import. Here an alias will be created where the name \texttt{Conductance} is mapped to the fully qualified name \\\texttt{Modelica.Fluid.Types.HydralicConductance}.
 
 \lstinputlisting[language=modelica]{Modelica/renamedImport.mo}
 
@@ -174,7 +167,7 @@ The compilation of Modelica code in JModelica.org is done in several steps, see 
 
 In Figure \ref{fig:bouncingBallInstance} when the instance of \texttt{BouncingBall}, \texttt{Ball} in Figure \ref{fig:bouncingBallCode} is created, a modification is used to set the gravity to a different value than the original. The flattening of Modelica code is complicated because of modifications that are used in Modelica. To simplify this and  prepare for the flattening, in step two a new AST in form of a instance tree is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The root is the model chosen by the user to be flattened. The instance tree consists of instances of all classes with the possibly given modifications at the point in the Modelica source code where the instance is created. Therefore the instance tree requires a lot more memory than the source tree and is slower to traverse. This is the reason we have chosen to implement our solution in the source tree. 
 
-In the third step the Modelica code is flattened. In this step class, component and inheritance structures are removed. This results in a model that only has a set of equations and a set of variables. Since an instance tree is created in the previous step it is easy to traverse the instance tree and collect all variables and equations.
+In the third step the Modelica code is flattened. In this step class, component and inheritance structures are removed. This results in a model that only has a set of equations and a set of variables. Since an instance tree is created in the previous step, it is easy to traverse the instance tree and collect all variables and equations to create the flat tree.
 
 In the fourth step the equations are sorted and optimized.
 
@@ -206,6 +199,7 @@ Collection attributes are defined by partial definitions in a number of arbitrar
 Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing of Modelica projects \cite{modelon.comMTT}. It has both a command line and a graphical interface and we will add functionality and options to both to support test selection.
 
 \subsection{Tests}
+%TODO: Niklas comment: kanske man kan ha i implemenations-kapitlet
     Write about runconfigs?
 
 \chapter[Dependency analysis]{Dependency analysis}
