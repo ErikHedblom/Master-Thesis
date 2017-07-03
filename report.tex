@@ -299,12 +299,12 @@ There is no automatic change detection, instead the user manually have to specif
 We have previously described how the dependency analysis should be performed. In this section we will look at some of the aspects not handled by the rules presented in Chapter 3.
 
 \subsection{Scope}
-To speed up the dependency analysis we ask the user to specify which libraries should be search for dependencies. For example, the standard library is automatically included in projects but users will rarely make changes to or test it. Hence, searching for dependencies to and in the standard library will usually be unnecessary. There might also be other dependencies in a project that are considered stable and unnecessary to analyze. In MTT this is handled by automatically search all open libraries.
+To speed up the dependency analysis we ask the user to specify which libraries should be search for dependencies. For example, the standard library is automatically included in projects but users will rarely make changes to or test it. Hence, searching for dependencies to and in the standard library will usually be unnecessary. There might also be other dependencies in a project that are considered stable and unnecessary to analyze. In MTT this is handled by automatically search in all libraries in the Model View pane, in the upper left part of Figure \ref{fig:MTTrun}.
 
 Furthermore, our implementation also excludes Modelica built-ins. Built-ins such as \texttt{Real} should never change, and if they do, it means the compiler has changed. If the compiler has changed all test will have to be rerun anyway.
 
 \subsection{Inverted dependency graph}
-The dependency graph produced in Chapter 3 shows the dependencies from the compilers perspective. To find out which models are affected by a change the graph has to be inverted. Consider Figure \ref{fig:invertedGraph}, in the left graph, if \texttt{C2} is changed the graph has to be searched backwards to find out that \texttt{T2} should be selected. This is implemented by inverting the graph, resulting in the right graph.
+The dependency graph produced in Chapter 3 shows the dependencies from the compilers perspective. To find out which models are affected by a change the graph has to be inverted. Consider the left graph in Figure \ref{fig:invertedGraph}, if the class \texttt{C2} is changed the graph has to be searched backwards to find out that the test \texttt{T2} should be selected. This is implemented by inverting the dependency graph, resulting in the right graph in Figure \ref{fig:invertedGraph}.
 
 \begin{figure}[!htbp]
     \centering
