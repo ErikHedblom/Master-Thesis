@@ -19,6 +19,7 @@
 \usepackage{listings}
 \usepackage{epstopdf}
 \usepackage{comment}
+\usepackage{hyperref}
 \input{listings-modelica.cfg}
 \usepackage{makecell}
 \usepackage[style=numeric]{biblatex}
@@ -315,9 +316,9 @@ The Modelica language allows use of external functions that are not defined in a
 
 
 \chapter[Evaluation]{Evaluation}
-In this chapter we are going to evaluate performance of our dependency analysis and test selection. We have performed measurements for HXL (the Heat Exchanger Library developed by Modelon) and MSL (Modelica Standard Library). To assess how much time our test selection can save, we have run the tests for each library several times, to get the average time it takes to run each test. This was done using a Intel\textregistered Core \texttrademark i5-4300M. The test times will be used to simulate a test selection without having to run the tests. Some tests have very long running times, therefore we limited tests to ten minutes. Test taking longer will timeout and their running time is set to ten minutes.
+In this chapter we are evaluating the performance of our dependency analysis and test selection. We have performed measurements for HXL (the Heat Exchanger Library developed by Modelon \footnote{\url{http://www.modelon.com/products/modelica-libraries/heat-exchanger-library/}}) and MSL (Modelica Standard Library). To assess how much time our test selection can save, we have run the tests for each library several times, 31 times for MSL and 7 for HXL, to get the average time it takes to run each test. This was done using a Intel\textregistered Core \texttrademark i5-4300M. The test times will be used to simulate a test selection without having to run the tests. Some tests have very long running times, therefore we limited tests to ten minutes. Test taking longer will timeout and their running time is set to ten minutes.
 
-First we preformed test selection for each Modelica file in two libraries, MSL and HXL, and assumed only one file changed. In Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} the result for all files in HXL and MSL relative the total running time for the complete test suite is shown. Neither of the graphs include the execution time of the test selection algorithm and therefore the time savings are not completely accurate. However, in both cases the the test selection time corresponds to a fraction of a percent on the y-axis. Figure \ref{fig:hxlonemodel} and \ref{fig:mslonemodel} are similar to Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} but the selection is performed with a finer granularity, using models instead of files. 
+First we preformed test selection for each Modelica file in two libraries, MSL and HXL, and assumed only one file changed. The total test suite execution time was 2h 26m 35s for MSL and 3h 1m 51s for HXL. In Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} the result for all files in HXL and MSL relative the total execution time for the complete test suite is shown. Neither of the graphs include the execution time of the test selection algorithm and therefore the time savings are not completely accurate. However, in both cases the the test selection time corresponds to a fraction of a percent on the y-axis. Figure \ref{fig:hxlonemodel} and \ref{fig:mslonemodel} are similar to Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} but the selection is performed with a finer granularity, using models instead of files. 
 
 \begin{figure}[!htbp]
     \centering
