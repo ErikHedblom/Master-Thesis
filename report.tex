@@ -316,7 +316,7 @@ The dependency graph produced in Chapter 3 shows the dependencies from the compi
 \end{figure}
 
 \subsection{External functions}
-The Modelica language allows use of external functions that are not defined in a Modelica file. The external functions are often defined in a C-file.\cite{modelicamodelica}. In our dependency analysis we do not analyze the dependencies in external files. To handle this, and keep the test selection safe, if a non Modelica file is changed we assume that every Modelica class that depend on externals is affected.
+The Modelica language allows use of external functions that are not defined in a Modelica file. The external functions are often defined in a C-files\cite{modelicamodelica}. In our dependency analysis we do not analyze the dependencies in external files. To handle this, and keep the test selection safe, if a non Modelica file is changed we assume that every Modelica class that depend on externals is affected.
 
 
 \chapter[Evaluation]{Evaluation}
