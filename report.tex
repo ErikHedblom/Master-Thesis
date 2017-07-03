@@ -226,10 +226,10 @@ To build the dependency graph we have constructed a set of rules to determine wh
 
 The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in JModelica.org not all accesses in a class can be followed and therefor not all dependencies from this rule can be created. We will later see how the other rules compensate for this. 
 
-The next rule, Rule 2, will create a dependency from a class to its encapsulating class. An example can be found in Figure \ref{fig:parentGraph}. In the example there is a constant \texttt{k} defined in package \texttt{P}. If another constant with the same name were to be added in in model \texttt{M1} the reference to \texttt{k} in \texttt{M2} will change to refer to the new constant and shadow the k in \texttt{P}. Therefore we need a dependency from \texttt{M2} to \texttt{M1} to handle name shadowing.
+The next rule, Rule 2, will create a dependency from a class to its encapsulating class. An example can be found in Figure \ref{fig:parentGraph}. In the example there is a constant \texttt{k} defined in package \texttt{P}. If another constant with the same name were to be added in in model \texttt{M1} the reference to \texttt{k} in \texttt{M2} will change to refer to the new constant and shadow the \texttt{k} in \texttt{P}. Therefore we need a dependency from \texttt{M2} to \texttt{M1} to handle name shadowing.
 
 In Figure \ref{fig:parentGraph} we also expect Rule 1 to create a dependency from \texttt{M2} to \texttt{P} due to \texttt{k} being located in \texttt{P}. However, the access \texttt{k} cannot be resolved by the JModelica.org compiler in the source tree and we will miss the dependency to \texttt{P}. In this case we can see that Rule 2 can compensate by adding an indirect dependency from \texttt{M2} to \texttt{P}. 
-If the constant k in package \texttt{P} is changed it will affect model \texttt{M2}. Therefore we need a dependency from \texttt{M2} to \texttt{P}. With Rule number 1 we get dependencies from \texttt{M2} to \texttt{M1} and from \texttt{M1} to \texttt{P}. So we have an indirect dependency from \texttt{M2} to \texttt{P}.
+If the constant \texttt{k} in package \texttt{P} is changed it will affect model \texttt{M2}. Therefore we need a dependency from \texttt{M2} to \texttt{P}. With Rule number 2 we get dependencies from \texttt{M2} to \texttt{M1} and from \texttt{M1} to \texttt{P}. So we have an indirect dependency from \texttt{M2} to \texttt{P}.
 
 \begin{figure}[!htbp]
     \centering
@@ -256,7 +256,8 @@ In Figure \ref{fig:dotAccess}, we want dependencies from model \texttt{M} to all
     \label{fig:component}
 \end{figure}
 
-Rule 4 is needed to handle the case in Figure \ref{fig:component}. Ideally the access \texttt{m.M3.f} would create dependencies to \texttt{M2}, \texttt{M3} and \texttt{f}. Because \texttt{m} is a component and the analysis is done in the source tree, \texttt{P.M2.M3.f} cannot be resolved and no dependencies can be created. Instead Rule 4 is used to create dependencies to everything defined in \texttt{M3} when \texttt{m} is declared.
+Rule 4 is needed to handle the case in Figure \ref{fig:component}. Ideally the access \texttt{m.M3.f} would create dependencies to \texttt{M2}, \texttt{M3} and \texttt{f}. Because \texttt{m} is a component and the analysis is done in the source tree, \texttt{P.M2.M3.f} cannot be resolved and no dependencies can be created. Instead Rule 4 is used to create dependencies to everything defined in \texttt{M2} when \texttt{m} is declared.
+
 It is also possible that an access cannot be fully resolved. This is the case in \ref{fig:brokenAccess}, where the access \texttt{P1.m.f} cannot be resolved because the constant \texttt{m} is a component. In this case the only resolvable part is \texttt{P1} and a  dependency is created to \texttt{P1} by Rule 3. \texttt{P1} have dependencies to \texttt{M} and \texttt{f} through Rule 4. Hence, it is not a problem that Rule 4 cannot be applied to \texttt{P1.m.f}.
 
 \begin{figure}[!htbp]
