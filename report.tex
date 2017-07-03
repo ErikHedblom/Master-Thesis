@@ -203,12 +203,13 @@ Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing 
     Write about runconfigs?
 
 \chapter[Dependency analysis]{Dependency analysis}
-To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica.org, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. When the lookup of an access fails in the source tree we say the access is not resolvable. This means that an valid access can fail to resolve. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. First we introduce the rules and then we will go on and explain and motivate each one.
+To implement the RTS (Regression Test Selection) for Modelica we build a dependency graph between Modelica classes in the compilation phase. To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica.org, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. When the lookup of an access fails in the source tree we say the access is not resolvable. This means that a valid access can fail to resolve. We hope to have time to fix the limitations to perform a better and more accurate dependency analysis. First we introduce the rules and then we will go on and explain and motivate each one.
 
 \paragraph{Dependency Rules}
+To build the dependency graph we use the following rules:
 \begin{enumerate}
 \item A class depends on all resolvable accesses within it.
-\item A class depends on its encapsulating class. 
+\item A class depends on its enclosing class. 
 \item All resolvable accesses in the path of an access yields dependencies.
 \item A class depends on all classes encapsulated by the accessed class. If the access is not resolvable, the last resolvable access in the path will be used instead.
 \item Exception to Rule 4: Rule 4 is not applicable to import statements. An import should not add dependencies to classes not imported but the import.
@@ -220,7 +221,7 @@ To build the dependency graph we have constructed a set of rules to determine wh
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/Parent.eps}}}
     \qquad
     \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{Modelica/Parent.mo}}}
-    \caption{A class depends on its encapsulating class}
+    \caption{To the right an example of Modelica code showing why Rule 2 is needed, and to the left the corresponding dependency graph.}
     \label{fig:parentGraph}
 \end{figure}
 
@@ -240,7 +241,7 @@ If the constant \texttt{k} in package \texttt{P} is changed it will affect model
         \centering
         \lstinputlisting[language=modelica]{Modelica/DotAccess.mo}
         \end{minipage}}}
-    \caption{Access with more access in its path, \texttt{P3.f}}
+    \caption{Dependency graph to the left, of the Modelica classes to the right. This is an example of why we need Rule 3.}
     \label{fig:dotAccess}
 \end{figure}
 
@@ -252,7 +253,7 @@ In Figure \ref{fig:dotAccess}, we want dependencies from model \texttt{M} to all
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/Component.eps}}}
     \qquad
     \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{Modelica/Component.mo}}}
-    \caption{Access through component}
+    \caption{To the right Modelica code with an access through a component, \texttt{m.M3.f(1)}, this is the reason Rule 4 is needed. To the left is the dependency graph.}
     \label{fig:component}
 \end{figure}
 
@@ -265,7 +266,7 @@ It is also possible that an access cannot be fully resolved. This is the case in
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/BrokenAccess.eps}}}
     \qquad
     \subfloat{\raisebox{4.0 cm}{\lstinputlisting[language=modelica]{Modelica/BrokenAccess.mo}}}
-    \caption{Access containing a component}
+    \caption{Access containing a component, where the access cannot be fully resolved. To the left, the dependency graph corresponding to the Modelica code to the right.}
     \label{fig:brokenAccess}
 \end{figure}
 
