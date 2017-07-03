@@ -52,7 +52,6 @@
 
 \theabstract{
 During software development, testing of software can be very time consuming. We have developed a safe regression test selection technique with static analysis, for the modeling language Modelica. When a user changes a Modelica model, our technique will exclude tests that are guaranteed not to be affected by the change. Since Modelica tests usually has relatively long running times there is much time to save. As far as we know test selection has previously not been attempted for Modelica. To perform the test selection we have implemented a dependency analysis in an existing Modelica compiler. We have evaluated our technique and tried to assess how much time that can be saved. When we look at the commit history of the Modelica Standard Library and compare running all tests with only running the tests selected by our test selection, the time saved for running the selected tests is 56\% of the time it takes to run all tests.
-%TODO: Update the abstract when we have done a version of the test selection not limited by the lookup in the source tree in OCT.
 
 %%Your abstract should capture the whole thesis with focus on the problem and solution in 150 words. Avoid acronyms, footnotes, and references in the abstract if possible.
 
@@ -76,25 +75,12 @@ During software development, testing of software can be very time consuming. We 
 
 %TODO: Related work?
 %TODO: Niklas comment: Wy do we need a compiler
-%TODO: Bouncing ball example in Introduction or Background?
 
 \section{Motivation}
 Software tests are used to verify that software works as intended.
-During software development, when a change is integrated into a project all previous testing have to be rerun to ensure no regression has occurred \cite{DBLP:conf/sigsoft/LegunsenHSLZM16, haider2016safe}. This is know as regression testing. Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the tests may be unrelated to the change and therefore unnecessary to run. By excluding unrelated tests significant time savings could be achieved. This is called test selection and have to our knowledge not been previously done for Modelica. Modelica is a high level programming language used for simulations in various areas. In Figure \ref{fig:bouncingBallCode} is a simple Modelica example to illustrate the language. It shows a model of a bouncing ball and in Figure \ref{fig:bouncingBallSimulation} is the simulation result of the bouncing ball model. When the test selection is done for regression tests it is known as regression test selection (RTS). 
+During software development, when a change is integrated into a project all previous testing have to be rerun to ensure no regression has occurred \cite{DBLP:conf/sigsoft/LegunsenHSLZM16, haider2016safe}. This is know as regression testing. Test suites usually accumulates over time and \emph{regression testing} can therefore be very time consuming. Depending on the change some or most of the tests may be unrelated to the change and therefore unnecessary to run. By excluding unrelated tests significant time savings could be achieved. This is called test selection and have to our knowledge not been previously done for Modelica. Modelica is a high level programming language used for simulations in various areas.  When the test selection is done for regression tests it is known as regression test selection (RTS). 
 
-\begin{figure}[!htbp]
-    \centering
-    \lstinputlisting[language=modelica]{Modelica/BouncingBall.mo}
-    \caption{Modelica example bouncing ball. This example is inspired by \textit{Implementation of a Modelica compiler using JastAdd attribute grammars} \cite{aakesson2010implementation} and \textit{Modelica by example} \cite{tillermodelica}.}
-    \label{fig:bouncingBallCode}
-\end{figure}
 
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=1.0\textwidth]{Pictures/BB1.png}
-    \caption{The simulation result of the model in Figure \ref{fig:bouncingBallCode}. This graph is retrieved from \textit{Modelica by example} \cite{tillermodelica}}
-    \label{fig:bouncingBallSimulation}
-\end{figure}
 
 \section{Goal}
 %TODO: Correct to say that: we are going to implement in the JModelica.org compiler when we acctually do it in OCT? Niklas thought that we should write about JModelica in the introduction
@@ -113,7 +99,22 @@ A safe Regression Test Selection (RTS) method will select at least all tests tha
 To measure how good the test selection is, the precision of the test selection can be used \cite{DBLP:conf/sigsoft/LegunsenHSLZM16}. If fewer redundant tests are selected the test selection has higher precision. There is a trade-off between the precision of the test selection and the overhead. If a RTS algorithm has full precision it does not select any tests that can not fail. To get higher precision a more complex algorithm may be needed. For a more complex algorithm it might be more difficult to validate that the RTS method is safe.
 
 \section{Modelica}
-Modelica is a declarative, object oriented programming language where models are described by equations \cite{modelicamodelica}. It is used to perform high performance simulations. This section will introduce the parts of Modelica that is important for this project.
+Modelica is a declarative, object oriented modeling language where models are described by equations \cite{modelicamodelica}. It is used to perform high performance simulations. This section will introduce the parts of Modelica that is important for this project. In Figure \ref{fig:bouncingBallCode} is a simple Modelica example to illustrate the language. It shows a model of a bouncing ball and in Figure \ref{fig:bouncingBallSimulation} is the simulation result of the bouncing ball model.
+
+\begin{figure}[!htbp]
+    \centering
+    \lstinputlisting[language=modelica]{Modelica/BouncingBall.mo}
+    \caption{Modelica example bouncing ball. This example is inspired by \textit{Implementation of a Modelica compiler using JastAdd attribute grammars} \cite{aakesson2010implementation} and \textit{Modelica by example} \cite{tillermodelica}.}
+    \label{fig:bouncingBallCode}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Pictures/BB1.png}
+    \caption{The simulation result of the model in Figure \ref{fig:bouncingBallCode}. This graph is retrieved from \textit{Modelica by example} \cite{tillermodelica}}
+    \label{fig:bouncingBallSimulation}
+\end{figure}
+
 %TODO: Niklas comment "ibland används begreppet qualified access"
 Modelica uses dot notation like many other languages to access something inside an object. Consider the code snippet in Figure \ref{fig:modelicaExample}, Model \texttt{M} can be accessed through \texttt{P1.P2.M}. We will call this an access. Depending on from which scope \texttt{M} is being accessed the access could also be \texttt{P2.M} or just \texttt{M}. An access using dot notation is basically a list of accesses and we will call all the accesses the path. For instance, the path of model \texttt{M} is \texttt{P1.P2.M}. We will also denote an access as a qualified name, if the first part of it is referencing the top package. In this case the qualified name for \texttt{M} is \texttt{P1.P2.M}.
 
