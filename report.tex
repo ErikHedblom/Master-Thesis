@@ -124,7 +124,6 @@ Modelica is a declarative, object oriented modeling language where models are de
     \label{fig:bouncingBallSimulation}
 \end{figure}
 
-%TODO: Niklas comment "ibland används begreppet qualified access"
 Modelica uses dot notation to access something inside an object \cite{modelicamodelica}. Consider the code snippet in Figure \ref{fig:modelicaExample}, the model \texttt{M} can be accessed through \texttt{P1.P2.M}. We will call this an \emph{access}. Depending on from which scope \texttt{M} is being accessed, the access could also be \texttt{P2.M} or just \texttt{M}. An access using dot notation is basically a list of accesses and we will call all the accesses the \emph{path}. For instance, the path of model \texttt{M} is \texttt{P1.P2.M}. We will also denote a path as a \emph{fully qualified name}, if the first part of it is referencing the top package. In this case the fully qualified name for \texttt{M} is \texttt{P1.P2.M}.
 
 \begin{figure}[!htbp]
@@ -437,14 +436,11 @@ A breakdown of the graphs is shown in Table \ref{table:breakdown}, as well as so
 We have previously, in Chapter 3, discussed some aspects of the dependency analysis. We will now discuss a few other aspects of our work and then look at some related works.
 
 \section{Validity}
-Validating the test selection and is an important step to make sure the test selection actually is safe. During the development of the dependency analysis we have developed a test suit which can validate that the dependency graph is correct for some Modelica libraries. However, is is not feasible to prove that the dependency analysis and our implementation is 100\% safe. Instead we have tried to prove that is not safe, but that can never prove that what we have built is safe. But, it will increase our confidence for the test selection. 
+Validating the test selection and is an important step to make sure the test selection actually is safe. During the development of the dependency analysis we have developed a test suit which can validate that the dependency graph is correct for some Modelica libraries. However, is is not feasible to prove that the dependency analysis and our implementation is 100\% safe. Instead we have to try to prove that it is not safe, but that can never prove that what we have built is safe. But, it will increase our confidence for the test selection. 
 
-%TODO: Move to Future Work?
-To do this we have a couple of approaches, firstly we hope to run our test selection parallel with the complete test suit on Modelon's build server to make sure all failed tests occurring have been caught by our test selection. This approach is inherently flawed since developers are actively trying to not commit code that breaks any tests. %%TODO: write some more?
-
+To do this we have a couple of approaches, firstly we hope to run our test selection parallel with the complete test suit on Modelon's build server to make sure all failed tests occurring have been caught by our test selection. This approach is inherently flawed since developers are actively trying to not commit code that breaks any tests.
 
 Secondly we hope to do some mutation testing by introducing semi random errors in a library and then run all tests not in the test selection. If any test fails we know that the test selection is not safe. Both these approaches are essentially the same except mutation testing is probably more effective since we can guarantee that there is problems in the code base. However, depending on the test coverage, every test could still pass.
-
 
 \section{Granularity}
 A dependency analysis can be performed with different granularities. Our dependency analysis handles classes and is sometimes converted to a more coarse analysis handling files. Generally a more coarse analysis will have lower precision since classes in the same file will be considered having the same dependencies. On the other hand moving to a more granular analysis can be costly ~\cite{DBLP:conf/sigsoft/LegunsenHSLZM16}, both in running time, complexity and size. A more granular analysis could for example handle dependencies between lines of code instead of classes. This would have to be weighted against the precision gained.
@@ -468,11 +464,13 @@ Our results show significant time savings when using test selection for Modelica
 %TODO: JModelica is not perfectly suited for this
 
 \section{Future work}
-%TODO: Write Future work
-%TODO:      Evaluate on history of more libraries
-%TODO:      Run on Jenkins
-%TODO:      Mutation testing
-%TODO:      Try if dependencies between lines of code could save more time?
+We have succeeded in reducing the time for regression tests, but there is more work that can be done. Our test selection could be further evaluated. The same measurements we have performed for the commit history of the Modelica Standard Library could be performed for other Modelica libraries, to get a better understanding of how much time can be saved. The Modelica Standard Library is a git repository. For the libraries developed by Modelon, SVN is used. We have not had time to adopt our evaluation method to SVN.
+
+Another thing that would be interesting to do, is to validate our test selection more. Like we mentioned in chapter 6 this could be done by running our test selection parallel with running the complete test suite on the build server and see if our test selection selects all tests that fails. Another option that might be better for validation is to use mutation testing and see if our test selection then selects all tests that fails.
+
+It is possible that more time can be saved. It could be interesting to do the dependency analysis between lines of code instead of Modelica classes to see if that would save more time.
+
+It would also be interesting to run the dependency analysis in the instance tree to see if the increased precision can save more time. But if all classes in a Modelica library should be instantiated in the instance tree, it will in the most cases require to much memory. So first a technique for throwing away parts of the instance tree along the process or some other solution must be developed. Doing this and running the dependency analysis in the instance tree will take more time than running the dependency analysis in the source tree. So the timed saved by a higher precision will have to be grater than the time lost by doing the dependency analysis in the instance tree.
 
 \printbibliography[heading=bibintoc]
 
