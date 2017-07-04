@@ -208,7 +208,7 @@ Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing 
 \chapter[Dependency analysis]{Dependency analysis}
 To implement the RTS (Regression Test Selection) for Modelica we build a dependency graph between Modelica classes in the compilation phase. To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica.org, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. When the lookup of an access fails in the source tree we say the access is not resolvable. This means that a valid access can fail to resolve. First we introduce the rules and then we will go on and explain and motivate each one. Then we will conclude this chapter by discussing the limitations and improvements if of the dependency analysis.
 
-\paragraph{Dependency Rules}
+\paragraph{Dependency Rules}\mbox{}\\
 To build the dependency graph we use the following rules:
 \begin{enumerate}
 \item A class depends on all resolvable accesses within it.
@@ -285,9 +285,9 @@ It is also possible that an access cannot be fully resolved. This is the case in
 Rule 5 is an exception to Rule 4, added to improve the precision of the test selection. Imports are specific and it is enough to add dependencies to what is actually imported. It is not uncommon to import packages located high up in the library structure. Without this exception, unnecessary dependencies would be added to all or large part of the library. For example in Modelica's standard library there are several imports of Modelica, which is the top level package. Such import would create dependencies to every single class in the library. (Such imports may seem unnecessary and in fact they often are, but they can be used to affect the name lookup if there exists classes with the same name in the library). An example of this is shown in Figure \ref{fig:rule5}.
 
 \section{Limitations and Improvements}
-The lookup limitation in the source tree of JModelica.org have had significant impact on the dependency analysis. It would be interesting to explore the differences compared to a "pure" dependency analysis only affected by the Modelica standard. We have looked at the option of improving the lookup in the source tree in JModelica.org. However, that is seems unfeasible within our time frame and furthermore, the functionality is already available in the instance tree.
+The lookup limitation in the source tree of JModelica.org have had significant impact on the dependency analysis. It would be interesting to explore the differences compared to a dependency analysis only affected by the Modelica standard and not limited by the source tree. We have looked at the option of improving the lookup in the source tree in JModelica.org. However, that seems unfeasible within our time frame and furthermore, the functionality is already available in the instance tree.
 
-It would be interesting to explore the option of performing the dependency analysis in the instance tree. The main problem the this is the memory requirements, to instantiate all classes in one or more libraries would likely require to much memory. It might be possible to work around this by building the dependency graph incrementally. There is also currently some work into throwing away parts of the instance tree to save memory so that might also be a  viable option in the future. The running time such solutions would probably be significantly higher and would have to be compensated by the precision gain in the dependency graph. 
+It would be interesting to explore the option of performing the dependency analysis in the instance tree. The main problem with this is the memory requirements, to instantiate all classes in one or more libraries would likely require to much memory. It might be possible to work around this by building the dependency graph incrementally. There is also currently some work into throwing away parts of the instance tree to save memory so that might also be a viable option in the future. The running time such solutions would probably be significantly higher and would have to be compensated by the precision gain in the dependency graph. 
 
 Another concern with a more precise dependency analysis is differences between compilers, since the solution is used though MTT and MTT might not use JModelica.org when compiling and running tests. For example, error checking might differ between compilers causing compilation error for a test using one compiler but not for another.
 
@@ -450,6 +450,7 @@ A breakdown of the graphs is shown in Table \ref{table:breakdown}, as well as so
 Validating the test selection and is an important step to make sure the test selection actually is safe. 
 However, is is not feasible to prove that the dependency analysis and our implementation is 100\% safe. Instead we have tried to prove that is not safe, but that can never prove that what we have built is safe. But, it will increase our confidence for the test selection. 
 
+%TODO: Move to Future Work?
 To do this we have a couple of approaches, firstly we hope to run our test selection parallel with the complete test suit on Modelon's build server to make sure all failed tests occurring have been caught by our test selection. This approach is inherently flawed since developers are actively trying to not commit code that breaks any tests. %%TODO: write some more?
 
 
