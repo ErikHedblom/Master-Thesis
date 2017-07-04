@@ -46,7 +46,11 @@
 %\date{January 16, 2015}
 
 \acknowledgements{
-%TODO: Write acknowledgements
+We would like to thank Johan Ylikiiskilä at Modelon, who proposed the subject of this master thesis and has introduced us to Model Testing Toolkit.
+
+Further we would like to thank Jonathan Kämpe and Jesper Mattsson at Modelon for helping us understand the JModelica.org compiler and validate our dependency analysis.
+
+We would also like to thank our supervisor at LTH, Niklas Fors for all feedback during our work on the report.
 
 %%If you want to thank people, do it here, on a separate right-hand page. Both the U.S. \textit{acknowledgments} and the British \textit{acknowledgements} spellings are acceptable.
 }
@@ -61,6 +65,7 @@ During software development, testing of software can be very time consuming. We 
 \keywords{Test Selection, Modelica, Regression testing, JModelica.org}
 %TODO: Add JastAdd keyword if we include the JastAdd section in the report
 \divisionoflabor{
+%TODO: Write Division of labor
 }
 
 %% Only used to display font sizes
@@ -136,6 +141,7 @@ It is not apparent from an access what it is trying to access, it could be a pac
 %TODO: Niklas comment: är det accessen till komponenten eller typen för komponenten som inte kan hittas?
 
 \subsection{Name lookup}
+%TODO: Is this a good example of name lookup?
 In this section we will give an example of a name lookup in the Modelica compiler. For an exhaustive description of the Modelica name lookup, see the Modelica specification \cite{modelicamodelica}. In order to find a match for a name, the Modelica compiler starts by looking at the first name in the path \cite{modelicamodelica, tillermodelica}. In Figure \ref{fig:nameLookup}, when \texttt{P1.P3.M.x} is defined it is initialized to the value the constant \texttt{P1.P2.k} has. To find the constant \texttt{k} through the path \texttt{P2.k}, the Modelica compiler starts by trying to find a match for the first name, \texttt{P2}, in the path. The Modelica compiler first checks if there is a definition of \texttt{P2} in the class \texttt{M}, where it is used. There is no definition of of \texttt{P2} in class \texttt{M}, so the Modelica compiler continues by looking for a definition in the enclosing class \texttt{P3}. There is still no definition of \texttt{P2}, in the next step the Modelica compiler looks for a definition in the enclosing class of \texttt{P3}, package \texttt{P1}. In package \texttt{P1} a definition of the name \texttt{P2} is found. Then the Modelica compiler looks for a definition of the name \texttt{k} in the class \texttt{P2}, and finds a definition of \texttt{P2.k}.
 
 %TODO: Make sure this figure is located in the Name lookup section in the report
