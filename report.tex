@@ -63,7 +63,6 @@ During software development, testing of software can be very time consuming. We 
 }
 
 \keywords{Test Selection, Modelica, Regression testing, JModelica.org}
-%TODO: Add JastAdd keyword if we include the JastAdd section in the report
 \divisionoflabor{
 %TODO: Write Division of labor
 }
@@ -193,14 +192,6 @@ In the last step C-code is generated.
     \label{fig:bouncingBallInstance}
 \end{figure}
 
-%TODO: Decide if we want a JasAdd section
-\begin{comment}
-\section{JastAdd}
-JModelica.org is developed using the Meta compiler JastAdd. JastAdd is a system based on reference attribute grammars ~\cite{aakesson2010implementation}, for extensible implementation of compilers. An Abstract Syntax Tree (AST) is used to represent a program. Attribute Grammars is a method for declaratively defining computations on an AST. A node in an AST can have a synthesized attribute or an inherited attribute. An attribute is defined by an equation. A synthesized attribute is defined in the node, an inherited attribute is defined in an ancestor node. A JastAdd specification is used to create an object-oriented framework.
-
-Collection attributes are defined by partial definitions in a number of arbitrary nodes. ~\cite{magnusson2007extending}. A node that have a partial definition of a collection attribute contributes to the value of the collection attribute. A collection attribute is usually a set where the empty set is the initial value of the collection attribute. The contributors, the nodes that contributes to the collection attribute, can for example contribute by adding elements to the set.
-\end{comment}
-
 \section{Model Testing Toolkit}
 Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing of Modelica projects \cite{modelon.comMTT}. It has both a command line and a graphical interface and we will add functionality and options to both to support test selection. Furthermore, it also provides integration with third-party tools. This means that compilers other than JModleica.org could be used together with MTT.
 
@@ -284,13 +275,8 @@ It is also possible that an access cannot be fully resolved. This is the case in
 
 Rule 5 is an exception to Rule 4, added to improve the precision of the test selection. Imports are specific and it is enough to add dependencies to what is actually imported. It is not uncommon to import packages located high up in the library structure. Without this exception, unnecessary dependencies would be added to all or large part of the library. For example in Modelica's standard library there are several imports of Modelica, which is the top level package. Such import would create dependencies to every single class in the library. (Such imports may seem unnecessary and in fact they often are, but they can be used to affect the name lookup if there exists classes with the same name in the library). An example of this is shown in Figure \ref{fig:rule5}.
 
-<<<<<<< HEAD
-\section{Limitations and Improvements}
-The lookup limitation in the source tree of JModelica.org have had significant impact on the dependency analysis. It would be interesting to explore the differences compared to a dependency analysis only affected by the Modelica standard and not limited by the source tree. We have looked at the option of improving the lookup in the source tree in JModelica.org. However, that seems unfeasible within our time frame and furthermore, the functionality is already available in the instance tree.
-=======
 \section{Discussion}
-The lookup limitation in the source tree of JModelica.org have had significant impact on the dependency analysis. It would be interesting to explore the differences compared to a "pure" dependency analysis only affected by the Modelica standard. We have looked at the option of improving the lookup in the source tree in JModelica.org. However, that is seems unfeasible within our time frame and furthermore, the functionality is already available in the instance tree.
->>>>>>> Started writing on the conclution
+The lookup limitation in the source tree of JModelica.org have had significant impact on the dependency analysis. It would be interesting to explore the differences compared to a dependency analysis only considering the Modelica standard and not limited by JModelica.org. We have looked at the option of improving the lookup in the source tree in JModelica.org. However, that seems unfeasible within our time frame and furthermore, the functionality is already available in the instance tree.
 
 It would be interesting to explore the option of performing the dependency analysis in the instance tree. The main problem with this is the memory requirements, to instantiate all classes in one or more libraries would likely require to much memory. It might be possible to work around this by building the dependency graph incrementally. There is also currently some work into throwing away parts of the instance tree to save memory so that might also be a viable option in the future. The running time such solutions would probably be significantly higher and would have to be compensated by the precision gain in the dependency graph. 
 
