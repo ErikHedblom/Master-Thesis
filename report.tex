@@ -78,9 +78,6 @@ Throughout this thesis project we, Erik and Kasper, have not had a clear devisio
 \makefrontmatter
 \chapter[Introduction]{Introduction}
 
-%TODO: Related work?
-%TODO: Niklas comment: Wy do we need a compiler
-
 \section{Motivation}
 Software tests are used to verify that software works as intended.
 During software development, when a change is integrated into a project all previous testing have to be rerun to ensure no regression has occurred \cite{DBLP:conf/sigsoft/LegunsenHSLZM16, haider2016safe}. This is know as \emph{regression testing}. Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the tests may be unrelated to the change and therefore unnecessary to run. By excluding unrelated tests significant time savings could be achieved. Choosing which tests to run is called \emph{test selection}. When the test selection is done for regression tests it is known as \emph{regression test selection} (RTS).
@@ -135,14 +132,11 @@ Modelica uses dot notation to access something inside an object \cite{modelicamo
     \label{fig:modelicaExample}
 \end{figure}
 
-It is not apparent from an access what it is trying to access, it could be a package, model, function or a component. Due to this we will simplify the terminology by grouping models, packages and function together and just call them classes. Components are instantiations of classes and will be handled separately since our solution can not resolve accesses to components yet.
-%TODO: Niklas comment: är det accessen till komponenten eller typen för komponenten som inte kan hittas?
+It is not apparent from an access what it is trying to access, it could be a package, model, function or a component. Due to this we will simplify the terminology by grouping models, packages and function together and just call them classes. Components are instantiations of classes and will be handled separately.
 
 \subsection{Name lookup}
-%TODO: Is this a good example of name lookup?
 In this section we will give an example of a name lookup in the Modelica compiler. For an exhaustive description of the Modelica name lookup, see the Modelica specification \cite{modelicamodelica}. In order to find a match for a name, the Modelica compiler starts by looking at the first name in the path \cite{modelicamodelica, tillermodelica}. In Figure \ref{fig:nameLookup}, when \texttt{P1.P3.M.x} is defined it is initialized to the value the constant \texttt{P1.P2.k} has. To find the constant \texttt{k} through the path \texttt{P2.k}, the Modelica compiler starts by trying to find a match for the first name, \texttt{P2}, in the path. The Modelica compiler first checks if there is a definition of \texttt{P2} in the class \texttt{M}, where it is used. There is no definition of of \texttt{P2} in class \texttt{M}, so the Modelica compiler continues by looking for a definition in the enclosing class \texttt{P3}. There is still no definition of \texttt{P2}, in the next step the Modelica compiler looks for a definition in the enclosing class of \texttt{P3}, package \texttt{P1}. In package \texttt{P1} a definition of the name \texttt{P2} is found. Then the Modelica compiler looks for a definition of the name \texttt{k} in the class \texttt{P2}, and finds a definition of \texttt{P2.k}.
 
-%TODO: Make sure this figure is located in the Name lookup section in the report
 \begin{figure}[!htbp]
     \centering
     \lstinputlisting[language=modelica]{Modelica/NameLookup.mo}
@@ -164,7 +158,6 @@ Modelica allows the use of wildcard imports. When using wildcard imports it is n
 \lstinputlisting[language=modelica]{Modelica/wildcardImport.mo}
 
 \section{JModelica.org}
-%TODO: Explain more about what source and instance tree is?
 JModelica.org is an open source compiler developed and maintained by the company Modelon. Optimica Compiler Toolkit (OCT) is the commercial version of JModelica.org. Our solution will be developed in OCT but will not use any OCT specific functionality. 
 
 The compilation of Modelica code in JModelica.org is done in several steps, see Figure \ref{fig:compilerSteps} \cite{aakesson2010implementation}. In the first step, name and type analysis of the source code is done, identifiers are bound to declarations etc. An AST (Abstract Syntax Tree) is built in form of a source tree.
@@ -454,14 +447,9 @@ A master thesis similar to this one has previously been done at LTH. In the prev
 Studies have been conducted to investigate at which granularity dependency analysis pays off the most and how much precision it can have without getting to expensive ~\cite{DBLP:conf/sigsoft/LegunsenHSLZM16}. It has also been done work in other techniques to achieve shorter time for testing, including dynamic test selection.
 
 Safe regression test selection has been developed for Java at LTH \cite{DBLP:conf/pppj/OqvistHM16}. In this work the dependency graph is stored and updated when it changes unlike our solution for Modelica, where we compute the dependency graph each time. There is two main differences between Java and Modelica interesting for test selection. Modelica regression tests takes usually much longer time to run than Java regression tests. The longest time it takes to run all tests for a Java project used in the evaluation in \cite{DBLP:conf/pppj/OqvistHM16} is less than 20 seconds (on a 4-core 3.6GHz Intel i7-3820 CPU, with 64 GiB RAM, running Linux Mint 17.0). For the Modelica Standard Library it takes more than 2 hours to run all tests (on a Intel Core i5-4300M), even though the tests taking more than ten minutes, are canceled after ten minutes. In Modelica it is possible to use classes in another package without using imports, that is not possible in Java. This affects the dependency analysis.
-%TODO: Write about size of the Java project and MSL?
 
 \chapter[Conclusion]{Conclusion}
 Our results show significant time savings when using test selection for Modelica projects. This was the one of the main goals of this thesis project. The other goal was to not compromise the testing quality when reducing the test suit. We have not proven that this is achieved but are confident that it is. 
-
-%TODO: Write
-%TODO: Significat time savings
-%TODO: JModelica is not perfectly suited for this
 
 \section{Future work}
 We have succeeded in reducing the time for regression tests, but there is more work that can be done. Our test selection could be further evaluated. The same measurements we have performed for the commit history of the Modelica Standard Library could be performed for other Modelica libraries, to get a better understanding of how much time can be saved. The Modelica Standard Library is a git repository. For the libraries developed by Modelon, SVN is used. We have not had time to adopt our evaluation method to SVN.
