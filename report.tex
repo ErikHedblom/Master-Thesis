@@ -189,7 +189,7 @@ Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing 
 
 
 \chapter[Dependency analysis]{Dependency analysis}
-To implement the RTS (Regression Test Selection) for Modelica we build a dependency graph between Modelica classes in the compilation phase. To build the dependency graph we have constructed a set of rules to determine what creates dependencies. Due to limitations in JModelica.org, mainly pertaining to the lookup of names in the source tree, the rules have been adjusted to work around these limitations. When the lookup of an access fails in the source tree we say the access is not resolvable. This means that a valid access can fail to resolve. First we introduce the rules and then we will go on and explain and motivate each one. Then we will conclude this chapter by discussing the limitations and improvements if of the dependency analysis.
+To implement the RTS (Regression Test Selection) for Modelica we build a dependency graph between Modelica classes in the compilation phase. To build the dependency graph we have constructed a set of rules to determine what creates dependencies. We have chosen to work with the source tree representation of Modelica programs in the JModelica.org compiler. The source tree is a relative light weight representation of a Modelica program and have limited name lookup capabilities but provides significant performance benefits. The rules have therefore been adjusted to work with the name lookup in the source tree. When the lookup of an access fails in the source tree we say the access is not resolvable. This means that a valid access can fail to resolve, in the source tree. First we introduce the rules and then we will go on and explain and motivate each one. Then we will conclude this chapter by discussing the limitations and improvements if of the dependency analysis.
 
 \paragraph{Dependency Rules}\mbox{}\\
 To build the dependency graph we use the following rules:
@@ -197,7 +197,7 @@ To build the dependency graph we use the following rules:
 \item A class depends on all resolvable accesses within it.
 \item A class depends on its enclosing class. 
 \item All resolvable accesses in the path of an access yields dependencies.
-\item A class depends on all classes encapsulated by the accessed class. If the access is not resolvable, the last resolvable access in the path will be used instead.
+\item A class depends on all classes enclosed by the accessed class. If the access is not resolvable, the last resolvable access in the path will be used instead.
 \item Exception to Rule 4: Rule 4 is not applicable to import statements. An import should not add dependencies to classes not imported but the import.
 \end{enumerate}
 
@@ -213,7 +213,7 @@ To build the dependency graph we use the following rules:
 
 The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in JModelica.org not all accesses in a class can be followed and therefor not all dependencies from this rule can be created. We will later see how Rule 4 compensates for this. 
 
-The next rule, Rule 2, will create a dependency from a class to its encapsulating class. An example can be found in Figure \ref{fig:parentGraph}. In the example there is a constant \texttt{k} defined in package \texttt{P}. If another constant with the same name were to be added in in model \texttt{M1} the reference to \texttt{k} in \texttt{M2} will change to refer to the new constant and shadow the \texttt{k} in \texttt{P}. Therefore we need a dependency from \texttt{M2} to \texttt{M1} to handle name shadowing.
+The next rule, Rule 2, will create a dependency from a class to its enclosing class. An example can be found in Figure \ref{fig:parentGraph}. In the example there is a constant \texttt{k} defined in package \texttt{P}. If another constant with the same name were to be added in in model \texttt{M1} the reference to \texttt{k} in \texttt{M2} will change to refer to the new constant and shadow the \texttt{k} in \texttt{P}. Therefore we need a dependency from \texttt{M2} to \texttt{M1} to handle name shadowing.
 
 In Figure \ref{fig:parentGraph} we also expect Rule 1 to create a dependency from \texttt{M2} to \texttt{P} due to \texttt{k} being located in \texttt{P}. However, the access \texttt{k} cannot be resolved by the JModelica.org compiler in the source tree and we will miss the dependency to \texttt{P}. In this case we can see that Rule 2 can compensate by adding an indirect dependency from \texttt{M2} to \texttt{P}. 
 If the constant \texttt{k} in package \texttt{P} is changed it will affect model \texttt{M2}. Therefore we need a dependency from \texttt{M2} to \texttt{P}. With Rule number 2 we get dependencies from \texttt{M2} to \texttt{M1} and from \texttt{M1} to \texttt{P}. So we have an indirect dependency from \texttt{M2} to \texttt{P}.
