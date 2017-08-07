@@ -243,7 +243,7 @@ In Figure \ref{fig:dotAccess}, we want dependencies from model \texttt{M} to all
     \label{fig:component}
 \end{figure}
 
-Rule 4 is needed to handle the case in Figure \ref{fig:component}. Ideally the access \texttt{m.M3.f} would create dependencies to \texttt{M2}, \texttt{M3} and \texttt{f}. Because \texttt{m} is a component and the analysis is done in the source tree, \texttt{P.M2.M3.f} cannot be resolved and no dependencies can be created. Instead Rule 4 is used to create dependencies to everything defined in \texttt{M2} when \texttt{m} is declared.
+Rule 4 is needed to handle the case in Figure \ref{fig:component}. Ideally the access \texttt{m.M3.f} would create dependencies to \texttt{M2}, \texttt{M3} and \texttt{f}. Because \texttt{m} is a component and the analysis is done in the source tree, \texttt{m.M3.f} cannot be resolved and no dependencies can be created. Instead Rule 4 is used to create dependencies to everything defined in \texttt{M2} when \texttt{m} is declared.
 
 \begin{figure}[!htbp]
     \centering
