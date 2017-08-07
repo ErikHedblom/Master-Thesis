@@ -210,7 +210,7 @@ To build the dependency graph we use the following rules:
     \caption{To the right an example of Modelica code showing why Rule 2 is needed, and to the left the corresponding dependency graph.}
     \label{fig:parentGraph}
 \end{figure}
-
+%TODO: Maybe limitations in the source tree and not in JModelica.org
 The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in JModelica.org not all accesses in a class can be followed and therefor not all dependencies from this rule can be created. We will later see how Rule 4 compensates for this. 
 
 The next rule, Rule 2, will create a dependency from a class to its enclosing class. An example can be found in Figure \ref{fig:parentGraph}. In the example there is a constant \texttt{k} defined in package \texttt{P}. If another constant with the same name were to be added in in model \texttt{M1} the reference to \texttt{k} in \texttt{M2} will change to refer to the new constant and shadow the \texttt{k} in \texttt{P}. Therefore we need a dependency from \texttt{M2} to \texttt{M1} to handle name shadowing.
@@ -254,9 +254,10 @@ Rule 4 is needed to handle the case in Figure \ref{fig:component}. Ideally the a
     \label{fig:rule5}
 \end{figure}
 
-Rule 5 is an exception to Rule 4, added to improve the precision of the test selection. Imports are specific and it is enough to add dependencies to what is actually imported. It is not uncommon to import packages located high up in the library structure. Without this exception, unnecessary dependencies would be added to all or large part of the library. For example in Modelica's standard library there are several imports of Modelica, which is the top level package. Such import would create dependencies to every single class in the library. (Such imports may seem unnecessary, but they can be used to affect the name lookup if there exists classes with the same name in the library). An example of this is shown in Figure \ref{fig:rule5}.
+Rule 5 is an exception to Rule 4, added to improve the precision of the test selection. Imports are specific and it is enough to add dependencies to what is actually imported. It is not uncommon to import packages located high up in the library structure. Without this exception, unnecessary dependencies would be added to all or large part of the library. For example in Modelica's standard library there are several imports of Modelica, which is the top level package. Such imports would create dependencies to every single class in the library. (Such imports may seem unnecessary, but they can be used to affect the name lookup if there exists classes with the same name in the library). An example of this is shown in Figure \ref{fig:rule5}.
 
 \section{Discussion}
+%TODO: Rephrase "limited by JModelica.org"?
 The lookup limitation in the source tree of JModelica.org have had significant impact on the dependency analysis. It would be interesting to explore the differences compared to a dependency analysis only considering the Modelica standard and not limited by JModelica.org. We have looked at the option of improving the lookup in the source tree in JModelica.org. However, that seems unfeasible within our time frame and furthermore, the functionality is already available in the instance tree.
 
 It would be interesting to explore the option of performing the dependency analysis in the instance tree. The main problem with this is the memory requirements, to instantiate all classes in one or more libraries would likely require to much memory. It might be possible to work around this by building the dependency graph incrementally. There is also currently some work into throwing away parts of the instance tree to save memory so that might also be a viable option in the future. The running time such solutions would probably be significantly higher and would have to be compensated by the precision gain in the dependency graph. 
@@ -419,12 +420,14 @@ We have previously, in Chapter 3, discussed some aspects of the dependency analy
 
 \section{Validity}
 Validating the test selection is an important step to make sure the test selection actually is safe. During the development of the dependency analysis we have developed a test suit which can validate that the dependency graph is correct for some Modelica libraries. However, is is not feasible to prove that the dependency analysis and our implementation is 100\% safe. Instead we have to try to prove that it is not safe, but that can never prove that what we have built is safe. But, it will increase our confidence for the test selection. 
-
+%TODO: Rephrase, we do not hope to do
 To do this we have a couple of approaches, firstly we hope to run our test selection parallel with the complete test suit on Modelon's build server to make sure all failed tests occurring have been caught by our test selection. This approach is inherently flawed since developers are actively trying to not commit code that breaks any tests.
 
 Secondly we hope to do some mutation testing by introducing semi random errors in a library and then run all tests not in the test selection. If any test fails we know that the test selection is not safe. Both these approaches are essentially the same except mutation testing is probably more effective since we can guarantee that there is problems in the code base. However, depending on the test coverage, every test could still pass.
 
 \section{Granularity}
+%TODO: "Generally a more coarse analysis will have lower precision since classes in the same file will be considered having the same dependencies", is this really true?
+%TODO: Write something about HXL where we get a better result for files than classes?
 A dependency analysis can be performed with different granularities. Our dependency analysis handles classes and is sometimes converted to a more coarse analysis handling files. Generally a more coarse analysis will have lower precision since classes in the same file will be considered having the same dependencies. On the other hand moving to a more granular analysis can be costly ~\cite{DBLP:conf/sigsoft/LegunsenHSLZM16}, both in running time, complexity and size. A more granular analysis could for example handle dependencies between lines of code instead of classes. This would have to be weighted against the precision gained.
 
 We chose class granularity because is was easy to implement. Initially we wanted to perform the analysis at file level but when we started implementing it it was natural to go to class level since all the class level dependencies had to be resolved anyway to find the corresponding files. The results shows significant saving and therefor it is not motivated to increase the precision at the cost of analysis complexity, development time and running time.
