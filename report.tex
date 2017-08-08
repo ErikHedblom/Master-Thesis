@@ -418,10 +418,10 @@ We have previously, in Chapter 3, discussed some aspects of the dependency analy
 
 \section{Validity}
 Validating the test selection is an important step to make sure the test selection actually is safe. During the development of the dependency analysis we have developed a test suit which can validate that the dependency graph is correct for some Modelica libraries. However, is is not feasible to prove that the dependency analysis and our implementation is 100\% safe. Instead we have to try to prove that it is not safe, but that can never prove that what we have built is safe. But, it will increase our confidence for the test selection. 
-%TODO: Rephrase, we do not hope to do
-To do this we have a couple of approaches, firstly we hope to run our test selection parallel with the complete test suit on Modelon's build server to make sure all failed tests occurring have been caught by our test selection. This approach is inherently flawed since developers are actively trying to not commit code that breaks any tests.
 
-Secondly we hope to do some mutation testing by introducing semi random errors in a library and then run all tests not in the test selection. If any test fails we know that the test selection is not safe. Both these approaches are essentially the same except mutation testing is probably more effective since we can guarantee that there is problems in the code base. However, depending on the test coverage, every test could still pass.
+To do this we have a couple of approaches, one is to run our test selection parallel with the complete test suit on Modelon's build server to make sure all failed tests occurring have been caught by our test selection. This approach is inherently flawed since developers are actively trying to not commit code that breaks any tests.
+
+Another is to do mutation testing by introducing semi random errors in a library and then run all tests not in the test selection. If any test fails we know that the test selection is not safe. Both these approaches are essentially the same except mutation testing is probably more effective since we can guarantee that there is problems in the code base. However, depending on the test coverage, every test could still pass.
 
 \section{Granularity}
 %TODO: "Generally a more coarse analysis will have lower precision since classes in the same file will be considered having the same dependencies", is this really true?
