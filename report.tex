@@ -424,7 +424,6 @@ There are a couple of approaches to this. One is to run our test selection paral
 Another is to do mutation testing by introducing semi random errors in a library and then run all tests not in the test selection. If any test fails we know that the test selection is not safe. Both these approaches are essentially the same except mutation testing is probably more effective since we can guarantee that there is problems in the code base. However, depending on the test coverage, every test could still pass. We have preformed neither of these approaches but some further validation may be in order in the future.
 
 \section{Granularity}
-%TODO: "Generally a more coarse analysis will have lower precision since classes in the same file will be considered having the same dependencies", is this really true?
 %TODO: Write something about HXL where we get a better result for files than classes?
 A dependency analysis can be performed with different granularities. Our dependency analysis handles classes and is sometimes converted to a more coarse analysis handling files. Generally a more coarse analysis will have lower precision since classes in the same file will be considered having the same dependencies. On the other hand moving to a more granular analysis can be costly ~\cite{DBLP:conf/sigsoft/LegunsenHSLZM16}, both in running time, complexity and size. A more granular analysis could for example handle dependencies between lines of code instead of classes. This would have to be weighted against the precision gained.
 
