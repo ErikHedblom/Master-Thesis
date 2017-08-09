@@ -258,17 +258,17 @@ Rule 5 is an exception to Rule 4, added to improve the precision of the test sel
 \section{Discussion}
 The lookup limitation in the source tree of OCT have had significant impact on the dependency analysis. It would be interesting to explore the differences compared to a dependency analysis only considering the Modelica standard and not limited by the source tree in OCT. We have looked at the option of improving the lookup in the source tree in OCT. However, that seems unfeasible within our time frame and furthermore, the functionality is already available in the instance tree.
 
-It would be interesting to explore the option of performing the dependency analysis in the instance tree. The main problem with this is the memory requirements, to instantiate all classes in one or more libraries would likely require to much memory. It might be possible to work around this by building the dependency graph incrementally. There is also currently some work into throwing away parts of the instance tree to save memory so that might also be a viable option in the future. The running time such solutions would probably be significantly higher and would have to be compensated by the precision gain in the dependency graph. 
+It would be interesting to explore the option of performing the dependency analysis in the instance tree. The main problem with this is the memory requirements, to instantiate all classes in one or more libraries would likely require to much memory. It might be possible to work around this by building the dependency graph incrementally. The running time of such solutions would probably be significantly higher and would have to be compensated by the precision gain in the dependency graph. 
 
 Another concern with a more precise dependency analysis is differences between compilers, since the solution is used through MTT and MTT might not use OCT when compiling and running tests. For example, error checking might differ between compilers causing compilation error for a test using one compiler but not for another.
 
-A more precise dependency analysis would probably be more complicated. Consider the example in Figure \ref{fig:contrainedBy}. A more precise dependency analysis would have to find out that the function call \texttt{m.f(10)} refers to \texttt{P5.f} but also depend on at least \texttt{P4} and \texttt{P3} due to the constraints on \texttt{f}. However, \texttt{f} might also depend on \texttt{P1} and \texttt{P2} if the compiler error check the constraints. 
+A more precise dependency analysis would probably be more complicated. Consider the example in Figure \ref{fig:constrainedBy}. A more precise dependency analysis would have to find out that the function call \texttt{m.f(10)} refers to \texttt{P5.f} but also depend on at least \texttt{P4} and \texttt{P3} due to the constraints on \texttt{f}. However, \texttt{f} might also depend on \texttt{P1} and \texttt{P2} if the compiler error check the constraints. 
 
 \begin{figure}[htbp]
     \centering
     \raisebox{4.0 cm}{\lstinputlisting[language=modelica]{Modelica/ConstrainedBy.mo}}
     \caption{An example illustrating some complex dependencies}
-    \label{fig:contrainedBy}
+    \label{fig:consPtrainedBy}
 \end{figure}
 
 
@@ -285,7 +285,7 @@ MTT will process the data from the user, either from the command line interface 
     \label{fig:MTTrun}
 \end{figure}
 
-MTT will then send all modified files or models to OCT and ask for all affected models. Then tests, testing one of the affected models, will be selected and run.
+MTT will then send all modified files or models to OCT and ask for all affected models. Then all tests testing one of the affected models will be selected and run.
 
 \subsection{Change detection}
 There is no automatic change detection, instead the user manually have to specify which models or files should be considered changed. Automatic change detection could be implemented using a version control system such as Git or SVN. A continuous integration server could look at the commit history to determine what is changed. For a user using MTT \texttt{git status} could be used. Another option is to look at the file timestamps to determine what is changed.
@@ -294,7 +294,7 @@ There is no automatic change detection, instead the user manually have to specif
 We have previously described how the dependency analysis should be performed. In this section we will look at some of the aspects not handled by the rules presented in Chapter 3.
 
 \subsection{Scope}
-To speed up the dependency analysis we ask the user to specify which libraries should be search for dependencies. For example, the standard library is automatically included in projects but users will rarely make changes to or test it. Hence, searching for dependencies to and in the standard library will usually be unnecessary. There might also be other dependencies in a project that are considered stable and unnecessary to analyze. In MTT this is handled by automatically search in all libraries in the Model View pane, in the upper left part of Figure \ref{fig:MTTrun}.
+To speed up the dependency analysis we ask the user to specify which libraries should be search for dependencies. For example, the standard library is automatically included in projects but users will rarely make changes to or test it. Hence, searching for dependencies to and in the standard library will usually be unnecessary. There might also be other dependencies in a project that are considered stable and unnecessary to analyze. In MTT this is handled by limiting the dependency analysis to all libraries in the Model View pane, in the upper left part of Figure \ref{fig:MTTrun}.
 
 Furthermore, our implementation also excludes Modelica built-ins. Built-ins such as \texttt{Real} should never change, and if they do, it means the compiler has changed. If the compiler has changed all test will have to be rerun anyway.
 
@@ -311,13 +311,13 @@ The dependency graph produced in Chapter 3 shows the dependencies from the compi
 \end{figure}
 
 \subsection{External functions}
-The Modelica language allows use of external functions that are not defined in a Modelica file. The external functions are often defined in a C-files\cite{modelicamodelica}. In our dependency analysis we do not analyze the dependencies in external files. To handle this, and keep the test selection safe, if a non Modelica file is changed we assume that every Modelica class that depend on externals are affected.
+The Modelica language allows use of external functions that are not defined in a Modelica file. The external functions are often defined in external source files\cite{modelicamodelica}. In our dependency analysis we do not analyze the dependencies in external files, files that is not Modelica source files. To handle this, and keep the test selection safe, if a non Modelica file is changed we assume that every Modelica class within the analysis, that depends on external functions are affected.
 
 
 \chapter[Evaluation]{Evaluation}
-In this chapter we are evaluating the performance of our dependency analysis and test selection. We have performed measurements for HXL (the Heat Exchanger Library developed by Modelon \footnote{\url{http://www.modelon.com/products/modelica-libraries/heat-exchanger-library/}}) and MSL (Modelica Standard Library). To assess how much time our test selection can save, we have run the tests for each library several times, 31 times for MSL and 7 for HXL, to get the average time it takes to run each test. This was done using a Intel\textregistered Core \texttrademark i5-4300M. The test times will be used to simulate a test selection without having to run the tests. Some tests have very long running times, therefore we limited tests to ten minutes. Test taking longer will timeout and their running time is set to ten minutes.
+In this chapter we are evaluating the performance of our dependency analysis and test selection. We have performed measurements for HXL (the Heat Exchanger Library, developed by Modelon \footnote{\url{http://www.modelon.com/products/modelica-libraries/heat-exchanger-library/}}) and MSL (Modelica Standard Library, developed by the Modelica Association). To assess how much time our test selection can save we have run the tests for each library several times. We have run them 31 times for MSL and 7 for HXL, to get the average time it takes to run each test. This was done using a Dell Latitude E6440 laptop \footnote{With a Intel\textregistered Core \texttrademark i5-4300M processor and 16 GB RAM}. The test times will be used to simulate a test selection without having to run the tests. Some tests have very long running times, therefore we limited tests to ten minutes. Test taking longer will timeout and their running time is set to ten minutes.
 
-First we preformed test selection for each Modelica file in two libraries, MSL and HXL, and assumed only one file changed. The total test suite execution time was 2h 26m 35s for MSL and 3h 1m 51s for HXL. In Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} the result for all files in HXL and MSL relative the total execution time for the complete test suite is shown. Neither of the graphs include the execution time of the test selection algorithm and therefore the time savings are not completely accurate. However, in both cases the the test selection time corresponds to a fraction of a percent on the y-axis. Figure \ref{fig:hxlonemodel} and \ref{fig:mslonemodel} are similar to Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} but the selection is performed with a finer granularity, using models instead of files. 
+The total test suite execution time was 2h 26m 35s for MSL and 3h 1m 51s for HXL. First we preformed test selection for each Modelica file in two libraries, MSL and HXL, and assumed only one file changed.  In Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} the result for all files in HXL and MSL relative the total execution time for the complete test suite is shown. Neither of the graphs include the execution time of the test selection algorithm and therefore the time savings are not completely accurate. However, in both cases the the test selection time corresponds to a fraction of a percent on the y-axis. Figure \ref{fig:hxlonemodel} and \ref{fig:mslonemodel} are similar to Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} but the selection is performed with a finer granularity, using models instead of files. 
 
 \begin{figure}[!htbp]
     \centering
@@ -347,7 +347,7 @@ First we preformed test selection for each Modelica file in two libraries, MSL a
     \label{fig:mslonemodel}
 \end{figure}
 
-The results looks good but do not necessary reflect a real use case. In Figure \ref{fig:mslhistory} are all the commits in the commit history for MSL until commit e69f57, 24th of may 2017. On the y-axis we have commits and on the x-axis is the time for running the test selection corresponding to the commit. The time is plotted relative to the total time of the complete test suite. As the previous graphs the time for the dependency analysis is not included. Furthermore, we have not run the dependency analysis and test suite for each commit, instead the same dependency analysis and test suit results was reused for all commits. Running all tests and creating a new dependency analysis for every commit would require too much time. This means that the graph is an approximation. The average time saving for test executions in Figure \ref{fig:mslhistory} is 56\% (dependency analysis execution time excluded).
+The results shows a potential decrease in execution times for tests, but do not necessary reflect a real use case. To get a better approximation of a real use case we have looked at the commit history of MSL. In Figure \ref{fig:mslhistory} are all the commits in the commit history for MSL until commit e69f57, 24th of may 2017. On the y-axis we have commits and on the x-axis is the time for running the test selection corresponding to the commit. The time is plotted relative to the total time of the complete test suite. As the previous graphs the time for the dependency analysis is not included. In order to save time, we have not run the dependency analysis and test suite for each commit, instead the same dependency analysis and test suit results was reused for all commits. This means that the graph is an approximation. Running all tests and creating a new dependency analysis for every commit would require significantly more time. The average time saving for test executions in Figure \ref{fig:mslhistory} is 56\% (dependency analysis execution time excluded).
 
 \begin{figure}[!htbp]
     \centering
@@ -421,7 +421,7 @@ Validating the test selection is an important step to make sure the test selecti
 
 There are a couple of approaches to this. One is to run our test selection parallel with the complete test suit on Modelon's build server to make sure all failed tests occurring have been caught by our test selection. This approach is inherently flawed since developers are actively trying to not commit code that breaks any tests.
 
-Another is to do mutation testing by introducing semi random errors in a library and then run all tests not in the test selection. If any test fails we know that the test selection is not safe. Both these approaches are essentially the same except mutation testing is probably more effective since we can guarantee that there is problems in the code base. However, depending on the test coverage, every test could still pass. We have preformed neither of these approaches but some further validation may be in order in the future.
+Another approach is to do mutation testing by introducing semi random errors in a library and then run all tests not in the test selection. If any test fails we know that the test selection is not safe. Both these approaches are essentially the same except mutation testing is probably more effective since we can guarantee that there is problems in the code base. However, depending on the test coverage, every test could still pass. We have preformed neither of these approaches but some further validation may be in order in the future.
 
 \section{Granularity}
 %TODO: Write something about HXL where we get a better result for files than classes?
@@ -447,7 +447,7 @@ Another thing that would be interesting to do, is to validate our test selection
 
 It is possible that more time can be saved. It could be interesting to do the dependency analysis between lines of code instead of Modelica classes to see if that would save more time.
 
-It would also be interesting to run the dependency analysis in the instance tree to see if the increased precision can save more time. But if all classes in a Modelica library should be instantiated in the instance tree, it will in the most cases require to much memory. So first a technique for throwing away parts of the instance tree along the process or some other solution must be developed. Doing this and running the dependency analysis in the instance tree will take more time than running the dependency analysis in the source tree. So the timed saved by a higher precision will have to be greater than the time lost by doing the dependency analysis in the instance tree.
+It would also be interesting to run the dependency analysis in the instance tree to see if the increased precision can save more time. But if all classes in a Modelica library should be instantiated in the instance tree, it will in the most cases require to much memory. First the memory requirements of the instance tree would have to be improved. Doing this and running the dependency analysis in the instance tree will take more time than running the dependency analysis in the source tree. The timed saved by a higher precision would have to be greater than the time lost by doing the dependency analysis in the instance tree for it to be worthwhile.
 
 \printbibliography[heading=bibintoc]
 
