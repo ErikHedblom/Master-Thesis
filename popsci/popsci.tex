@@ -21,7 +21,7 @@
 %To create a title in two rows, leave examensarbete blank and fill in examensarbeteTwoRows.
 \examensarbeteTwoRows{}{}
 
-\author{Erik Hedblom, Kasper Rundqvist}
+\author{Erik Hedblom, Kasper Rundquist}
 \supervisor {Niklas Fors (LTH), Johan Ylikiiskilä (Modelon)}
 \examiner{Görel Hedin (LTH)}
 
@@ -33,9 +33,11 @@
 \theabstract{Många företag lägger mycket tid och resurser på att testa mjukvara. Med tekniken vi har utvecklat för att välja ut tester har vi lyckats minska tiden för testning med 56 \% utan att försämmra kvaliteten på testningen.}
 
 
-{\noindent Det finns mycket tid och resurser att spara om det går att minska testningen för mjukvara. Under utveckling av mjukvara så testas mjukvaran för att kontrollera att den fungerar som det är tänkt. För att vara säker på att något test som visar på ett fel i mjukvaran inte missas, är det lättaste alternativet att välja att köra alla test som finns vid testning. Men om det endast har gjorts en liten ändring så kan det vara så att många test körs helt i onödan, om de inte testar någon del av mjukvaran som har påverkats av ändringen. Vi har utvecklat en teknik för att analysera mjukvara och välja bort tester som är onödiga, för att kunna minska tiden testningen tar utan att försämra kvaliteten på testningen.
+{\noindent Det finns mycket tid och resurser att spara om det går att minska testningen för mjukvara. Under utveckling av mjukvara så testas mjukvaran för att kontrollera att den fungerar som det är tänkt. För att vara säker på att något test som visar på ett fel i mjukvaran inte missas, är det lättaste alternativet att välja att köra alla test som finns vid testning. Men om det endast har gjorts en liten ändring så kan det vara så att många test körs helt i onödan, om de inte testar någon del av mjukvaran som har påverkats av ändringen. Vi har utvecklat en teknik för att analysera Modelica kod och välja bort tester som är onödiga, för att kunna minska tiden testningen tar utan att försämra kvaliteten på testningen.
 
-Vi har använt historiken för ändringar i ett mjukvaruprojekt för att räkna ut hur mycket tid som kan sparas. Vi har jämfört hur mycket som tid hade sparats om vår teknik för att välja ut tester hade andvänts istället för att köra alla tester. Vi har kommit fram till att tiden för testning hade minskats med 56 \% av tiden det tar att köra alla test för detta projekt. Detta är en ganska stor tidsbesparing, att köra alla tester, på den dator vi har använt, tar för detta projekt två och en halv timme.
+Modelica är ett modelieringsspråk som används för simuleringar inom många olika områden, bl.a. simulering av elektriska komponenter, motorer och fordon.
+
+Vi har använt historiken för ändringar i ett Modelica-projekt för att räkna ut hur mycket tid som kan sparas. Vi har jämfört hur mycket tid som hade sparats om vår teknik för att välja ut tester hade andvänts istället för att köra alla tester. Vi har kommit fram till att tiden för testning hade minskats med 56 \% av tiden det tar att köra alla test för detta projekt. Detta är en ganska stor tidsbesparing. Att köra alla tester, på den dator vi har använt, tar för detta projekt två och en halv timme.
 }
 
 \end{document}
