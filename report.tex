@@ -121,7 +121,7 @@ Modelica is a declarative, object oriented modeling language where models are de
     \label{fig:bouncingBallSimulation}
 \end{figure}
 
-Modelica uses dot notation to access something inside an object \cite{modelicamodelica}. Consider the code snippet in Figure \ref{fig:modelicaExample}, the model \texttt{M} can be accessed through \texttt{P1.P2.M}. We will call this an \emph{access}. Depending on from which scope \texttt{M} is being accessed, the access could also be \texttt{P2.M} or just \texttt{M}. An access using dot notation is basically a list of accesses and we will call all the accesses the \emph{path}. For instance, the path of model \texttt{M} is \texttt{P1.P2.M}. We will also denote a path as a \emph{fully qualified name}, if the first part of it is referencing the top package. In this case the fully qualified name for \texttt{M} is \texttt{P1.P2.M}.
+Modelica uses dot notation to access something inside an object \cite{modelicamodelica}. Consider the code snippet in Figure \ref{fig:modelicaExample}, the model \texttt{M} can be accessed through \texttt{P1.P2.M}. We will call this an \emph{access}. Depending on from which scope \texttt{M} is being accessed, the access could also be \texttt{P2.M} or just \texttt{M}. An access using dot notation is basically a list of accesses and we will call all the accesses a \emph{path}. For instance, both \texttt{P1.P2.M} and \texttt{P2.M} are paths to the model \texttt{M}, and the path \texttt{P1.P2.M} includes the accesses \texttt{P1.P2} and \texttt{P1}. We will also denote a path as a \emph{fully qualified name}, if the first part of it is referencing the top package. In this case the fully qualified name for \texttt{M} is \texttt{P1.P2.M}.
 
 \begin{figure}[!htbp]
     \centering
@@ -158,7 +158,7 @@ Modelica allows the use of wildcard imports. When using wildcard imports it is n
 \lstinputlisting[language=modelica]{Modelica/wildcardImport.mo}
 
 \section{JModelica.org}
-JModelica.org is an open source platform developed and maintained by the company Modelon. JModelica.org  handles optimizations and simulations of complex dynamic systems and includes a Modelica compiler. Optimica Compiler Toolkit (OCT) is a commercial product building on the JModelica.org technology. The compilation process for OCT is therefor equivalent to the process presented below for JMoldelica.org. Our solution will be developed in OCT but will not use any OCT specific technology. 
+JModelica.org is an open source platform developed and maintained by the company Modelon. JModelica.org  handles optimizations and simulations of complex dynamic systems and includes a Modelica compiler. Optimica Compiler Toolkit (OCT) is a commercial product building on the JModelica.org technology. The compilation process for OCT is therefore equivalent to the process presented below for JMoldelica.org. Our solution will be developed in OCT but will not use any OCT specific technology. 
 
 The compilation of Modelica code in JModelica.org is done in several steps, see Figure \ref{fig:compilerSteps} \cite{aakesson2010implementation}. In the first step, name and type analysis of the source code is done, identifiers are bound to declarations etc. An AST (Abstract Syntax Tree) is built in form of a source tree.
 
@@ -166,7 +166,9 @@ In Figure \ref{fig:bouncingBallInstance} when the instance of \texttt{BouncingBa
 
 In the third step the Modelica code is flattened. In this step class, component and inheritance structures are removed. This results in a model that only has a set of equations and a set of variables. Since an instance tree is created in the previous step, it is easy to traverse the instance tree and collect all variables and equations to create the flat tree.
 
-In the fourth step the equations are sorted and optimized and in the last step C-code is generated. 
+In the fourth step the equations are simplified and sorted.
+
+In the last step C-code is generated. 
 
 \begin{figure}[!htbp]
     \centering
@@ -187,15 +189,15 @@ Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing 
 
 
 \chapter[Dependency analysis]{Dependency analysis}
-To implement the RTS (Regression Test Selection) for Modelica we build a dependency graph between Modelica classes in the compilation phase. To build the dependency graph we have constructed a set of rules to determine what creates dependencies. We have chosen to work with the source tree representation of Modelica programs in the OCT compiler. The source tree is a relative light weight representation of a Modelica program and have limited name lookup capabilities but provides significant performance benefits. The rules have therefore been adjusted to work with the name lookup in the source tree. When the lookup of an access fails in the source tree we say the access is not resolvable. This means that a valid access can fail to resolve, in the source tree. First we introduce the rules and then we will go on and explain and motivate each one. Then we will conclude this chapter by discussing the limitations and improvements of the dependency analysis.
+To implement the RTS (Regression Test Selection) for Modelica we build a dependency graph between Modelica classes in the compilation phase. To build the dependency graph we have constructed a set of rules to determine what creates dependencies. We have chosen to work with the source tree representation of Modelica programs in the OCT compiler. The source tree is a relatively light weight representation of a Modelica program and have limited name lookup capabilities but provides significant performance benefits. The rules have therefore been adjusted to work with the name lookup in the source tree. When the lookup of an access fails in the source tree we say the access is not resolvable. This means that a valid access can fail to resolve, in the source tree. First we introduce the rules and then we will go on and explain and motivate each one. Then we will conclude this chapter by discussing the limitations and improvements of the dependency analysis.
 
 \paragraph{Dependency Rules}\mbox{}\\
 To build the dependency graph we use the following rules:
 \begin{enumerate}
-\item A class depends on all resolvable accesses within it.
+\item A class depends on all classes referenced by resolvable accesses within it, not including accesses within paths.
 \item A class depends on its enclosing class. 
-\item All resolvable accesses in the path of an access yields dependencies.
-\item A class depends on all classes enclosed by the accessed class. If the access is not resolvable, the last resolvable access in the path will be used instead.
+\item A class depends on all classes referenced by access paths within it. A unresolvable access can still contain resolvable accesses within its path.
+\item A class depends on all classes enclosed by accessed classes within it. This does not include access within paths but if an access is not resolvable, the last resolvable access in the path will be used instead.
 \item Exception to Rule 4: Rule 4 is not applicable to import statements.
 \end{enumerate}
 
@@ -208,7 +210,7 @@ To build the dependency graph we use the following rules:
     \caption{To the right an example of Modelica code showing why Rule 2 is needed, and to the left the corresponding dependency graph.}
     \label{fig:parentGraph}
 \end{figure}
-The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in the source tree in OCT not all accesses in a class can be followed and therefor not all dependencies from this rule can be created. We will later see how Rule 4 compensates for this. 
+The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in the source tree in OCT not all accesses in a class can be followed and therefore not all dependencies from this rule can be created. We will later see how Rule 4 compensates for this. 
 
 The next rule, Rule 2, will create a dependency from a class to its enclosing class. An example can be found in Figure \ref{fig:parentGraph}. In the example there is a constant \texttt{k} defined in package \texttt{P}. If another constant with the same name were to be added in in model \texttt{M1} the reference to \texttt{k} in \texttt{M2} will change to refer to the new constant and shadow the \texttt{k} in \texttt{P}. Therefore we need a dependency from \texttt{M2} to \texttt{M1} to handle name shadowing.
 
@@ -425,7 +427,7 @@ Another is to do mutation testing by introducing semi random errors in a library
 %TODO: Write something about HXL where we get a better result for files than classes?
 A dependency analysis can be performed with different granularities. Our dependency analysis handles classes and is sometimes converted to a more coarse analysis handling files. Generally a more coarse analysis will have lower precision since classes in the same file will be considered having the same dependencies. On the other hand moving to a more granular analysis can be costly ~\cite{DBLP:conf/sigsoft/LegunsenHSLZM16}, both in running time, complexity and size. A more granular analysis could for example handle dependencies between lines of code instead of classes. This would have to be weighted against the precision gained.
 
-We chose class granularity because is was easy to implement. Initially we wanted to perform the analysis at file level but when we started implementing it it was natural to go to class level since all the class level dependencies had to be resolved anyway to find the corresponding files. The results shows significant saving and therefor it is not motivated to increase the precision at the cost of analysis complexity, development time and running time.
+We chose class granularity because is was easy to implement. Initially we wanted to perform the analysis at file level but when we started implementing it it was natural to go to class level since all the class level dependencies had to be resolved anyway to find the corresponding files. The results shows significant saving and therefore it is not motivated to increase the precision at the cost of analysis complexity, development time and running time.
 
 \section{Related Work}
 % Kan kanske flyttas till bakgrunden ev till test selection delen. Måste inte ligga så sent i rapporten
