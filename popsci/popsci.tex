@@ -45,6 +45,7 @@ För att ta reda på hur mycket av tiden som går åt till testning som kan spar
 När ett program utvecklas så införs många ändringar varje dag. Att köra alla tester för varje ändring är därför oftast inte möjligt. För varje gång testerna körs kan det ha hunnit komma in många nya ändringar. Men vår teknik kan vi minska tiden för varje testomgång och ge snabbare återkoppling till utvecklarna. Om ett test misslyckas så kan det även vara lättare att hitta vilken ändring som som är orsaken eftersom färre ändringar är med i varje testomgång. 
 
 
+%Vi gör analysen av Modelica kod i en kompilator. Det är kompilatorn är det verktyg som tolkar kod. Det finns potential att göra analysen av Modelica kod ännu bättre i framtiden och kunna minska tiden för testning ytterligare. Vi skulle kunna göra en bättre analys av Modelica koden genom att göra analysen i ett annat steg i kopilatorn, men det är inte möjligt i dagsläget eftersom det krävs för mycket minne. Först måste problemet med minnesbehovet lösas för att kunna göra den bättre kodanalysen i ett annat steg i kompilatorn. Det finns även en möjlighet att spara mer tid vid testning genom att experimentera med på vilken detaljnivån kodanalysen görs. 
 }
 
 \end{document}
