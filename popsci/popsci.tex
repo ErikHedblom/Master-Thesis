@@ -38,6 +38,8 @@
 Modelica är ett modelieringsspråk som används för simuleringar inom många olika områden, bl.a. simulering av elektriska komponenter, motorer och fordon.
 
 Vi har använt historiken för ändringar i ett Modelica-projekt för att räkna ut hur mycket tid som kan sparas. Vi har jämfört hur mycket tid som hade sparats om vår teknik för att välja ut tester hade andvänts istället för att köra alla tester. Vi har kommit fram till att tiden för testning hade minskats med 56 \% av tiden det tar att köra alla test för detta projekt. Detta är en ganska stor tidsbesparing. Att köra alla tester, på den dator vi har använt, tar för detta projekt två och en halv timme.
+
+Vi gör analysen av Modelica kod i en kompilator. Det är kompilatorn är det verktyg som tolkar kod. Det finns potential att gör analysen av Modelica kod ännu bättre i framtiden och kunna minska tiden för testning ytterligare. Vi skulle kunna göra en bättre analys av Modelica koden genom att göra analysen i ett annat steg i kopilatorn, men det är inte möjligt i dagsläget eftersom det krävs för mycket minne. Först måste problemet med minnesbehovet lösas för att kunna göra den bättre kodanalysen i ett annat steg i kompilatorn. Det finns även en möjlighet att spara mer tid vid testning genom att experimentera med på vilken detaljnivån kodanalysen görs. 
 }
 
 \end{document}
