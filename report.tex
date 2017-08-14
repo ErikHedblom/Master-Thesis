@@ -260,14 +260,14 @@ MTT will process the data from the user, either from the command line interface 
 
 \begin{figure}[!hbtp]
     \includegraphics[width=1.0\textwidth]{Pictures/MTT_Capture.png}
-    \caption{A screen shot of the MTT GUI. In the Model View pane the when right clicking on a Model there is an option to run all associated tests.}
+    \caption{A screen shot of the MTT GUI. In the Model View pane when right clicking on a Model there is an option to run all associated tests.}
     \label{fig:MTTrun}
 \end{figure}
 
 MTT will then send all modified files or models to OCT and ask for all affected models. Then all tests testing one of the affected models will be selected and run.
 
 \subsection{Change detection}
-There is no automatic change detection, instead the user manually have to specify which models or files should be considered changed. Automatic change detection could be implemented using a version control system such as Git or SVN. A continuous integration server could look at the commit history to determine what is changed. For a user using MTT \texttt{git status} could be used. Another option is to look at the file timestamps to determine what is changed.
+There is no automatic change detection, instead the user manually have to specify which models or files should be considered changed. Automatic change detection could be implemented using a version control system such as Git or SVN. A continuous integration server could look at the commit history to determine what has changed. For a user using MTT, the command \texttt{git status} could be used. Another option is to look at the file timestamps to determine what has changed.
 
 \section{Dependency analysis}
 We have previously described how the dependency analysis should be performed. In this section we will look at some of the aspects not handled by the rules presented in Chapter 3.
@@ -290,7 +290,7 @@ The dependency graph produced in Chapter 3 shows the dependencies from the compi
 \end{figure}
 
 \subsection{External functions}
-The Modelica language allows use of external functions that are not defined in a Modelica file. The external functions are often defined in external source files\cite{modelicamodelica}. In our dependency analysis we do not analyze the dependencies in external files, files that is not Modelica source files. To handle this, and keep the test selection safe, if a non Modelica file is changed we assume that every Modelica class within the analysis, that depends on external functions are affected.
+The Modelica language allows use of external functions that are not defined in a Modelica file. The external functions are often defined in external source files\cite{modelicamodelica}. In our dependency analysis we do not analyze the dependencies in external files, files that are not Modelica source files. To handle this, and keep the test selection safe, if a non Modelica file is changed we assume that every Modelica class within the analysis, that depends on external functions are affected.
 
 
 \chapter[Evaluation]{Evaluation}
