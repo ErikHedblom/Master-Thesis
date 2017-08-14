@@ -251,22 +251,6 @@ Rule 4 is needed to handle the case in Figure \ref{fig:component}. Ideally the a
 
 Rule 5 is an exception to Rule 4, added to improve the precision of the test selection. Imports are specific and it is enough to add dependencies to what is actually imported. It is not uncommon to import packages located high up in the library structure. Without this exception, unnecessary dependencies would be added to all or large part of the library. For example in Modelica's standard library there are several imports of Modelica, which is the top level package. Such imports would create dependencies to every single class in the library. (Such imports may seem unnecessary, but they can be used to affect the name lookup if there exists classes with the same name in the library). An example of this is shown in Figure \ref{fig:rule5}.
 
-\section{Discussion}
-The lookup limitation in the source tree of OCT have had significant impact on the dependency analysis. It would be interesting to explore the differences compared to a dependency analysis only considering the Modelica standard and not limited by the source tree in OCT. We have considered the option of improving the lookup in the source tree in OCT. A naive approach is to use the class that a component instantiates during name lookup. This is easy to implement and will work for some simple examples but Figure \ref{fig:betterLookup} illustrates why more complex examples will fail. To resolve the access \texttt{m.f} by replacing \texttt{m} with \texttt{M} will yield the function \texttt{f} in \texttt{P1}. This is wrong since the component \texttt{m} have a modification to use package \texttt{P2} instead.
-
-\begin{figure}[htbp]
-    \centering
-    \raisebox{4.0 cm}{\lstinputlisting[language=modelica]{Modelica/ImprovedLookupFail.mo}}
-    \caption{Modifications of classes requires the name lookup to differentiate between different variations of a class, in this case \texttt{M1}}
-    \label{fig:betterLookup}
-\end{figure}
-
-To improve the name lookup in the source tree all requires handling the modified instances of classes. That is unfeasible within our time frame and furthermore, that is what the instance tree is for. 
-
-It would be interesting to explore the option of performing the dependency analysis in the instance tree. The main problem with this is the memory requirements, to instantiate all classes in one or more libraries would likely require to much memory. It might be possible to work around this by building the dependency graph incrementally. The running time of such solutions would probably be significantly higher and would have to be compensated by the precision gain in the dependency graph. 
-
-Another concern with a more precise dependency analysis is differences between compilers, since the solution is used through MTT and MTT might not use OCT when compiling and running tests. For example, error checking might differ between compilers causing compilation error for a test using one compiler but not for another.
-
 \chapter[Implementation]{Implementation}
 In this chapter we will describe how we have implemented the test selection in OCT. The solution is implemented both in Optimica Compiler Toolkit (OCT) and in Model Testing Toolkit (MTT). OCT produces the dependency graph and MTT interacts with the user and runs the reduced test suit.
 
@@ -409,7 +393,19 @@ A breakdown of the graphs is shown in Table \ref{table:breakdown}, as well as so
 \end{center}
 
 \chapter[Discussion]{Discussion}
-We have previously, in Chapter 3, discussed some aspects of the dependency analysis. We will now discuss a few other aspects of our work and then look at some related works.
+
+In this chapter we will discuss some of the aspects of this project, starting with the name lookup in OCT. The lookup limitation in the source tree of OCT have had significant impact on the dependency analysis. It would therefore be interesting to explore the differences compared to a dependency analysis only considering the Modelica standard and not limited by the source tree in OCT. We have considered the option of improving the lookup in the source tree in OCT. A naive approach is to use the class that a component instantiates during name lookup. This is easy to implement and will work for some simple examples but Figure \ref{fig:betterLookup} illustrates why more complex examples will fail. To resolve the access \texttt{m.f} by replacing \texttt{m} with \texttt{M} will yield the function \texttt{f} in \texttt{P1}. This is wrong since the component \texttt{m} have a modification to use package \texttt{P2} instead.
+
+\begin{figure}[htbp]
+    \centering
+    \raisebox{4.0 cm}{\lstinputlisting[language=modelica]{Modelica/ImprovedLookupFail.mo}}
+    \caption{Modifications of classes requires the name lookup to differentiate between different variations of a class, in this case \texttt{M1}}
+    \label{fig:betterLookup}
+\end{figure}
+
+To improve the name lookup in the source tree all requires handling the modified instances of classes. That is unfeasible within our time frame and furthermore, that is what the instance tree is for. It would therefore be interesting to explore the option of performing the dependency analysis in the instance tree. The main problem with this is the memory requirements, to instantiate all classes in one or more libraries would likely require to much memory. It might be possible to work around this by building the dependency graph incrementally. The running time of such solutions would probably be significantly higher and would have to be compensated by the precision gain in the dependency graph. 
+
+Another concern with a more precise dependency analysis is differences between compilers, since the solution is used through MTT and MTT might not use OCT when compiling and running tests. For example, error checking might differ between compilers causing compilation error for a test using one compiler but not for another.
 
 \section{Validity}
 Validating the test selection is an important step to make sure the test selection actually is safe. During the development of the dependency analysis we have developed a test suit which validates the dependency graph for some Modelica libraries. Besides this we have also continuously discussed and challenged the dependency analysis with Jonathan Kämpe and Jesper Mattson at Modelon, both part of the compiler team. However, is is not feasible for us to prove that the dependency analysis and our implementation is 100\% safe. Instead we have to try to prove that it is not safe, but that can never prove that what we have built is safe. But, it will increase our confidence for the test selection. 
