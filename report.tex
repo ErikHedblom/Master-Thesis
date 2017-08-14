@@ -189,7 +189,7 @@ Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing 
 
 
 \chapter[Dependency analysis]{Dependency analysis}
-To implement the RTS (Regression Test Selection) for Modelica we build a dependency graph between Modelica classes in the compilation phase. To build the dependency graph we have constructed a set of rules to determine what creates dependencies. We have chosen to work with the source tree representation of Modelica programs in the OCT compiler. The source tree is a relatively light weight representation of a Modelica program and have limited name lookup capabilities but provides significant performance benefits. The rules have therefore been adjusted to work with the name lookup in the source tree. When the lookup of an access fails in the source tree we say the access is not resolvable. This means that a valid access can fail to resolve, in the source tree. First we introduce the rules and then we will go on and explain and motivate each one. Then we will conclude this chapter by discussing the limitations and improvements of the dependency analysis.
+To implement the RTS (Regression Test Selection) for Modelica we build a dependency graph between Modelica classes in the compilation phase. To build the dependency graph we have constructed a set of rules to determine what creates dependencies. We have chosen to work with the source tree representation of Modelica programs in the OCT compiler. The source tree is a relatively light weight representation of a Modelica program and have limited name lookup capabilities but provides significant performance benefits. The rules have therefore been adjusted to work with the name lookup in the source tree. When the lookup of an access fails in the source tree we say the access is not \emph{resolvable}. This means that a valid access can fail to resolve, in the source tree. First we introduce the rules and then we will go on and explain and motivate each one. Then we will conclude this chapter by discussing the limitations and improvements of the dependency analysis.
 
 \paragraph{Dependency Rules}\mbox{}\\
 To build the dependency graph we use the following rules:
@@ -197,7 +197,8 @@ To build the dependency graph we use the following rules:
 \item A class depends on all classes referenced by resolvable accesses within it, not including accesses within paths.
 \item A class depends on its enclosing class. 
 \item A class depends on all classes referenced by access paths within it. A unresolvable access can still contain resolvable accesses within its path.
-\item A class depends on all classes enclosed by accessed classes within it. This does not include access within paths but if an access is not resolvable, the last resolvable access in the path will be used instead.
+\item A class depends on all classes enclosed by an accessed class. This does not include access within paths but if an access is not resolvable, the last resolvable access in the path will be used instead.
+For example, class A contains an access to class B, and B contains the class C, then A will depend on C. Furthermore, if class C contains the class D, A will depend on D as well.
 \item Exception to Rule 4: Rule 4 is not applicable to import statements.
 \end{enumerate}
 
@@ -258,19 +259,18 @@ Rule 5 is an exception to Rule 4, added to improve the precision of the test sel
 \section{Discussion}
 The lookup limitation in the source tree of OCT have had significant impact on the dependency analysis. It would be interesting to explore the differences compared to a dependency analysis only considering the Modelica standard and not limited by the source tree in OCT. We have considered the option of improving the lookup in the source tree in OCT. A naive approach is to use the class that a component instantiates during name lookup. This is easy to implement and will work for some simple examples but Figure \ref{fig:betterLookup} illustrates why more complex examples will fail. To resolve the access \texttt{m.f} by replacing \texttt{m} with \texttt{M} will yield the function \texttt{f} in \texttt{P1}. This is wrong since the component \texttt{m} have a modification to use package \texttt{P2} instead.
 
+\begin{figure}[htbp]
+    \centering
+    \raisebox{4.0 cm}{\lstinputlisting[language=modelica]{Modelica/ImprovedLookupFail.mo}}
+    \caption{Modifications of classes requires the name lookup to differentiate between different variations of a class, in this case \texttt{M1}}
+    \label{fig:betterLookup}
+\end{figure}
+
+To improve the name lookup in the source tree all requires handling the modified instances of classes. That is unfeasible within our time frame and furthermore, that is what the instance tree is for. 
+
 It would be interesting to explore the option of performing the dependency analysis in the instance tree. The main problem with this is the memory requirements, to instantiate all classes in one or more libraries would likely require to much memory. It might be possible to work around this by building the dependency graph incrementally. The running time of such solutions would probably be significantly higher and would have to be compensated by the precision gain in the dependency graph. 
 
 Another concern with a more precise dependency analysis is differences between compilers, since the solution is used through MTT and MTT might not use OCT when compiling and running tests. For example, error checking might differ between compilers causing compilation error for a test using one compiler but not for another.
-
-A more precise dependency analysis would probably be more complicated. Consider the example in Figure \ref{fig:constrainedBy}. A more precise dependency analysis would have to find out that the function call \texttt{m.f(10)} refers to \texttt{P5.f} but also depend on at least \texttt{P4} and \texttt{P3} due to the constraints on \texttt{f}. However, \texttt{f} might also depend on \texttt{P1} and \texttt{P2} if the compiler error check the constraints. 
-
-\begin{figure}[htbp]
-    \centering
-    \raisebox{4.0 cm}{\lstinputlisting[language=modelica]{Modelica/ConstrainedBy.mo}}
-    \caption{An example illustrating some complex dependencies}
-    \label{fig:constrainedBy}
-\end{figure}
-
 
 \chapter[Implementation]{Implementation}
 In this chapter we will describe how we have implemented the test selection in OCT. The solution is implemented both in Optimica Compiler Toolkit (OCT) and in Model Testing Toolkit (MTT). OCT produces the dependency graph and MTT interacts with the user and runs the reduced test suit.
