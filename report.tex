@@ -48,9 +48,9 @@
 \acknowledgements{
 We would like to thank Johan Ylikiiskilä at Modelon, who proposed the subject of this master thesis and has introduced us to Model Testing Toolkit.
 
-Further we would like to thank Jonathan Kämpe and Jesper Mattsson at Modelon for helping us understand the JModelica.org compiler and validate our dependency analysis.
+Further we would like to thank Jonathan Kämpe and Jesper Mattsson at Modelon for helping us understand the OCT compiler and validate our dependency analysis.
 
-We would also like to thank our supervisor at LTH, Niklas Fors for all feedback during our work on the report.
+We would also like to thank our supervisor at Lund University, Niklas Fors for all feedback during our work on the report.
 
 %%If you want to thank people, do it here, on a separate right-hand page. Both the U.S. \textit{acknowledgments} and the British \textit{acknowledgements} spellings are acceptable.
 }
@@ -64,7 +64,7 @@ During software development, testing of software can be very time consuming. We 
 
 \keywords{Test Selection, Modelica, Regression testing, JModelica.org, Optimica compiler toolkit}
 \divisionoflabor{
-Throughout this thesis project we, Erik and Kasper, have not had a clear devision of labor. We have been seated next to each other and naturally this has allowed us to discuss and participate in all aspects of the project together. 
+Throughout this thesis project we, Erik and Kasper, have been seated next to each other and naturally this has allowed us to discuss and participate in all aspects of the project together. We have discussed and developed the rules for the dependency analysis together. Erik had the main responsibility of implementing the dependency analysis in the jrag-files, while Kasper has spent more time on developing test cases and including the dependency analysis in the GUI.
 }
 
 %% Only used to display font sizes
@@ -77,27 +77,19 @@ Throughout this thesis project we, Erik and Kasper, have not had a clear devisio
 \begin{document}
 \makefrontmatter
 \chapter[Introduction]{Introduction}
-
-\section{Motivation}
 Software tests are used to verify that software works as intended.
-During software development, when a change is integrated into a project all previous testing have to be rerun to ensure no regression has occurred \cite{DBLP:conf/sigsoft/LegunsenHSLZM16, haider2016safe}. This is know as \emph{regression testing}. Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the tests may be unrelated to the change and therefore unnecessary to run. By excluding unrelated tests significant time savings could be achieved. Choosing which tests to run is called \emph{test selection}. When test selection is done for regression tests it is known as \emph{regression test selection} (RTS).
+During software development, when a change is integrated into a project all previous testing have to be rerun to ensure that no regression has occurred \cite{DBLP:conf/sigsoft/LegunsenHSLZM16, haider2016safe}. This is know as \emph{regression testing}. Test suites usually accumulates over time and regression testing can therefore be very time consuming. Depending on the change some or most of the tests may be unrelated to the change and therefore unnecessary to run. By excluding unrelated tests significant time savings could be achieved. Choosing which tests to run is called \emph{test selection}. When test selection is done for regression tests it is known as \emph{regression test selection} (RTS).
 
-%TODO: Okay to have ha Modelica section under Motivation? Or we need a specific Modelica section with its own heading?
 %TODO: Good examples of areas where Modelica is used?
-\emph{Modelica} is an object oriented modeling language used for simulations in various areas, for example simulations of electrical components, engines and air conditioners. Usually Modelica tests have long execution times. To our knowledge test selection has not been previously developed for Modelica.
+\emph{Modelica} is an object oriented modeling language used for simulations in various areas, for example simulations of electrical components, engines and air conditioners. Usually Modelica tests have long execution times, meaning there is a grate potential of time saving using test selection for Modelica. Despite this has, to our knowledge, test selection not been previously developed for Modelica.
 
-
-
-\section{Goal}
-%TODO: Correct to say that: we are going to implement in the JModelica.org compiler when we acctually do it in OCT? Niklas thought that we should write about JModelica in the introduction
 %TODO: Correct to say that: the goal is to give some Modelica models to the compiler, when it origanally was files?
-The aim of this project is to reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a safe RTS method with static analysis, a method to exclude tests in a test suite unaffected by a specific change \cite{DBLP:conf/pppj/OqvistHM16}. Regression testing can then be performed with a reduced test suite without compromising testing quality. To know which tests can be safely excluded we need to know if there are dependencies between different parts of Modelica code. To solve this we are going to implement a solution in the Optimica compiler toolkit compiler. The solution will allow the compiler to produce a dependency graph for the Modelica classes in Modelica projects.
+The aim of this project is to reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a safe RTS method with static analysis, a method to exclude tests in a test suite unaffected by a specific change \cite{DBLP:conf/pppj/OqvistHM16}. Regression testing can then be performed with a reduced test suite without compromising testing quality. To know which tests can be safely excluded we need to know if there are dependencies between different parts of Modelica code. To solve this we are going to implement a solution in the Optimica Compiler Toolkit compiler. The solution will allow the compiler to produce a dependency graph for the Modelica classes in Modelica projects.
 
-\section{Results}
-We have succeeded in significantly decreasing the time for testing by using test selection for Modelica. In chapter 5 we evaluate our solution, we try to assess how much time can be saved with our RTS method and the precision of the method. We look at the commit history for some Modelica libraries to see how much time would have been saved if our RTS method had been used instead of running all tests for each commit. However we have not formally proved that the method we have developed is safe, we discuss this further in chapter 6.
+We have succeeded in significantly decreasing the time for testing by using test selection for Modelica. When we look at the commit history of one Modelica library our solution saves 56\% of the testing time compared to running all tests for each commit, see chapter 5. However we have not formally proved that the method we have developed is safe, we discuss this further in chapter 6.
 
 \chapter[Background]{Background}
-In this chapter we will explain concepts and give some background important to understanding the rest of the report. We will give a short explanation of test selection, the Modelica language and a summary of how the JModelica.org compiler works.
+In this chapter we will explain concepts and give some background important to understanding the rest of the report. We will give a short explanation of test selection, the Modelica language and a summary of how the Modelica compiler in the Optimica Compiler Toolkit works.
 
 \section{Test Selection}
 A safe Regression Test Selection (RTS) method will select at least all tests that produce a new result after a specific change \cite{DBLP:conf/pppj/OqvistHM16}. A safe RTS method is therefore equivalent to running all tests, in the aspect of finding errors. For a RTS method to be useful the RTS algorithm should run in less time than it takes to run the excluded tests. This is not necessary for each run, but on average the overhead needs to be less than the time it takes to run the excluded tests.
@@ -105,7 +97,9 @@ A safe Regression Test Selection (RTS) method will select at least all tests tha
 To measure how good the test selection is, the precision of the test selection can be used \cite{DBLP:conf/sigsoft/LegunsenHSLZM16}. If fewer redundant tests are selected, the test selection has higher precision. There is a trade-off between the precision of the test selection and the overhead. To get higher precision, a more complex algorithm may be needed.
 
 \section{Modelica}
-Modelica is a declarative, object oriented modeling language where models are described by equations \cite{modelicamodelica}. It is used to perform high performance simulations. This section will introduce the parts of Modelica that are important for this project. In Figure \ref{fig:bouncingBallCode} is a simple Modelica example to illustrate the language. It shows a model of a bouncing ball and in Figure \ref{fig:bouncingBallSimulation} is the simulation result of the bouncing ball model.
+Modelica is a declarative, object oriented modeling language where models are described by equations \cite{modelicamodelica}. It is used to perform high performance simulations. This section will introduce the parts of Modelica that are important for this project.
+
+In Figure \ref{fig:bouncingBallCode} is a simple Modelica example to illustrate the language. It shows a model of a bouncing ball. The model has two parameters, the elasticity coefficient of the ball and the gravity. There are two values describing the ball, the height and the velocity of the ball that are set to initial value 1 respectively 0. The equation section in the model describes the behavior of the balls motion. In the when statement the balls velocity is set after the bounce at height 0. When a simulation of the bouncing ball model is run we get the result in Figure \ref{fig:bouncingBallSimulation}.
 
 \begin{figure}[!htbp]
     \centering
@@ -121,7 +115,8 @@ Modelica is a declarative, object oriented modeling language where models are de
     \label{fig:bouncingBallSimulation}
 \end{figure}
 
-Modelica uses dot notation to access something inside an object \cite{modelicamodelica}. Consider the code snippet in Figure \ref{fig:modelicaExample}, the model \texttt{M} can be accessed through \texttt{P1.P2.M}. We will call this an \emph{access}. Depending on from which scope \texttt{M} is being accessed, the access could also be \texttt{P2.M} or just \texttt{M}. An access using dot notation is basically a list of accesses and we will call all the accesses a \emph{path}. For instance, both \texttt{P1.P2.M} and \texttt{P2.M} are paths to the model \texttt{M}, and the path \texttt{P1.P2.M} includes the accesses \texttt{P1.P2} and \texttt{P1}. We will also denote a path as a \emph{fully qualified name}, if the first part of it is referencing the top package. In this case the fully qualified name for \texttt{M} is \texttt{P1.P2.M}.
+\subsection{Dot notation}
+To do a dependency analysis we need to understand how Modelica models depends on other Modelica models. Modelica uses dot notation to access something inside an object \cite{modelicamodelica}. Consider the code snippet in Figure \ref{fig:modelicaExample}, the model \texttt{M} can be accessed through \texttt{P1.P2.M}. We will call this an \emph{access}. Depending on from which scope \texttt{M} is being accessed, the access could also be \texttt{P2.M} or just \texttt{M}. An access using dot notation is basically a list of accesses and we will call all the accesses a \emph{path}. For instance, both \texttt{P1.P2.M} and \texttt{P2.M} are paths to the model \texttt{M}, and the path \texttt{P1.P2.M} includes the accesses \texttt{P1.P2} and \texttt{P1}. We will also denote a path as a \emph{fully qualified name}, if the first part of it is referencing the top package. In this case the fully qualified name for \texttt{M} is \texttt{P1.P2.M}.
 
 \begin{figure}[!htbp]
     \centering
@@ -132,10 +127,10 @@ Modelica uses dot notation to access something inside an object \cite{modelicamo
     \label{fig:modelicaExample}
 \end{figure}
 
-It is not apparent from an access what it is trying to access, it could be a package, model, function or a component. Due to this we will simplify the terminology by grouping models, packages and function together and just call them classes. Components are instantiations of classes and will be handled separately.
+It is not apparent from an access what it is trying to access, it could be a package, model, function or a component. Due to this we will simplify the terminology by grouping models, packages and function together and just call them \emph{classes}. Components are instantiations of classes and will be handled separately.
 
 \subsection{Name lookup}
-In this section we will give an example of a name lookup in the Modelica compiler. For an exhaustive description of the Modelica name lookup, see the Modelica specification \cite{modelicamodelica}. In order to find a match for a name, the Modelica compiler starts by looking at the first name in the path \cite{modelicamodelica, tillermodelica}. In Figure \ref{fig:nameLookup}, when \texttt{P1.P3.M.x} is defined it is initialized to the value the constant \texttt{P1.P2.k} has. To find the constant \texttt{k} through the path \texttt{P2.k}, the Modelica compiler starts by trying to find a match for the first name, \texttt{P2}, in the path. The Modelica compiler first checks if there is a definition of \texttt{P2} in the class \texttt{M}, where it is used. There is no definition of of \texttt{P2} in class \texttt{M}, so the Modelica compiler continues by looking for a definition in the enclosing class \texttt{P3}. There is still no definition of \texttt{P2}, in the next step the Modelica compiler looks for a definition in the enclosing class of \texttt{P3}, package \texttt{P1}. In package \texttt{P1} a definition of the name \texttt{P2} is found. Then the Modelica compiler looks for a definition of the name \texttt{k} in the class \texttt{P2}, and finds a definition of \texttt{P2.k}.
+In this section we will give an example of a name lookup in the Modelica compiler. For an exhaustive description of the Modelica name lookup, see the Modelica specification \cite{modelicamodelica}. In order to find a match for a name, the compiler starts by looking at the first name in the path \cite{modelicamodelica, tillermodelica}. In Figure \ref{fig:nameLookup}, when the component \texttt{P1.P3.M.x} is defined it is initialized to the value the constant \texttt{P1.P2.k} has. To find the constant \texttt{k} through the path \texttt{P2.k}, the compiler starts by trying to find a match for the first name, \texttt{P2}, in the path. The compiler first checks if there is a definition of \texttt{P2} in the class \texttt{M}, where it is used. There is no definition of of \texttt{P2} in class \texttt{M}, so the compiler continues by looking for a definition in the enclosing class \texttt{P3}. There is still no definition of \texttt{P2}, in the next step the compiler looks for a definition in the enclosing class of \texttt{P3}, that is in package \texttt{P1}. In package \texttt{P1} a definition of the name \texttt{P2} is found. Then the compiler looks for a definition of the name \texttt{k} in the class \texttt{P2}, and finds a definition of \texttt{P2.k}.
 
 \begin{figure}[!htbp]
     \centering
@@ -153,18 +148,18 @@ Modelica offers the option to rename an import. Here an alias will be created wh
 
 \lstinputlisting[language=modelica]{Modelica/renamedImport.mo}
 
-Modelica allows the use of wildcard imports. When using wildcard imports it is not possible to rename the import. This wildcard import will create an alias for every definition in \texttt{Modelica.Fluid}.
+Modelica allows the use of wildcard imports. When using wildcard imports it is not possible to rename the import. The following wildcard import will create an alias for every definition in \texttt{Modelica.Fluid}.
 
 \lstinputlisting[language=modelica]{Modelica/wildcardImport.mo}
 
-\section{JModelica.org}
-JModelica.org is an open source platform developed and maintained by the company Modelon. JModelica.org  handles optimizations and simulations of complex dynamic systems and includes a Modelica compiler. Optimica Compiler Toolkit (OCT) is a commercial product building on the JModelica.org technology. The compilation process for OCT is therefore equivalent to the process presented below for JMoldelica.org. Our solution will be developed in OCT but will not use any OCT specific technology. 
+\section{Optimica Compiler Toolkit}
+JModelica.org is an open source Modelica platform developed and maintained by the company Modelon. JModelica.org handles optimizations and simulations of complex dynamic systems and includes a Modelica compiler. Optimica Compiler Toolkit (OCT) is a commercial product based on the JModelica.org technology. Our solution will be developed in OCT but will not use any OCT specific technology. 
 
-The compilation of Modelica code in JModelica.org is done in several steps, see Figure \ref{fig:compilerSteps} \cite{aakesson2010implementation}. In the first step, name and type analysis of the source code is done, identifiers are bound to declarations etc. An AST (Abstract Syntax Tree) is built in form of a source tree.
+The compilation of Modelica code in the OCT compiler is done in several steps, see Figure \ref{fig:compilerSteps} \cite{aakesson2010implementation}. In the first step, Modelica source code is parsed to an AST (Abstract Syntax Tree) called the \emph{source tree}. Then name and type analysis of the source code is done, identifiers are bound to declarations etc.
 
-In Figure \ref{fig:bouncingBallInstance} when the instance of \texttt{BouncingBall}, \texttt{Ball} in Figure \ref{fig:bouncingBallCode} is created, a modification is used to set the gravity to a different value than the original. The flattening of Modelica code is complicated because of modifications that are used in Modelica. To simplify this and  prepare for the flattening, in step two a new AST in form of a instance tree is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The root is the model chosen by the user to be flattened. The instance tree consists of instances of all classes with the possibly given modifications at the point in the Modelica source code where the instance is created. Therefore the instance tree requires a lot more memory than the source tree and is slower to traverse. This is the reason we have chosen to implement our solution in the source tree. 
+In Figure \ref{fig:bouncingBallInstance} when the instance of \texttt{BouncingBall}, \texttt{Ball} in Figure \ref{fig:bouncingBallCode} is created, a modification is used to set the gravity to a different value than the original. The flattening of Modelica code is complicated because of modifications that are used in Modelica. To simplify this and  prepare for the flattening, in step two a new AST in form of an \emph{instance tree} is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The root is the model chosen by the user to be flattened. The instance tree consists of instances of all classes with the possibly given modifications at the point in the Modelica source code where the instance is created. Therefore the instance tree requires a lot more memory than the source tree and is slower to traverse. This is the reason we have chosen to implement our solution in the source tree. 
 
-In the third step the Modelica code is flattened. In this step class, component and inheritance structures are removed. This results in a model that only has a set of equations and a set of variables. Since an instance tree is created in the previous step, it is easy to traverse the instance tree and collect all variables and equations to create the flat tree.
+In the third step the Modelica code is flattened. In this step all object-oriented structures are removed. This results in \emph{one} model that only has a set of equations and a set of variables. Since an instance tree is created in the previous step, it is easy to traverse the instance tree and collect all variables and equations to create the flat tree.
 
 In the fourth step the equations are simplified and sorted.
 
@@ -173,7 +168,7 @@ In the last step C-code is generated.
 \begin{figure}[!htbp]
     \centering
     {\includegraphics[scale=0.5]{dotGenerated/CompilerSteps.eps}}
-    \caption{The compilation steps in the JModelica.org compiler}
+    \caption{The compilation steps in the Modelica compiler in OCT}
     \label{fig:compilerSteps}
 \end{figure}
 
@@ -185,7 +180,7 @@ In the last step C-code is generated.
 \end{figure}
 
 \section{Model Testing Toolkit}
-Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing of Modelica projects \cite{modelon.comMTT}. It has both a command line and a graphical interface and we will add functionality and options to both to support test selection. Furthermore, it also provides integration with third-party tools. This means that compilers other than JModleica.org could be used together with MTT.
+Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing of Modelica projects \cite{modelon.comMTT}. It has both a command line and a graphical interface and we will add functionality and options to both to support test selection. Furthermore, it also provides integration with third-party tools. This means that compilers other than the OCT compiler could be used together with MTT.
 
 
 \chapter[Dependency analysis]{Dependency analysis}
