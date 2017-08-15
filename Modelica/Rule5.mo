@@ -6,6 +6,6 @@ package P
       end M2;
     end P;
   end M1;
-  package LagrePackage
-  end LagrePackage;
+  package LargePackage
+  end LargePackage;
 end P;

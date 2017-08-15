@@ -5,6 +5,6 @@ digraph DependencyGraph {
 	"P.M1.P.M2" -> "P"
 	"P.M1.P.M2" -> "P.M1.P"
 	"P.M1.P.M2" -> "P.M1" [style="dashed"]
-	"P.M1.P.M2" -> "P.LargePacakge" [style="dashed"]
-	"P.LargePacakge" -> "P"
+	"P.M1.P.M2" -> "P.LargePackage" [style="dashed"]
+	"P.LargePackage" -> "P"
 }
