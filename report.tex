@@ -270,7 +270,7 @@ MTT will then send all modified files or models to OCT and ask for all affected 
 There is no automatic change detection, instead the user manually have to specify which models or files should be considered changed. Automatic change detection could be implemented using a version control system such as Git or SVN. A continuous integration server could look at the commit history to determine what has changed. For a user using MTT, the command \texttt{git status} could be used. Another option is to look at the file timestamps to determine what has changed.
 
 \section{Dependency analysis}
-We have previously described how the dependency analysis should be performed. In this section we will look at some of the aspects not handled by the rules presented in Chapter 3.
+We have previously described how the dependency analysis should be performed. In this section we will look at some of the aspects not handled by the rules presented in Chapter 3. Our implementation of the analysis consists of 343 lines of code, including 63 line only used for testing.
 
 \subsection{Scope}
 To speed up the dependency analysis we ask the user to specify which libraries should be search for dependencies. For example, the standard library is automatically included in projects but users will rarely make changes to or test it. Hence, searching for dependencies to and in the standard library will usually be unnecessary. There might also be other dependencies in a project that are considered stable and unnecessary to analyze. In MTT this is handled by limiting the dependency analysis to all libraries in the Model View pane, in the upper left part of Figure \ref{fig:MTTrun}.
