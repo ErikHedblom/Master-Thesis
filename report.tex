@@ -392,6 +392,12 @@ A breakdown of the graphs is shown in Table \ref{table:breakdown}, as well as so
 \end{table}
 \end{center}
 
+\section{Validity}
+Validating the test selection is an important step to make sure the test selection actually is safe. During the development of the dependency analysis we have developed a test suit which validates the dependency graph for some Modelica libraries. Besides this we have also continuously discussed and challenged the dependency analysis with Jonathan Kämpe and Jesper Mattson at Modelon, both part of the compiler team. However, is is not feasible for us to prove that the dependency analysis and our implementation is 100\% safe. Instead we have to try to prove that it is not safe, but that can never prove that what we have built is safe. But, it will increase our confidence for the test selection. 
+
+There are a couple of approaches to this. One is to run our test selection parallel with the complete test suit on Modelon's build server to make sure all failed tests occurring have been caught by our test selection. This approach is inherently flawed since developers are actively trying to not commit code that breaks any tests.
+
+Another approach is to do mutation testing ~\cite{DBLP:journals/tse/JiaH11} by introducing semi random errors in a library and then run all tests not in the test selection. If any test fails we know that the test selection is not safe. Both these approaches are essentially the same except mutation testing is probably more effective since we can guarantee that there is problems in the code base. However, depending on the test coverage, every test could still pass. We have preformed neither of these approaches but some further validation may be in order in the future.
 \chapter[Discussion]{Discussion}
 
 In this chapter we will discuss some of the aspects of this project, starting with the name lookup in OCT. The lookup limitation in the source tree of OCT have had significant impact on the dependency analysis. It would therefore be interesting to explore the differences compared to a dependency analysis only considering the Modelica standard and not limited by the source tree in OCT. We have considered the option of improving the lookup in the source tree in OCT. A naive approach is to use the class that a component instantiates during name lookup. This is easy to implement and will work for some simple examples but Figure \ref{fig:betterLookup} illustrates why more complex examples will fail. To resolve the access \texttt{m.f} by replacing \texttt{m} with \texttt{M} will yield the function \texttt{f} in \texttt{P1}. This is wrong since the component \texttt{m} have a modification to use package \texttt{P2} instead.
@@ -407,12 +413,7 @@ To improve the name lookup in the source tree all requires handling the modified
 
 Another concern with a more precise dependency analysis is differences between compilers, since the solution is used through MTT and MTT might not use OCT when compiling and running tests. For example, error checking might differ between compilers causing compilation error for a test using one compiler but not for another.
 
-\section{Validity}
-Validating the test selection is an important step to make sure the test selection actually is safe. During the development of the dependency analysis we have developed a test suit which validates the dependency graph for some Modelica libraries. Besides this we have also continuously discussed and challenged the dependency analysis with Jonathan Kämpe and Jesper Mattson at Modelon, both part of the compiler team. However, is is not feasible for us to prove that the dependency analysis and our implementation is 100\% safe. Instead we have to try to prove that it is not safe, but that can never prove that what we have built is safe. But, it will increase our confidence for the test selection. 
 
-There are a couple of approaches to this. One is to run our test selection parallel with the complete test suit on Modelon's build server to make sure all failed tests occurring have been caught by our test selection. This approach is inherently flawed since developers are actively trying to not commit code that breaks any tests.
-
-Another approach is to do mutation testing ~\cite{DBLP:journals/tse/JiaH11} by introducing semi random errors in a library and then run all tests not in the test selection. If any test fails we know that the test selection is not safe. Both these approaches are essentially the same except mutation testing is probably more effective since we can guarantee that there is problems in the code base. However, depending on the test coverage, every test could still pass. We have preformed neither of these approaches but some further validation may be in order in the future.
 
 \section{Granularity}
 %TODO: Write something about HXL where we get a better result for files than classes?
