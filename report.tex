@@ -252,7 +252,7 @@ Rule 4 is needed to handle the case in Figure \ref{fig:component}. Ideally the a
 Rule 5 is an exception to Rule 4, added to improve the precision of the test selection. Imports are specific and it is enough to add dependencies to what is actually imported. It is not uncommon to import packages located high up in the library structure. Without this exception, unnecessary dependencies would be added to all or large part of the library. For example in Modelica's standard library there are several imports of Modelica, which is the top level package. Such imports would create dependencies to every single class in the library. (Such imports may seem unnecessary, but they can be used to affect the name lookup if there exists classes with the same name in the library). An example of this is shown in Figure \ref{fig:rule5}.
 
 \chapter[Implementation]{Implementation}
-In this chapter we will describe how we have implemented the test selection in OCT. The solution is implemented both in OPTIMICA Compiler Toolkit (OCT) and in Model Testing Toolkit. OCT produces the dependency graph and the Model Testing Toolkit interacts with the user and runs the reduced test suit.
+In this chapter we will describe how we have implemented the test selection in the OPTIMICA Compiler Toolkit (OCT). The solution is implemented both in OCT and in Model Testing Toolkit. OCT produces the dependency graph and the Model Testing Toolkit interacts with the user and runs the reduced test suit.
 
 \section{Model Testing Toolkit}
 
