@@ -62,7 +62,7 @@ During software development, testing of software can be very time consuming. We 
 
 }
 
-\keywords{Test Selection, Modelica, Regression testing, JModelica.org, Optimica compiler toolkit}
+\keywords{Test Selection, Modelica, Regression testing, JModelica.org, OPTIMICA compiler toolkit}
 \divisionoflabor{
 Throughout this thesis project we, Erik and Kasper, have been seated next to each other and naturally this has allowed us to discuss and participate in all aspects of the project equally. We have discussed and developed the rules for the dependency analysis together. Erik had the main responsibility of implementing the dependency analysis in the jrag-files, while Kasper has spent more time on developing test cases and including the dependency analysis in the GUI.
 }
@@ -84,12 +84,12 @@ During software development, when a change is integrated into a project all prev
 \emph{Modelica} is an object oriented modeling language used for simulations in various areas, for example simulations of electrical components, engines and air conditioners. Usually Modelica tests have long execution times, meaning there is a great potential for time savings using test selection for Modelica. Despite this, test selection not been previously developed for Modelica, to our knowledge.
 
 %TODO: Correct to say that: the goal is to give some Modelica models to the compiler, when it origanally was files?
-The aim of this project is to reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a safe RTS method with static analysis, a method to exclude tests in a test suite unaffected by a specific change \cite{DBLP:conf/pppj/OqvistHM16}. Regression testing can then be performed with a reduced test suite without compromising testing quality. To know which tests can be safely excluded we need to know if there are dependencies between different parts of Modelica code. To solve this we are going to implement a solution in the Optimica Compiler Toolkit compiler. The solution will allow the compiler to produce a dependency graph for the Modelica classes in Modelica projects.
+The aim of this project is to reduce testing times for Modelica projects without loss of quality. This will be done by developing and implementing a safe RTS method with static analysis, a method to exclude tests in a test suite unaffected by a specific change \cite{DBLP:conf/pppj/OqvistHM16}. Regression testing can then be performed with a reduced test suite without compromising testing quality. To know which tests can be safely excluded we need to know if there are dependencies between different parts of Modelica code. To solve this we are going to implement a solution in the OPTIMICA Compiler Toolkit compiler. The solution will allow the compiler to produce a dependency graph for the Modelica classes in Modelica projects.
 
 We have succeeded in significantly decreasing the time for testing by using test selection for Modelica. When we look at the commit history of one Modelica library our solution saves 56\% of the average testing time compared to running all tests for each commit, see chapter 5. However we have not formally proved that the method we have developed is safe, we discuss this further in chapter 6.
 
 \chapter[Background]{Background}
-In this chapter we will explain concepts and give some background important to understanding the rest of the report. We will give a short explanation of test selection, the Modelica language and a summary of how the Modelica compiler in the Optimica Compiler Toolkit works.
+In this chapter we will explain concepts and give some background important to understanding the rest of the report. We will give a short explanation of test selection, the Modelica language and a summary of how the Modelica compiler in the OPTIMICA Compiler Toolkit works.
 
 \section{Test Selection}
 A safe Regression Test Selection (RTS) method will select at least all tests that produce a new result after a specific change \cite{DBLP:conf/pppj/OqvistHM16}. A safe RTS method is therefore equivalent to running all tests, in the aspect of finding errors. For a RTS method to be useful the RTS algorithm should run in less time than it takes to run the excluded tests. This is not necessary for each run, but on average the overhead needs to be less than the time it takes to run the excluded tests.
@@ -152,8 +152,8 @@ Modelica allows the use of wildcard imports. When using wildcard imports it is n
 
 \lstinputlisting[language=modelica]{Modelica/wildcardImport.mo}
 
-\section{Optimica Compiler Toolkit}
-JModelica.org is an open source Modelica platform developed and maintained by the company Modelon. JModelica.org handles optimizations and simulations of complex dynamic systems and includes a Modelica compiler. Optimica Compiler Toolkit (OCT) is a commercial product based on the JModelica.org technology. Our solution will be developed in OCT but will not use any OCT specific technology. 
+\section{OPTIMICA Compiler Toolkit}
+JModelica.org is an open source Modelica platform developed and maintained by the company Modelon. JModelica.org handles optimizations and simulations of complex dynamic systems and includes a Modelica compiler. OPTIMICA Compiler Toolkit (OCT) is a commercial product based on the JModelica.org technology. Our solution will be developed in OCT but will not use any OCT specific technology. 
 
 The compilation of Modelica code in the OCT compiler is done in several steps, see Figure \ref{fig:compilerSteps} \cite{aakesson2010implementation}. In the first step, Modelica source code is parsed to an AST (Abstract Syntax Tree) called the \emph{source tree}. Then name and type analysis of the source code is done, identifiers are bound to declarations etc.
 
@@ -252,7 +252,7 @@ Rule 4 is needed to handle the case in Figure \ref{fig:component}. Ideally the a
 Rule 5 is an exception to Rule 4, added to improve the precision of the test selection. Imports are specific and it is enough to add dependencies to what is actually imported. It is not uncommon to import packages located high up in the library structure. Without this exception, unnecessary dependencies would be added to all or large part of the library. For example in Modelica's standard library there are several imports of Modelica, which is the top level package. Such imports would create dependencies to every single class in the library. (Such imports may seem unnecessary, but they can be used to affect the name lookup if there exists classes with the same name in the library). An example of this is shown in Figure \ref{fig:rule5}.
 
 \chapter[Implementation]{Implementation}
-In this chapter we will describe how we have implemented the test selection in OCT. The solution is implemented both in Optimica Compiler Toolkit (OCT) and in Model Testing Toolkit. OCT produces the dependency graph and the Model Testing Toolkit interacts with the user and runs the reduced test suit.
+In this chapter we will describe how we have implemented the test selection in OCT. The solution is implemented both in OPTIMICA Compiler Toolkit (OCT) and in Model Testing Toolkit. OCT produces the dependency graph and the Model Testing Toolkit interacts with the user and runs the reduced test suit.
 
 \section{Model Testing Toolkit}
 
@@ -294,7 +294,7 @@ The Modelica language allows use of external functions that are not defined in a
 
 
 \chapter[Evaluation]{Evaluation}
-In this chapter we are evaluating the performance of our dependency analysis and test selection. We have performed measurements for HXL (the Heat Exchanger Library, developed by Modelon ~\cite{modelon.comHXL}) and MSL (Modelica Standard Library, developed by the Modelica Association). To evaluate how much time our test selection can save we have run the tests for each library several times. We have run them 31 times for MSL and 7 for HXL, to get the average time it takes to run each test. This was done using a Windows 10 machine with a dual core Intel\textregistered Core \texttrademark i5-4300M processor and 16 GB RAM. The compilation is executed in a JVM, we used Java 8 with a 4GB heap. The test times was used to simulate test selections without having to rerun all the tests each time. Some tests have very long running times, therefore we limited tests to ten minutes. Test taking longer will timeout and their running time is set to ten minutes.
+In this chapter we are evaluating the performance of our dependency analysis and test selection. We have performed measurements for the Heat Exchanger Library (HXL), developed by Modelon ~\cite{modelon.comHXL}) and the Modelica Standard Library (MSL), developed by the Modelica Association. To evaluate how much time our test selection can save we have run the tests for each library several times. We have run them 31 times for MSL and 7 for HXL, to get the average time it takes to run each test. This was done using a Windows 10 machine with a dual core Intel\textregistered Core \texttrademark i5-4300M processor and 16 GB RAM. The compilation is executed in a JVM, we used Java 8 with a 4GB heap. The test times was used to simulate test selections without having to rerun all the tests each time. Some tests have very long running times, therefore we limited tests to ten minutes. Test taking longer will timeout and their running time is set to ten minutes.
 
 The total test suite execution time was 2h 26m 35s for MSL and 3h 1m 51s for HXL. First we ran test selection for each Modelica file in two libraries, MSL and HXL, and assumed only one file changed.  In Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} the result for all files in HXL and MSL relative the total execution time for the complete test suite is shown. Neither of the graphs include the execution time of the test selection algorithm and therefore the time savings are not completely accurate. However, in both cases the the test selection time corresponds to a fraction of a percent on the y-axis. Figure \ref{fig:hxlonemodel} and \ref{fig:mslonemodel} are similar to Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} but the selection is performed with a finer granularity, using models instead of files. 
 
