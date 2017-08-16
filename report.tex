@@ -46,7 +46,7 @@
 %\date{January 16, 2015}
 
 \acknowledgements{
-We would like to thank Johan Ylikiiskilä at Modelon, who proposed the subject of this master thesis and has introduced us to Model Testing Toolkit.
+We would like to thank Johan Ylikiiskilä at Modelon, who proposed the subject of this master thesis and has introduced us to the Model Testing Toolkit.
 
 Further we would like to thank Jonathan Kämpe and Jesper Mattsson at Modelon for helping us understand the OCT compiler and validate our dependency analysis.
 
@@ -157,7 +157,7 @@ JModelica.org is an open source Modelica platform developed and maintained by th
 
 The compilation of Modelica code in the OCT compiler is done in several steps, see Figure \ref{fig:compilerSteps} \cite{aakesson2010implementation}. In the first step, Modelica source code is parsed to an AST (Abstract Syntax Tree) called the \emph{source tree}. Then name and type analysis of the source code is done, identifiers are bound to declarations etc.
 
-In Figure \ref{fig:bouncingBallInstance} when the instance of \texttt{BouncingBall}, \texttt{Ball}, from Figure \ref{fig:bouncingBallCode} is created, a modification is used to set the gravity to a different value than the original. The flattening of Modelica code is complicated because of modifications that are used in Modelica. To simplify this and  prepare for the flattening, in step two a new AST in form of an \emph{instance tree} is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The root is the model chosen by the user to be flattened. The instance tree consists of instances of all classes with the possibly given modifications at the point in the Modelica source code where the instance is created. Therefore the instance tree requires a lot more memory than the source tree and is slower to traverse. This is the reason we have chosen to implement our solution in the source tree. 
+In Figure \ref{fig:bouncingBallInstance}, \texttt{Ball} is an instance of \texttt{BouncingBall} from Figure \ref{fig:bouncingBallCode}. When the instance is created, a modification is used to set the gravity to a different value than the original. The flattening of Modelica code is complicated because of modifications that are used in Modelica. To simplify this and  prepare for the flattening, in step two a new AST in form of an \emph{instance tree} is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The root is the model chosen by the user to be flattened. The instance tree consists of instances of all classes with the possibly given modifications at the point in the Modelica source code where the instance is created. Therefore the instance tree requires a lot more memory than the source tree and is slower to traverse. This is the reason we have chosen to implement our solution in the source tree. 
 
 In the third step the Modelica code is flattened. In this step all object-oriented structures are removed. This results in \emph{one} model that only has a set of equations and a set of variables. Since an instance tree is created in the previous step, it is easy to traverse the instance tree and collect all variables and equations to create the flat tree.
 
@@ -180,7 +180,7 @@ In the last step C-code is generated.
 \end{figure}
 
 \section{Model Testing Toolkit}
-Model testing Toolkit (MTT) is a toolbox developed by Modelon to handle testing of Modelica projects \cite{modelon.comMTT}. It has both a command line and a graphical interface and we will add functionality and options to both to support test selection. Furthermore, it also provides integration with third-party tools. This means that compilers and simulators other than the OCT compiler could be used together with MTT.
+Model testing Toolkit is a toolbox developed by Modelon to handle testing of Modelica projects \cite{modelon.comMTT}. It has both a command line and a graphical interface and we will add functionality and options to both to support test selection. Furthermore, it also provides integration with third-party tools. This means that compilers and simulators other than the OCT compiler could be used together with Model Testing Toolkit.
 
 
 \chapter[Dependency analysis]{Dependency analysis}
@@ -252,28 +252,28 @@ Rule 4 is needed to handle the case in Figure \ref{fig:component}. Ideally the a
 Rule 5 is an exception to Rule 4, added to improve the precision of the test selection. Imports are specific and it is enough to add dependencies to what is actually imported. It is not uncommon to import packages located high up in the library structure. Without this exception, unnecessary dependencies would be added to all or large part of the library. For example in Modelica's standard library there are several imports of Modelica, which is the top level package. Such imports would create dependencies to every single class in the library. (Such imports may seem unnecessary, but they can be used to affect the name lookup if there exists classes with the same name in the library). An example of this is shown in Figure \ref{fig:rule5}.
 
 \chapter[Implementation]{Implementation}
-In this chapter we will describe how we have implemented the test selection in OCT. The solution is implemented both in Optimica Compiler Toolkit (OCT) and in Model Testing Toolkit (MTT). OCT produces the dependency graph and MTT interacts with the user and runs the reduced test suit.
+In this chapter we will describe how we have implemented the test selection in OCT. The solution is implemented both in Optimica Compiler Toolkit (OCT) and in Model Testing Toolkit. OCT produces the dependency graph and the Model Testing Toolkit interacts with the user and runs the reduced test suit.
 
 \section{Model Testing Toolkit}
 
-MTT will process the data from the user, either from the command line interface (CLI) or from the graphical user interface (GUI). We have added an option to the CLI so that the user can specify that test selection should be used and which models or files have changed. In the GUI we have added a menu option to specify which models have changed, this is shown in Figure \ref{fig:MTTrun}. In the GUI multiple models can be selected.
+The Model Testing Toolkit will process the data from the user, either from the command line interface (CLI) or from the graphical user interface (GUI). We have added an option to the CLI so that the user can specify that test selection should be used and which models or files have changed. In the GUI we have added a menu option to specify which models have changed, this is shown in Figure \ref{fig:MTTrun}. In the GUI multiple models can be selected.
 
 \begin{figure}[!hbtp]
     \includegraphics[width=1.0\textwidth]{Pictures/MTT_Capture.png}
-    \caption{A screen shot of the MTT GUI. In the Model View pane when right clicking on a Model there is an option to run all associated tests.}
+    \caption{A screen shot of the Model Testing Toolkit GUI. In the Model View pane when right clicking on a Model there is an option to run all associated tests.}
     \label{fig:MTTrun}
 \end{figure}
 
-MTT will then send all modified files or models to OCT and ask for all affected models. Then all tests testing one of the affected models will be selected and run.
+The Model Testing Toolkit will then send all modified files or models to OCT and ask for all affected models. Then all tests testing one of the affected models will be selected and run.
 
 \subsection{Change detection}
-There is no automatic change detection, instead the user manually have to specify which models or files should be considered changed. Automatic change detection could be implemented using a version control system such as Git or SVN. A continuous integration server could look at the commit history to determine what has changed. For a user using MTT, the command \texttt{git status} could be used. Another option is to look at the file timestamps to determine what has changed.
+There is no automatic change detection, instead the user manually have to specify which models or files should be considered changed. Automatic change detection could be implemented using a version control system such as Git or SVN. A continuous integration server could look at the commit history to determine what has changed. For a user using the Model Testing Toolkit, the command \texttt{git status} could be used. Another option is to look at the file timestamps to determine what has changed.
 
 \section{Dependency analysis}
 We have previously described how the dependency analysis should be performed. In this section we will look at some of the aspects not handled by the rules presented in Chapter 3. Our implementation of the analysis consists of 343 lines of code, including 63 line only used for testing.
 
 \subsection{Scope}
-To speed up the dependency analysis we ask the user to specify which libraries should be search for dependencies. For example, the standard library is automatically included in projects but users will rarely make changes to or test it. Hence, searching for dependencies to and in the standard library will usually be unnecessary. There might also be other dependencies in a project that are considered stable and unnecessary to analyze. In MTT this is handled by limiting the dependency analysis to all libraries in the Model View pane, in the upper left part of Figure \ref{fig:MTTrun}. This functionality have not yet been added to the command line interface.
+To speed up the dependency analysis we ask the user to specify which libraries should be search for dependencies. For example, the standard library is automatically included in projects but users will rarely make changes to or test it. Hence, searching for dependencies to and in the standard library will usually be unnecessary. There might also be other dependencies in a project that are considered stable and unnecessary to analyze. In the Model Testing Toolkit this is handled by limiting the dependency analysis to all libraries in the Model View pane, in the upper left part of Figure \ref{fig:MTTrun}. This functionality have not yet been added to the command line interface.
 
 Furthermore, our implementation also excludes Modelica built-ins. Built-ins such as \texttt{Real} should never change, and if they do, it means the compiler has changed. If the compiler has changed all test will have to be rerun anyway.
 
@@ -411,7 +411,7 @@ In this chapter we will discuss some of the aspects of this project, starting wi
 
 To improve the name lookup in the source tree all requires handling the modified instances of classes. That is unfeasible within our time frame and furthermore, that is what the instance tree is for. It would therefore be interesting to explore the option of performing the dependency analysis in the instance tree. The main problem with this is the memory requirements, to instantiate all classes in one or more libraries would likely require to much memory. It might be possible to work around this by building the dependency graph incrementally. The running time of such solutions would probably be significantly higher and would have to be compensated by the precision gain in the dependency graph. 
 
-Another concern with a more precise dependency analysis is differences between compilers, since the solution is used through MTT and MTT might not use OCT when compiling and running tests. For example, error checking might differ between compilers causing compilation error for a test using one compiler but not for another.
+Another concern with a more precise dependency analysis is differences between compilers, since the solution is used through the Model Testing Toolkit and it might not use OCT when compiling and running tests. For example, error checking might differ between compilers causing compilation error for a test using one compiler but not for another.
 
 
 
