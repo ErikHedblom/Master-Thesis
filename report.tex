@@ -48,7 +48,7 @@
 \acknowledgements{
 We would like to thank Johan Ylikiiskilä at Modelon, who proposed the subject of this master thesis and has introduced us to the Model Testing Toolkit.
 
-Further we would like to thank Jonathan Kämpe and Jesper Mattsson at Modelon for helping us understand the OCT compiler and validate our dependency analysis.
+Further we would like to thank Jonathan Kämpe and Jesper Mattsson at Modelon for helping us understand the OPTIMICA Compiler Toolkit  compiler and validate our dependency analysis.
 
 We would also like to thank our supervisor at Lund University, Niklas Fors for all feedback during our work on the report.
 
@@ -154,9 +154,9 @@ Modelica allows the use of wildcard imports. When using wildcard imports it is n
 \lstinputlisting[language=modelica, basicstyle=\small]{Modelica/wildcardImport.mo}
 
 \section{OPTIMICA Compiler Toolkit}
-JModelica.org is an open source Modelica platform developed and maintained by the company Modelon. JModelica.org handles optimizations and simulations of complex dynamic systems and includes a Modelica compiler. OPTIMICA Compiler Toolkit (OCT) is a commercial product based on the JModelica.org technology. Our solution will be developed in OCT but will not use any OCT specific technology. 
+JModelica.org is an open source Modelica platform developed and maintained by the company Modelon. JModelica.org handles optimizations and simulations of complex dynamic systems and includes a Modelica compiler. OPTIMICA Compiler Toolkit  is a commercial product based on the JModelica.org technology. Our solution will be developed in OPTIMICA Compiler Toolkit  but will not use any OPTIMICA Compiler Toolkit  specific technology. 
 
-The compilation of Modelica code in the OCT compiler is done in several steps, see Figure \ref{fig:compilerSteps} \cite{aakesson2010implementation}. In the first step, Modelica source code is parsed to an AST (Abstract Syntax Tree) called the \emph{source tree}. Then name and type analysis of the source code is done, identifiers are bound to declarations etc.
+The compilation of Modelica code in the OPTIMICA Compiler Toolkit  compiler is done in several steps, see Figure \ref{fig:compilerSteps} \cite{aakesson2010implementation}. In the first step, Modelica source code is parsed to an AST (Abstract Syntax Tree) called the \emph{source tree}. Then name and type analysis of the source code is done, identifiers are bound to declarations etc.
 
 In Figure \ref{fig:bouncingBallInstance}, \texttt{Ball} is an instance of \texttt{BouncingBall} from Figure \ref{fig:bouncingBallCode}. When the instance is created, a modification is used to set the gravity to a different value than the original. The flattening of Modelica code is complicated because of modifications that are used in Modelica. To simplify this and  prepare for the flattening, in step two a new AST in form of an \emph{instance tree} is generated from the source tree. Each node in the instance tree has a reference to the corresponding declaration in the source tree. The root is the model chosen by the user to be flattened. The instance tree consists of instances of all classes with the possibly given modifications at the point in the Modelica source code where the instance is created. Therefore the instance tree requires a lot more memory than the source tree and is slower to traverse. This is the reason we have chosen to implement our solution in the source tree. 
 
@@ -169,7 +169,7 @@ In the last step C-code is generated.
 \begin{figure}[!htbp]
     \centering
     {\includegraphics[scale=0.5]{dotGenerated/CompilerSteps.eps}}
-    \caption{The compilation steps in the Modelica compiler in OCT}
+    \caption{The compilation steps in the Modelica compiler in OPTIMICA Compiler Toolkit }
     \label{fig:compilerSteps}
 \end{figure}
 
@@ -181,11 +181,11 @@ In the last step C-code is generated.
 \end{figure}
 
 \section{Model Testing Toolkit}
-Model testing Toolkit is a toolbox developed by Modelon to handle testing of Modelica projects \cite{modelon.comMTT}. It has both a command line and a graphical interface and we will add functionality and options to both to support test selection. Furthermore, it also provides integration with third-party tools. This means that compilers and simulators other than the OCT compiler could be used together with Model Testing Toolkit.
+Model testing Toolkit is a toolbox developed by Modelon to handle testing of Modelica projects \cite{modelon.comMTT}. It has both a command line and a graphical interface and we will add functionality and options to both to support test selection. Furthermore, it also provides integration with third-party tools. This means that compilers and simulators other than the OPTIMICA Compiler Toolkit  compiler could be used together with Model Testing Toolkit.
 
 
 \chapter[Dependency analysis]{Dependency analysis}
-To implement the RTS (Regression Test Selection) for Modelica we build a dependency graph between Modelica classes in the compilation phase. To build the dependency graph we have constructed a set of rules to determine what creates dependencies. We have chosen to work with the source tree representation of Modelica programs in the OCT compiler. The source tree is a relatively light weight representation of a Modelica program and have limited name lookup capabilities but provides significant performance benefits. The rules have therefore been adjusted to work with the name lookup in the source tree. When the lookup of an access fails in the source tree we say the access is not \emph{resolvable}. This means that a valid access can fail to resolve, in the source tree. First we introduce the rules and then we will go on and explain and motivate each one. Then we will conclude this chapter by discussing the limitations and improvements of the dependency analysis.
+To implement the RTS (Regression Test Selection) for Modelica we build a dependency graph between Modelica classes in the compilation phase. To build the dependency graph we have constructed a set of rules to determine what creates dependencies. We have chosen to work with the source tree representation of Modelica programs in the OPTIMICA Compiler Toolkit compiler. The source tree is a relatively light weight representation of a Modelica program and have limited name lookup capabilities but provides significant performance benefits. The rules have therefore been adjusted to work with the name lookup in the source tree. When the lookup of an access fails in the source tree we say the access is not \emph{resolvable}. This means that a valid access can fail to resolve, in the source tree. First we introduce the rules and then we will go on and explain and motivate each one. Then we will conclude this chapter by discussing the limitations and improvements of the dependency analysis.
 
 \paragraph{Dependency Rules}\mbox{}\\
 To build the dependency graph we use the following rules:
@@ -207,11 +207,11 @@ For example, class \texttt{A} contains an access to class B, and B contains the 
     \caption{To the right an example of Modelica code showing why Rule 2 is needed, and to the left the corresponding dependency graph.}
     \label{fig:parentGraph}
 \end{figure}
-The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in the source tree in OCT not all accesses in a class can be followed and therefore not all dependencies from this rule can be created. We will later see how Rule 4 compensates for this. 
+The first rule is perhaps the most intuitive, if a class accesses another class there is also a dependency to that class. However, due to the limitations in the source tree in OPTIMICA Compiler Toolkit  not all accesses in a class can be followed and therefore not all dependencies from this rule can be created. We will later see how Rule 4 compensates for this. 
 
 The next rule, Rule 2, will create a dependency from a class to its enclosing class. An example can be found in Figure \ref{fig:parentGraph}. In the example there is a constant \texttt{k} defined in package \texttt{P}. If another constant with the same name were to be added in in model \texttt{M1} the reference to \texttt{k} in \texttt{M2} will change to refer to the new constant and shadow the \texttt{k} in \texttt{P}. Therefore we need a dependency from \texttt{M2} to \texttt{M1} to handle name shadowing.
 
-In Figure \ref{fig:parentGraph} we also expect Rule 1 to create a dependency from \texttt{M2} to \texttt{P} due to \texttt{k} being located in \texttt{P}. However, the access \texttt{k} cannot be resolved by the OCT compiler in the source tree and we will miss the dependency to \texttt{P}. In this case we can see that Rule 2 can compensate by adding an indirect dependency from \texttt{M2} to \texttt{P}. 
+In Figure \ref{fig:parentGraph} we also expect Rule 1 to create a dependency from \texttt{M2} to \texttt{P} due to \texttt{k} being located in \texttt{P}. However, the access \texttt{k} cannot be resolved by the OPTIMICA Compiler Toolkit  compiler in the source tree and we will miss the dependency to \texttt{P}. In this case we can see that Rule 2 can compensate by adding an indirect dependency from \texttt{M2} to \texttt{P}. 
 If the constant \texttt{k} in package \texttt{P} is changed it will affect model \texttt{M2}. Therefore we need a dependency from \texttt{M2} to \texttt{P}. With Rule number 2 we get dependencies from \texttt{M2} to \texttt{M1} and from \texttt{M1} to \texttt{P}. So we have an indirect dependency from \texttt{M2} to \texttt{P}.
 
 \begin{figure}[!htbp]
@@ -253,7 +253,7 @@ Rule 4 is needed to handle the case in Figure \ref{fig:component}. Ideally the a
 Rule 5 is an exception to Rule 4, added to improve the precision of the test selection. Imports are specific and it is enough to add dependencies to what is actually imported. It is not uncommon to import packages located high up in the library structure. Without this exception, unnecessary dependencies would be added to all or large part of the library. For example in Modelica's standard library there are several imports of Modelica, which is the top level package. Such imports would create dependencies to every single class in the library. (Such imports may seem unnecessary, but they can be used to affect the name lookup if there exists classes with the same name in the library). An example of this is shown in Figure \ref{fig:rule5}.
 
 \chapter[Implementation]{Implementation}
-In this chapter we will describe how we have implemented the test selection in the OPTIMICA Compiler Toolkit (OCT). The solution is implemented both in OCT and in Model Testing Toolkit. OCT produces the dependency graph and the Model Testing Toolkit interacts with the user and runs the reduced test suit.
+In this chapter we will describe how we have implemented the test selection in the OPTIMICA Compiler Toolkit . The solution is implemented both in OPTIMICA Compiler Toolkit and in Model Testing Toolkit. OPTIMICA Compiler Toolkit  produces the dependency graph and the Model Testing Toolkit interacts with the user and runs the reduced test suit.
 
 \section{Model Testing Toolkit}
 
@@ -265,7 +265,7 @@ The Model Testing Toolkit will process the data from the user, either from the c
     \label{fig:MTTrun}
 \end{figure}
 
-The Model Testing Toolkit will then send all modified files or models to OCT and ask for all affected models. Then all tests testing one of the affected models will be selected and run.
+The Model Testing Toolkit will then send all modified files or models to OPTIMICA Compiler Toolkit and ask for all affected models. Then all tests testing one of the affected models will be selected and run.
 
 \subsection{Change detection}
 There is no automatic change detection, instead the user manually have to specify which models or files should be considered changed. Automatic change detection could be implemented using a version control system such as Git or SVN. A continuous integration server could look at the commit history to determine what has changed. For a user using the Model Testing Toolkit, the command \texttt{git status} could be used. Another option is to look at the file timestamps to determine what has changed.
@@ -297,7 +297,7 @@ The Modelica language allows use of external functions that are not defined in a
 \chapter[Evaluation]{Evaluation}
 In this chapter we are evaluating the performance of our dependency analysis and test selection. We have performed measurements for the Heat Exchanger Library (HXL), developed by Modelon ~\cite{modelon.comHXL}) and the Modelica Standard Library (MSL), developed by the Modelica Association. To evaluate how much time our test selection can save we have run the tests for each library several times. We have run them 31 times for MSL and 7 for HXL, to get the average time it takes to run each test. This was done using a Windows 10 machine with a dual core Intel\textregistered Core \texttrademark i5-4300M processor and 16 GB RAM. The compilation is executed in a JVM, we used Java 8 with a 4GB heap. The test times was used to simulate test selections without having to rerun all the tests each time. Some tests have very long running times, therefore we limited tests to ten minutes. Test taking longer will timeout and their running time is set to ten minutes.
 
-The total test suite execution time was 2h 26m 35s for MSL and 3h 1m 51s for HXL. First we ran test selection for each Modelica file in two libraries, MSL and HXL, and assumed only one file changed.  In Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} the result for all files in HXL and MSL relative the total execution time for the complete test suite is shown. Neither of the graphs include the execution time of the test selection algorithm and therefore the time savings are not completely accurate. However, in both cases the the test selection time corresponds to a fraction of a percent on the y-axis. Figure \ref{fig:hxlonemodel} and \ref{fig:mslonemodel} are similar to Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} but the selection is performed with a finer granularity, using models instead of files. 
+The total test suite execution time was 2h 26m 35s for MSL and 3h 1m 51s for HXL. First we ran test selection for each Modelica file in two libraries, MSL and HXL, and assumed only one file changed. In Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} the result for all files in HXL and MSL relative the total execution time for the complete test suite is shown. Neither of the graphs include the execution time of the test selection algorithm and therefore the time savings are not completely accurate. However, in both cases the the test selection time corresponds to a fraction of a percent on the y-axis. Figure \ref{fig:hxlonemodel} and \ref{fig:mslonemodel} are similar to Figure \ref{fig:hxlonefile} and \ref{fig:mslonefile} but the selection is performed with a finer granularity, using models instead of files. 
 
 \begin{figure}[!htbp]
     \centering
@@ -404,10 +404,10 @@ There are a couple of approaches to this. One is to run our test selection paral
 Another approach is to do mutation testing ~\cite{DBLP:journals/tse/JiaH11} by introducing semi random errors in a library and then run all tests not in the test selection. If any test fails we know that the test selection is not safe. Both these approaches are essentially the same except mutation testing is probably more effective since we can guarantee that there is problems in the code base. However, depending on the test coverage, every test could still pass. We have preformed neither of these approaches but some further validation may be in order in the future.
 \chapter[Discussion]{Discussion}
 
-In this chapter we will discuss some of the aspects of this project, starting with the name lookup in OCT. Then we move on to discuss the granularity of the dependency analysis and related work. 
+In this chapter we will discuss some of the aspects of this project, starting with the name lookup in OPTIMICA Compiler Toolkit. Then we move on to discuss the granularity of the dependency analysis and related work. 
 
 \section{Name lookup}
-The name lookup limitation in the source tree of OCT have had significant impact on the dependency analysis. The name lookup limitation in the source tree is the reason we need rule 4 and 5 described in chapter 3. It would therefore be interesting to explore the differences compared to a dependency analysis only considering the Modelica standard. That is not limited by how the name lookup in the source tree is currently implemented in OCT. We have considered the option of improving the lookup in the source tree in OCT. A naive approach is to substitute components with the class they implement, during name lookup. This means that the component \texttt{m} in Figure \ref{fig:betterLookup} would be substituted with \texttt{M1}. This is easy to implement and will work for some simple examples but Figure \ref{fig:betterLookup} illustrates why more complex examples will fail. To resolve the access \texttt{m.f} by replacing \texttt{m} with \texttt{M} will yield the dependency to function \texttt{f} in \texttt{P1}. This is wrong since the component \texttt{m} have a modification to use package the \texttt{P2} instead of \texttt{P1}. We would like to have a dependency from \texttt{M2} to the function \texttt{P2.f}.
+The name lookup limitation in the source tree of OPTIMICA Compiler Toolkit have had significant impact on the dependency analysis. The name lookup limitation in the source tree is the reason we need rule 4 and 5 described in chapter 3. It would therefore be interesting to explore the differences compared to a dependency analysis only considering the Modelica standard. That is not limited by how the name lookup in the source tree is currently implemented in OPTIMICA Compiler Toolkit. We have considered the option of improving the lookup in the source tree in OPTIMICA Compiler Toolkit. A naive approach is to substitute components with the class they implement, during name lookup. This means that the component \texttt{m} in Figure \ref{fig:betterLookup} would be substituted with \texttt{M1}. This is easy to implement and will work for some simple examples but Figure \ref{fig:betterLookup} illustrates why more complex examples will fail. To resolve the access \texttt{m.f} by replacing \texttt{m} with \texttt{M} will yield the dependency to function \texttt{f} in \texttt{P1}. This is wrong since the component \texttt{m} have a modification to use package the \texttt{P2} instead of \texttt{P1}. We would like to have a dependency from \texttt{M2} to the function \texttt{P2.f}.
 
 \begin{figure}[htbp]
     \centering
@@ -418,7 +418,7 @@ The name lookup limitation in the source tree of OCT have had significant impact
 
 To improve the name lookup in the source tree requires handling the \emph{modifications}, as illustrated in the previous example. That is unfeasible within our time frame and furthermore, that is why the instance tree exists: to handle modifications. It would therefore be interesting to explore the option of performing the dependency analysis in the instance tree instead of the source tree. The main problem with this is the memory requirements, to instantiate all classes in one or more libraries would likely require too much memory. It might be possible to work around this by building the dependency graph incrementally. The running time of such solutions would probably be significantly higher than our solution, and that would have to be compensated by the precision gain in the dependency graph. 
 
-Another concern with a more precise dependency analysis is differences between different compilers, since the solution is used through the Model Testing Toolkit and it might not use OCT when compiling and running tests. For example, error checking might differ between compilers causing compilation error for a test using one compiler but not for another. This means that a more precise implementation might exclude tests that will fail if the test suite is executed using another compiler. This means that a compiler neutral dependency analysis with a 100\% precision might not be possible. 
+Another concern with a more precise dependency analysis is differences between different compilers, since the solution is used through the Model Testing Toolkit and it might not use OPTIMICA Compiler Toolkit  when compiling and running tests. For example, error checking might differ between compilers causing compilation error for a test using one compiler but not for another. This means that a more precise implementation might exclude tests that will fail if the test suite is executed using another compiler. This means that a compiler neutral dependency analysis with a 100\% precision might not be possible. 
 
 
 
