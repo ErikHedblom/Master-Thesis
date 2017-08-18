@@ -110,6 +110,7 @@ In Figure \ref{fig:bouncingBallCode} is a simple Modelica example to illustrate 
 
 \begin{figure}[!htbp]
     \centering
+    \vspace{-0.5cm}
     \includegraphics[width=1.0\textwidth]{Pictures/BB1.png}
     \caption{The simulation result of the model in Figure \ref{fig:bouncingBallCode}. This graph is retrieved from \textit{Modelica by example} \cite{tillermodelica}}
     \label{fig:bouncingBallSimulation}
@@ -193,7 +194,7 @@ To build the dependency graph we use the following rules:
 \item A class depends on its enclosing class. 
 \item A class depends on all classes referenced by access paths within it. A unresolvable access can still contain resolvable accesses within its path.
 \item A class depends on all classes enclosed by an accessed class. This does not include access within paths but if an access is not resolvable, the last resolvable access in the path will be used instead.
-For example, class A contains an access to class B, and B contains the class C, then A will depend on C. Furthermore, if class C contains the class D, A will depend on D as well.
+For example, class \texttt{A} contains an access to class B, and B contains the class C, then A will depend on C. Furthermore, if class C contains the class D, then A will depend on D as well.
 \item Exception to Rule 4: Rule 4 is not applicable to import statements.
 \end{enumerate}
 
@@ -330,10 +331,13 @@ The results shows a potential decrease in execution times for tests, but do not 
 
 \begin{figure}[!htbp]
     \centering
+    \vspace{-0.5cm}
     \includegraphics[width=\textwidth]{Graphs/MSL_history_plot.eps}
     \caption{History plot for 4341 commits from MSL. The average saving is 56 \%.}
     \label{fig:mslhistory}
 \end{figure}
+
+\clearpage
 
 A breakdown of the graphs is shown in Table \ref{table:breakdown}, as well as some other information about the graphs. The \textit{Savings} are the average savings for each graph relative to the running time of the full test suite, found in the \textit{Complete test suite execution time} column. We also provide an average execution time for the dependency analysis. This was obtained by measuring the execution ten times, on the same computer used for the other results. However, it is usually not necessary to calculate the dependencies for all models or files unless every model or file is changed. Hence, the execution time is probably shorter in practice if we only analyze dependencies from the changed models.
 
