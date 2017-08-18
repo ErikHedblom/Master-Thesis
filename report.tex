@@ -99,11 +99,11 @@ To measure how good the test selection is, the precision of the test selection c
 \section{Modelica}
 Modelica is a declarative, object oriented modeling language where models are described by equations \cite{modelicamodelica}. It is used to perform high performance simulations. This section will introduce the parts of Modelica that are important for this project.
 
-In Figure \ref{fig:bouncingBallCode} is a simple Modelica example to illustrate the language. It shows a model of a bouncing ball. The model has two parameters, the elasticity coefficient of the ball and the gravity. There are two values describing the ball, the height and the velocity of the ball that are set to initial value 1 respectively 0. The equation section in the model describes the behavior of the balls motion. In the when statement the balls velocity is set after the bounce at height 0. When a simulation of the bouncing ball model is run we get the result in Figure \ref{fig:bouncingBallSimulation}.
+In Figure \ref{fig:bouncingBallCode} is a simple Modelica example to illustrate the language. It shows a model of a bouncing ball. The model has two parameters, the elasticity coefficient of the ball and the gravity. There are two variables describing the ball, the height and the velocity of the ball that are set to initial value 1 and 0, respectively. The \texttt{equation} section in the model describes the behavior of the ball's motion. In the \texttt{when} statement the ball's velocity is set after the bounce at height 0. When a simulation of the bouncing ball model is run we get the result in Figure \ref{fig:bouncingBallSimulation}.
 
 \begin{figure}[!htbp]
     \centering
-    \lstinputlisting[language=modelica]{Modelica/BouncingBall.mo}
+    \lstinputlisting[language=modelica, basicstyle=\small]{Modelica/BouncingBall.mo}
     \caption{A Modelica model of a bouncing ball. This example is inspired by \textit{Implementation of a Modelica compiler using JastAdd attribute grammars} \cite{aakesson2010implementation} and \textit{Modelica by example} \cite{tillermodelica}.}
     \label{fig:bouncingBallCode}
 \end{figure}
@@ -122,7 +122,7 @@ To do a dependency analysis we need to understand how Modelica models depends on
     \centering
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/ModelicaExample.eps}}}
     \qquad
-    \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{Modelica/ModelicaExample.mo}}}
+    \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica, basicstyle=\small]{Modelica/ModelicaExample.mo}}}
     \caption{An example of Modelica structure, where the boxes represents the Modelica classes in the Modelica code to the right.}
     \label{fig:modelicaExample}
 \end{figure}
@@ -134,7 +134,7 @@ In this section we will give an example of a name lookup in the Modelica compile
 
 \begin{figure}[!htbp]
     \centering
-    \lstinputlisting[language=modelica]{Modelica/NameLookup.mo}
+    \lstinputlisting[language=modelica, basicstyle=\small]{Modelica/NameLookup.mo}
     \caption{An example to illustrate the name lookup in the Modelica compiler.}
     \label{fig:nameLookup}
 \end{figure}
@@ -142,15 +142,15 @@ In this section we will give an example of a name lookup in the Modelica compile
 \subsection{Import}
 In Modelica imports can be used to access objects without using the fully qualified name each time, an import creates an alias \cite{tillermodelica}. Imports are also used to affect the name lookup and avoid name shadowing. To find an imported object the Modelica compiler looks for a match for the name in root packages, so the fully qualified name needs to be used in an import statement. In the import below \texttt{HydralicConductance} will be mapped to the fully qualified name \texttt{Modelica.Fluid.Types.HydralicConductance}.
 
-\lstinputlisting[language=modelica]{Modelica/import.mo}
+\lstinputlisting[language=modelica, basicstyle=\small]{Modelica/import.mo}
 
 Modelica offers the option to rename an import. Here an alias will be created where the name \texttt{Conductance} is mapped to the fully qualified name \\\texttt{Modelica.Fluid.Types.HydralicConductance}.
 
-\lstinputlisting[language=modelica]{Modelica/renamedImport.mo}
+\lstinputlisting[language=modelica, basicstyle=\small]{Modelica/renamedImport.mo}
 
 Modelica allows the use of wildcard imports. When using wildcard imports it is not possible to rename the import. The following wildcard import will create an alias for every definition in \texttt{Modelica.Fluid}.
 
-\lstinputlisting[language=modelica]{Modelica/wildcardImport.mo}
+\lstinputlisting[language=modelica, basicstyle=\small]{Modelica/wildcardImport.mo}
 
 \section{OPTIMICA Compiler Toolkit}
 JModelica.org is an open source Modelica platform developed and maintained by the company Modelon. JModelica.org handles optimizations and simulations of complex dynamic systems and includes a Modelica compiler. OPTIMICA Compiler Toolkit (OCT) is a commercial product based on the JModelica.org technology. Our solution will be developed in OCT but will not use any OCT specific technology. 
@@ -174,7 +174,7 @@ In the last step C-code is generated.
 
 \begin{figure}[!htbp]
     \centering
-    \lstinputlisting[language=modelica]{Modelica/BouncingBallInstance.mo}
+    \lstinputlisting[language=modelica, basicstyle=\small]{Modelica/BouncingBallInstance.mo}
     \caption{Instance of the bouncing ball in Figure \ref{fig:bouncingBallCode} with modification. This example is inspired by \textit{Implementation of a Modelica compiler using JastAdd attribute grammars} \cite{aakesson2010implementation}.}
     \label{fig:bouncingBallInstance}
 \end{figure}
@@ -202,7 +202,7 @@ For example, class A contains an access to class B, and B contains the class C, 
     \centering
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/Parent.eps}}}
     \qquad
-    \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica]{Modelica/Parent.mo}}}
+    \subfloat{\raisebox{3.2 cm}{\lstinputlisting[language=modelica, basicstyle=\small]{Modelica/Parent.mo}}}
     \caption{To the right an example of Modelica code showing why Rule 2 is needed, and to the left the corresponding dependency graph.}
     \label{fig:parentGraph}
 \end{figure}
@@ -220,7 +220,7 @@ If the constant \texttt{k} in package \texttt{P} is changed it will affect model
     \subfloat{\raisebox{9.5 cm}{
         \begin{minipage}[t]{.5\textwidth}
         \centering
-        \lstinputlisting[language=modelica]{Modelica/DotAccess.mo}
+        \lstinputlisting[language=modelica, basicstyle=\small]{Modelica/DotAccess.mo}
         \end{minipage}}}
     \caption{Dependency graph to the left, of the Modelica classes to the right. This is an example of why we need Rule 3.}
     \label{fig:dotAccess}
@@ -233,7 +233,7 @@ In Figure \ref{fig:dotAccess}, we want dependencies from model \texttt{M} to all
     \centering
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/Component.eps}}}
     \qquad
-    \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica]{Modelica/Component.mo}}}
+    \subfloat{\raisebox{4.7 cm}{\lstinputlisting[language=modelica, basicstyle=\small]{Modelica/Component.mo}}}
     \caption{To the right Modelica code with an access through a component, \texttt{m.M3.f(1)}, this is the reason Rule 4 is needed. To the left is the dependency graph.}
     \label{fig:component}
 \end{figure}
@@ -244,7 +244,7 @@ Rule 4 is needed to handle the case in Figure \ref{fig:component}. Ideally the a
     \centering
     \subfloat{{\includegraphics[scale=0.8]{dotGenerated/Rule5.eps}}}
     \qquad
-    \subfloat{\raisebox{4.0 cm}{\lstinputlisting[language=modelica]{Modelica/Rule5.mo}}}
+    \subfloat{\raisebox{4.0 cm}{\lstinputlisting[language=modelica, basicstyle=\small]{Modelica/Rule5.mo}}}
     \caption{Example of rule 5 improving the dependency graph. The dashed edges are removed by Rule 5.}
     \label{fig:rule5}
 \end{figure}
@@ -404,7 +404,7 @@ In this chapter we will discuss some of the aspects of this project, starting wi
 
 \begin{figure}[htbp]
     \centering
-    \raisebox{4.0 cm}{\lstinputlisting[language=modelica]{Modelica/ImprovedLookupFail.mo}}
+    \raisebox{4.0 cm}{\lstinputlisting[language=modelica, basicstyle=\small]{Modelica/ImprovedLookupFail.mo}}
     \caption{Modifications of classes requires the name lookup to differentiate between different variations of a class, in this case \texttt{M1}}
     \label{fig:betterLookup}
 \end{figure}
