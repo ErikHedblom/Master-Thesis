@@ -1,0 +1,5 @@
+digraph DependencyGraph {
+	"M" -> "A" [label="  Rule 1"]
+	"M" -> "B" [label="  Rule 4"]
+	"B" -> "A" [label="  Rule 2"]
+}
