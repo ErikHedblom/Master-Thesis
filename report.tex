@@ -180,6 +180,8 @@ In the last step C-code is generated.
     \label{fig:bouncingBallInstance}
 \end{figure}
 
+Compilation of Modelica models is a time consuming process, mainly because of the complex equation systems needed to be solved numerically. Due to this, Modelica tests cases usually have running times starting at around 10 seconds in our experience. But a test case can take hours to run if the test also runs detailed simulations.
+
 \section{Model Testing Toolkit}
 Model testing Toolkit is a toolbox developed by Modelon to handle testing of Modelica projects \cite{modelon.comMTT}. It has both a command line and a graphical interface and we will add functionality and options to both to support test selection. Furthermore, it also provides integration with third-party tools. This means that compilers and simulators other than the OPTIMICA Compiler Toolkit  compiler could be used together with Model Testing Toolkit.
 
