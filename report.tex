@@ -339,7 +339,7 @@ The results shows a potential decrease in execution times for tests, but do not 
 
 \clearpage
 
-A breakdown of the graphs is shown in Table \ref{table:breakdown}, as well as some other information about the graphs. The \textit{Savings} are the average savings for each graph relative to the running time of the full test suite, found in the \textit{Complete test suite execution time} column. We also provide an average execution time for the dependency analysis. This was obtained by measuring the execution ten times, on the same computer used for the other results. For files the result of the dependency analysis was then converted to a file graph by aggregating the classes into files. However, it is usually not necessary to calculate the dependencies for all models or files unless every model or file is changed. Hence, the execution time is probably shorter in practice if we only analyze dependencies from the changed models.
+A breakdown of the graphs is shown in Table \ref{table:breakdown}, as well as some other information about the graphs. The \textit{Savings} are the average savings for each graph relative to the running time of the full test suite, found in the \textit{Complete test suite execution time} column. We also provide an average execution time for the dependency analysis and the corresponding 95\% confidence interval. This was obtained by measuring the execution ten times, on the same computer used for the other results. For files the result of the dependency analysis was then converted to a file graph by aggregating the classes into files. However, it is usually not necessary to calculate the dependencies for all models or files unless every model or file is changed. Hence, the execution time is probably shorter in practice if we only analyze dependencies from the changed models.
 
 Looking closely at the results we notice that MSL contains about 30 classes per file, while HXL has aboout 1.5 classes per file. Our analysis will probably primarily be used at Modelon and the libraries developed at Modelon are similar to HXL, favoring few classes per file. The difference in classes per file between MSL and HXL boils down to different developer philosophies.
 
@@ -359,14 +359,14 @@ Looking closely at the results we notice that MSL contains about 30 classes per 
     & \multicolumn{1}{r}{552}
     & \multicolumn{1}{@{}l|}{files}
     & \multirow{2}{*}{3h 1m 51s}
-    & \multirow{2}{*}{6.7s}
+    & 6.7s
     &  68 \%
 \\
     & \ref{fig:hxlonemodel}
     & \multicolumn{1}{r}{819}
     & \multicolumn{1}{@{}l|}{classes}
     &
-    &
+    & [6.6s, 6.9s]
     & 67 \%
 \\ \hline
       \multirow{3}{*}{MSL}
@@ -374,7 +374,7 @@ Looking closely at the results we notice that MSL contains about 30 classes per 
     & \multicolumn{1}{r}{197}
     & \multicolumn{1}{@{}l|}{files}
     & \multirow{3}{*}{2h 26m 35s}
-    & \multirow{3}{*}{18.8s}
+    & \multirow{3}{*}{\shortstack{16.7s \\ {[}16.0s , 17.4s{]}}}
     & 88 \%
 \\
     & \ref{fig:mslonemodel}
